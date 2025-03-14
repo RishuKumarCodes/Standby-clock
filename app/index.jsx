@@ -15,7 +15,6 @@ export default function ClockScreen() {
   const router = useRouter();
   useKeepAwake();
 
-  // Force full-screen immersive mode (Android)
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
@@ -24,34 +23,28 @@ export default function ClockScreen() {
     NavigationBar.setButtonStyleAsync("light");
 
     return () => {
-      // Cleanup on unmount
       ScreenOrientation.unlockAsync();
       NavigationBar.setVisibilityAsync("visible");
     };
   }, []);
 
-  // Time logic
   const [time, setTime] = useState(new Date());
   useEffect(() => {
     const timerId = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timerId);
   }, []);
 
-  // Get the current style from context
   const { clockStyle } = useClockStyle();
   const selectedStyle = CLOCK_STYLES[clockStyle] || CLOCK_STYLES.default;
 
   return (
     <View style={styles.container}>
-      {/* Hide the top status bar */}
       <StatusBar hidden />
 
-      {/* Render the clock with the chosen style */}
       <Text style={[styles.timeTextBase, selectedStyle]}>
         {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
       </Text>
 
-      {/* Settings icon in top-right */}
       <TouchableOpacity
         style={styles.settingsButton}
         onPress={() => router.push("/settings")}
@@ -70,8 +63,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   timeTextBase: {
-    // Base style for the clock
-    // The style variant from CLOCK_STYLES merges with this
     textAlign: "center",
   },
   settingsButton: {

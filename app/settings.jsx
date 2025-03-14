@@ -1,6 +1,12 @@
-// app/settings.jsx
+
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,38 +18,41 @@ export default function SettingsScreen() {
   const router = useRouter();
   const { clockStyle, setClockStyle } = useClockStyle();
 
-  // Generate a list of style names from CLOCK_STYLES
-  const styleNames = Object.keys(CLOCK_STYLES); // ["default", "neonGreen", "retroDigital", ...]
+  const styleNames = Object.keys(CLOCK_STYLES);
 
   return (
     <View style={styles.container}>
       <StatusBar hidden />
-      
-      {/* Back button in top-left */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={28} color="white" />
-      </TouchableOpacity>
 
-      <Text style={styles.heading}>Settings</Text>
-      <Text style={styles.subHeading}>Choose Clock Style:</Text>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Ionicons name="arrow-back" size={28} color="white" />
+        </TouchableOpacity>
+        <Text style={styles.heading}>Settings</Text>
+      </View>
 
-      <ScrollView contentContainerStyle={styles.styleList}>
-        {styleNames.map((styleName) => {
-          const isSelected = clockStyle === styleName;
-          return (
-            <TouchableOpacity
-              key={styleName}
-              style={[
-                styles.styleOption,
-                isSelected && styles.selectedOption
-              ]}
-              onPress={() => setClockStyle(styleName)}
-            >
-              <Text style={styles.optionText}>{styleName}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+      <View style={styles.content}>
+        <ScrollView contentContainerStyle={styles.styleList}>
+          {styleNames.map((styleName) => {
+            const isSelected = clockStyle === styleName;
+            return (
+              <TouchableOpacity
+                key={styleName}
+                style={[
+                  styles.styleOption,
+                  isSelected && styles.selectedOption,
+                ]}
+                onPress={() => setClockStyle(styleName)}
+              >
+                <Text style={styles.optionText}>{styleName}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
     </View>
   );
 }
@@ -51,45 +60,54 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111",
+    backgroundColor: "#000",
+  },
+  header: {
+    flexDirection: "row",
     alignItems: "center",
-    paddingTop: 40,
+    padding: 10,
+  },
+  backButton: {
+    padding: 15,
   },
   heading: {
     color: "white",
     fontSize: 24,
+    padding: 10,
     fontWeight: "bold",
-    marginBottom: 12,
   },
-  subHeading: {
-    color: "#ccc",
-    fontSize: 18,
-    marginBottom: 16,
-  },
-  styleList: {
+
+  content: {
+    flex: 1,
     alignItems: "center",
+  },
+
+  styleList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
     paddingBottom: 50,
   },
+
   styleOption: {
-    width: "80%",
-    padding: 15,
-    backgroundColor: "#222",
-    borderRadius: 8,
-    marginBottom: 12,
+    width: "20%",
+    height: 90,
+    backgroundColor: "#111",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#222",
+    margin: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
+
   selectedOption: {
-    borderColor: "lime",
+    borderColor: "white",
     borderWidth: 2,
   },
   optionText: {
     color: "#fff",
     textAlign: "center",
     fontSize: 18,
-  },
-  backButton: {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    padding: 10,
   },
 });
