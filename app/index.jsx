@@ -1,6 +1,5 @@
-// app/index.jsx
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import { useKeepAwake } from "expo-keep-awake";
@@ -8,8 +7,13 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import * as NavigationBar from "expo-navigation-bar";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useClockStyle } from "./context/ClockStyleContext"; 
-import { CLOCK_STYLES } from "./constants/clockStyles";
+import MinimalBold from "./clock-designs/MinimalBold.jsx";
+import MinimalThin from "./clock-designs/MinimalThin.jsx";
+import AnalogClock from "./clock-designs/AnalogClock.jsx";
+import WeatherClock from "./clock-designs/WeatherClock.jsx";
+import NeonClock from "./clock-designs/NeonClock.jsx";
+import SagmentClock from "./clock-designs/SegmentClock.jsx";
+import { useClockStyle } from "./context/ClockStyleContext";
 
 export default function ClockScreen() {
   const router = useRouter();
@@ -17,8 +21,7 @@ export default function ClockScreen() {
 
   useEffect(() => {
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-
-    NavigationBar.setVisibilityAsync("immersive"); 
+    NavigationBar.setVisibilityAsync("immersive");
     NavigationBar.setBackgroundColorAsync("#000");
     NavigationBar.setButtonStyleAsync("light");
 
@@ -28,28 +31,48 @@ export default function ClockScreen() {
     };
   }, []);
 
-  const [time, setTime] = useState(new Date());
-  useEffect(() => {
-    const timerId = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timerId);
-  }, []);
+  const { clockStyle, userColor } = useClockStyle();
 
-  const { clockStyle } = useClockStyle();
-  const selectedStyle = CLOCK_STYLES[clockStyle] || CLOCK_STYLES.default;
+  let ClockComponent;
+  switch (clockStyle) {
+    case "Minimal bold":
+      ClockComponent = MinimalBold;
+      break;
+    case "Minimal focus":
+      ClockComponent = MinimalThin;
+      break;
+    case "Analog & Calendar":
+      ClockComponent = AnalogClock;
+      break;
+    case "Neon clock":
+      ClockComponent = NeonClock;
+      break;
+    case "Segment display":
+      ClockComponent = SagmentClock;
+      break;
+    case "weather & battery":
+      ClockComponent = WeatherClock;
+      break;
+    default:
+      ClockComponent = MinimalBold;
+      break;
+  }
 
   return (
     <View style={styles.container}>
       <StatusBar hidden />
-
-      <Text style={[styles.timeTextBase, selectedStyle]}>
-        {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-      </Text>
+      <ClockComponent color={userColor} />
 
       <TouchableOpacity
         style={styles.settingsButton}
         onPress={() => router.push("/settings")}
       >
-        <Ionicons name="settings-sharp" size={28} color="white" />
+        <Ionicons
+          name="pencil-outline"
+          size={28}
+          color={userColor}
+          style={{ opacity: 0.7 }}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -59,11 +82,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  timeTextBase: {
-    textAlign: "center",
   },
   settingsButton: {
     position: "absolute",
