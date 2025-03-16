@@ -2,24 +2,26 @@ import React from "react";
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { useClockStyle } from "../context/ClockStyleContext";
 
-// Import clock components
 import MinimalBold from "../clock-designs/MinimalBold";
 import MinimalThin from "../clock-designs/MinimalThin";
 import AnalogClock from "../clock-designs/AnalogClock";
 import WeatherClock from "../clock-designs/WeatherClock";
 import NeonClock from "../clock-designs/NeonClock";
 import SegmentClock from "../clock-designs/SegmentClock";
+// import RoundThemeAnalog from "../clock-designs/RoundThemeAnalog.jsx";
+import CircleTheme from "../clock-designs/circleTheme/CircleTheme.jsx";
 
 const ClockSettings = () => {
   const { clockStyle, setClockStyle } = useClockStyle();
 
-  // Map style names to their corresponding components
   const clockComponents = {
     "Minimal bold": MinimalBold,
     "Minimal focus": MinimalThin,
     "Analog & Calendar": AnalogClock,
     "weather & battery": WeatherClock,
     "Segment display": SegmentClock,
+    // "RoundThemeAnalog": RoundThemeAnalog,
+    "CircleTheme": CircleTheme,
     "Neon clock": NeonClock,
   };
 
@@ -39,9 +41,7 @@ const ClockSettings = () => {
               onPress={() => setClockStyle(styleName)}
             >
               <View style={styles.previewContainer}>
-                <View style={styles.scaledWrapper}>
-                  <PreviewComponent previewMode={true} color="#9ac78f" />
-                </View>
+                <PreviewComponent previewMode={true} color="#9ac78f" />
               </View>
             </TouchableOpacity>
           );
@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
   },
   subheading: {
     color: "#fff",
-    paddingTop: 30,
     paddingBottom: 10,
     fontSize: 18,
     marginBottom: 10,
@@ -67,13 +66,14 @@ const styles = StyleSheet.create({
   styleOptions: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    justifyContent: "center",
+
+    gap: "24",
   },
   styleOption: {
     backgroundColor: "#1a1a1a",
     borderRadius: 10,
-    marginBottom: 20,
-    width: "45%",
+    width: "47.6%",
     height: 150,
     alignItems: "center",
     justifyContent: "center",
@@ -88,16 +88,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
-
-    // borderWidth:1,
-    // borderColor:"#fff",
-  },
-  scaledWrapper: {
-    // transform: [
-    //   { scale: 1 },
-    //   { translateX: 0 },
-    //   { translateY: 0 },
-    // ],
   },
 });
 

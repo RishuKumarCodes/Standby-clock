@@ -43,28 +43,28 @@ const colorGroups = [
   {
     title: "Saturated Tones",
     colors: [
-      "#c90000",
-      "#0000a8",
-      "#00ad00",
       "#008080",
       "#2196F3",
       "#673AB7",
       "#E91E63",
       "#B22222",
       "#800000",
+      "#c90000",
+      "#0000a8",
+      "#00ad00",
     ],
   },
   {
     title: "Neon & Vibrant",
     colors: [
-      "#FF00FF",
-      "#FF1493",
-      "#FF4500",
-      "#FFD700",
       "#00FF00",
       "#00FFFF",
       "#1E90FF",
       "#8A2BE2",
+      "#FF00FF",
+      "#FF1493",
+      "#FF4500",
+      "#FFD700",
     ],
   },
 ];
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   // Color swatches
   colorRow: {
     flexDirection: "row",
-    flexWrap: "wrap", 
+    flexWrap: "wrap",
   },
   swatch: {
     width: 40,
