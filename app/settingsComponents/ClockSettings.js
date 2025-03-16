@@ -5,10 +5,9 @@ import { useClockStyle } from "../context/ClockStyleContext";
 import MinimalBold from "../clock-designs/MinimalBold";
 import MinimalThin from "../clock-designs/MinimalThin";
 import AnalogClock from "../clock-designs/AnalogClock";
-import WeatherClock from "../clock-designs/WeatherClock";
+import weatherBattery from "../clock-designs/weatherBattery/WeatherBattery.jsx";
 import NeonClock from "../clock-designs/NeonClock";
 import SegmentClock from "../clock-designs/SegmentClock";
-// import RoundThemeAnalog from "../clock-designs/RoundThemeAnalog.jsx";
 import CircleTheme from "../clock-designs/circleTheme/CircleTheme.jsx";
 
 const ClockSettings = () => {
@@ -18,10 +17,9 @@ const ClockSettings = () => {
     "Minimal bold": MinimalBold,
     "Minimal focus": MinimalThin,
     "Analog & Calendar": AnalogClock,
-    "weather & battery": WeatherClock,
+    weatherBattery: weatherBattery,
     "Segment display": SegmentClock,
-    // "RoundThemeAnalog": RoundThemeAnalog,
-    "CircleTheme": CircleTheme,
+    CircleTheme: CircleTheme,
     "Neon clock": NeonClock,
   };
 

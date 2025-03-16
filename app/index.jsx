@@ -10,10 +10,9 @@ import { Ionicons } from "@expo/vector-icons";
 import MinimalBold from "./clock-designs/MinimalBold.jsx";
 import MinimalThin from "./clock-designs/MinimalThin.jsx";
 import AnalogClock from "./clock-designs/AnalogClock.jsx";
-import WeatherClock from "./clock-designs/WeatherClock.jsx";
+import weatherBattery from "./clock-designs/weatherBattery/WeatherBattery.jsx";
 import NeonClock from "./clock-designs/NeonClock.jsx";
 import SagmentClock from "./clock-designs/SegmentClock.jsx";
-// import RoundThemeAnalog from "./clock-designs/RoundThemeAnalog.jsx";
 import CircleTheme from "./clock-designs/circleTheme/CircleTheme.jsx";
 import { useClockStyle } from "./context/ClockStyleContext";
 
@@ -52,12 +51,9 @@ export default function ClockScreen() {
     case "Segment display":
       ClockComponent = SagmentClock;
       break;
-    case "weather & battery":
-      ClockComponent = WeatherClock;
+    case "weatherBattery":
+      ClockComponent = weatherBattery;
       break;
-    // case "RoundThemeAnalog":
-    //   ClockComponent = RoundThemeAnalog;
-    //   break;
     case "CircleTheme":
       ClockComponent = CircleTheme;
       break;
