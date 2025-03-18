@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useClockStyle } from "../context/ClockStyleContext";
 
 import MinimalBold from "../clock-designs/MinimalBold";
@@ -11,7 +12,24 @@ import SegmentClock from "../clock-designs/SegmentClock";
 import CircleTheme from "../clock-designs/circleTheme/CircleTheme.jsx";
 
 const ClockSettings = () => {
-  const { clockStyle, setClockStyle } = useClockStyle();
+  const { clockStyle, setClockStyle, userColor, setUserColor } =
+    useClockStyle();
+
+  // ✅ Fetch the saved color when the component mounts
+  useEffect(() => {
+    const loadColor = async () => {
+      try {
+        const savedColor = await AsyncStorage.getItem("clockColor");
+        if (savedColor) {
+          setUserColor(savedColor); // Set the color in the context
+        }
+      } catch (error) {
+        console.error("Error loading saved color:", error);
+      }
+    };
+
+    loadColor();
+  }, []);
 
   const clockComponents = {
     "Minimal bold": MinimalBold,
@@ -39,7 +57,11 @@ const ClockSettings = () => {
               onPress={() => setClockStyle(styleName)}
             >
               <View style={styles.previewContainer}>
-                <PreviewComponent previewMode={true} color="#9ac78f" />
+                {/* ✅ Pass the saved color */}
+                <PreviewComponent
+                  previewMode={true}
+                  color={userColor || "#9ac78f"}
+                />
               </View>
             </TouchableOpacity>
           );
@@ -52,6 +74,7 @@ const ClockSettings = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingHorizontal: 5,
     backgroundColor: "#000",
     flex: 1,
   },
@@ -65,8 +88,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-
-    gap: "24",
+    gap: 24,
   },
   styleOption: {
     backgroundColor: "#1a1a1a",

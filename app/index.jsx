@@ -1,38 +1,59 @@
-import React, { useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Pressable, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import { useKeepAwake } from "expo-keep-awake";
 import * as ScreenOrientation from "expo-screen-orientation";
 import * as NavigationBar from "expo-navigation-bar";
-import { Ionicons } from "@expo/vector-icons";
+import { useScreenSettings } from "./context/ScreenSettingsContext.js";
 
-import MinimalBold from "./clock-designs/MinimalBold.jsx";
-import MinimalThin from "./clock-designs/MinimalThin.jsx";
-import AnalogClock from "./clock-designs/AnalogClock.jsx";
-import weatherBattery from "./clock-designs/weatherBattery/WeatherBattery.jsx";
-import NeonClock from "./clock-designs/NeonClock.jsx";
-import SagmentClock from "./clock-designs/SegmentClock.jsx";
-import CircleTheme from "./clock-designs/circleTheme/CircleTheme.jsx";
-import { useClockStyle } from "./context/ClockStyleContext";
+import MinimalBold from "./clock-designs/MinimalBold";
+import MinimalThin from "./clock-designs/MinimalThin";
+import AnalogClock from "./clock-designs/AnalogClock";
+import weatherBattery from "./clock-designs/weatherBattery/WeatherBattery";
+import NeonClock from "./clock-designs/NeonClock";
+import SagmentClock from "./clock-designs/SegmentClock";
+import CircleTheme from "./clock-designs/circleTheme/CircleTheme";
+import AlternatingDimOverlay from "./components/AlternatingDimOverlay";
+
+import { useClockStyle } from "./context/ClockStyleContext.js";
 
 export default function ClockScreen() {
   const router = useRouter();
   useKeepAwake();
+  const { clockStyle, userColor } = useClockStyle();
+  const { navBarVisible, statusBarVisible } = useScreenSettings();
+  const [isLandscape, setIsLandscape] = useState(false);
 
   useEffect(() => {
-    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-    NavigationBar.setVisibilityAsync("immersive");
-    NavigationBar.setBackgroundColorAsync("#000");
-    NavigationBar.setButtonStyleAsync("light");
+    const setupScreen = async () => {
+      try {
+        // ✅ Lock orientation to LANDSCAPE ONCE
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+
+        // ✅ Change Navigation Bar visibility & background color
+        NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
+        NavigationBar.setBackgroundColorAsync("#000"); // Set black background
+        
+        setIsLandscape(true);
+      } catch (error) {
+        console.error("Error setting up screen:", error);
+      }
+    };
+
+    setupScreen();
 
     return () => {
-      ScreenOrientation.unlockAsync();
+      // ✅ Don't unlock orientation to avoid switching back to portrait
       NavigationBar.setVisibilityAsync("visible");
     };
   }, []);
 
-  const { clockStyle, userColor } = useClockStyle();
+  // ✅ Toggle navigation bar without affecting screen orientation
+  useEffect(() => {
+    NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
+    NavigationBar.setBackgroundColorAsync("#000"); // Keep it black
+  }, [navBarVisible]);
 
   let ClockComponent;
   switch (clockStyle) {
@@ -63,22 +84,19 @@ export default function ClockScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar hidden />
+    <Pressable
+      style={styles.container}
+      onLongPress={() => router.push("/settings")}
+      delayLongPress={250}
+    >
+      <StatusBar hidden={!statusBarVisible} style="light" />
+
+      {/* Render selected clock component */}
       <ClockComponent color={userColor} />
 
-      <TouchableOpacity
-        style={styles.settingsButton}
-        onPress={() => router.push("/settings")}
-      >
-        <Ionicons
-          name="pencil-outline"
-          size={28}
-          color={userColor}
-          style={{ opacity: 0.7 }}
-        />
-      </TouchableOpacity>
-    </View>
+      {/* Overlay in landscape mode */}
+      {isLandscape && <AlternatingDimOverlay />}
+    </Pressable>
   );
 }
 
@@ -86,11 +104,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
-  },
-  settingsButton: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-    padding: 10,
   },
 });

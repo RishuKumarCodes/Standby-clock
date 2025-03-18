@@ -1,8 +1,10 @@
+// SettingsScreen.jsx
 import React, { useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import Sidebar from "./settingsComponents/sidebar.js";
 import ClockSettings from "./settingsComponents/ClockSettings.js";
 import ColorSettings from "./settingsComponents/ColorSettings.js";
+import GeneralSettings from "./settingsComponents/GeneralSettings.jsx";
 
 export default function SettingsScreen() {
   const [activeTab, setActiveTab] = useState("clock");
@@ -14,7 +16,13 @@ export default function SettingsScreen() {
         style={styles.mainContent}
         contentContainerStyle={styles.mainContentContainer}
       >
-        {activeTab === "clock" ? <ClockSettings /> : <ColorSettings />}
+        {activeTab === "clock" ? (
+          <ClockSettings />
+        ) : activeTab === "colors" ? (
+          <ColorSettings />
+        ) : activeTab === "general" ? (
+          <GeneralSettings />
+        ) : null}
       </ScrollView>
     </View>
   );

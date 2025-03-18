@@ -3,7 +3,7 @@
     "name": "Standby-clock",
     "slug": "Standby-clock",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -36,6 +36,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "0df30a4d-4b1c-4805-8503-e8b3d2d3f20b"
+      }
     }
   }
 }

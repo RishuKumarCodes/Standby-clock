@@ -1,11 +1,17 @@
 import React from "react";
 import { Stack } from "expo-router";
-import { ClockStyleProvider } from "./context/ClockStyleContext";
+import { GridSettingsProvider } from "./context/GridSettingsContext.js";
+import { ScreenSettingsProvider } from "./context/ScreenSettingsContext.js";
+import { ClockStyleProvider } from "./context/ClockStyleContext.js";
 
 export default function Layout() {
   return (
-    <ClockStyleProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-    </ClockStyleProvider>
+    <GridSettingsProvider>
+      <ScreenSettingsProvider>
+        <ClockStyleProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+        </ClockStyleProvider>
+      </ScreenSettingsProvider>
+    </GridSettingsProvider>
   );
 }

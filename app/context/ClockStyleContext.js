@@ -4,35 +4,48 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ClockStyleContext = createContext();
 
 export function ClockStyleProvider({ children }) {
-  const [clockStyle, setClockStyle] = useState("digital");
-  const [userColor, setUserColor] = useState("#FFFFFF");
+  const [clockStyle, setClockStyle] = useState(null);
+  const [userColor, setUserColor] = useState(null);
+  const [selectedTheme, setSelectedTheme] = useState(null);
 
-  // Load saved theme & color on app start
+  // Load saved preferences on app start
   useEffect(() => {
     (async () => {
       try {
         const savedStyle = await AsyncStorage.getItem("clockStyle");
         const savedColor = await AsyncStorage.getItem("userColor");
-        if (savedStyle) setClockStyle(savedStyle);
-        if (savedColor) setUserColor(savedColor);
+        const savedTheme = await AsyncStorage.getItem("selectedTheme");
+
+        if (savedStyle !== null) setClockStyle(savedStyle);
+        if (savedColor !== null) setUserColor(savedColor);
+        if (savedTheme !== null) setSelectedTheme(savedTheme);
       } catch (err) {
-        console.warn("Error loading saved style/color:", err);
+        console.warn("Error loading saved preferences:", err);
       }
     })();
   }, []);
 
+  // Save settings when they change
   useEffect(() => {
-    AsyncStorage.setItem("clockStyle", clockStyle).catch(console.warn);
+    if (clockStyle !== null) {
+      AsyncStorage.setItem("clockStyle", clockStyle).catch(console.warn);
+    }
   }, [clockStyle]);
 
   useEffect(() => {
-    AsyncStorage.setItem("userColor", userColor).catch(console.warn);
+    if (userColor !== null) {
+      AsyncStorage.setItem("userColor", userColor).catch(console.warn);
+    }
   }, [userColor]);
 
+  useEffect(() => {
+    if (selectedTheme !== null) {
+      AsyncStorage.setItem("selectedTheme", selectedTheme).catch(console.warn);
+    }
+  }, [selectedTheme]);
+
   return (
-    <ClockStyleContext.Provider
-      value={{ clockStyle, setClockStyle, userColor, setUserColor }}
-    >
+    <ClockStyleContext.Provider value={{ clockStyle, setClockStyle, userColor, setUserColor, selectedTheme, setSelectedTheme }}>
       {children}
     </ClockStyleContext.Provider>
   );

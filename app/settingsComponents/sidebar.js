@@ -1,3 +1,4 @@
+// Sidebar.jsx (updated)
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -38,6 +39,15 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       >
         <Text style={styles.sidebarItemText}>Colors</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.sidebarItem,
+          activeTab === "general" && styles.sidebarItemActive,
+        ]}
+        onPress={() => setActiveTab("general")}
+      >
+        <Text style={styles.sidebarItemText}>General</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -55,7 +65,12 @@ const styles = {
     marginBottom: 30,
   },
   sidebarHeaderText: { color: "#fff", fontSize: 20 },
-  sidebarItem: { paddingVertical: 15, paddingHorizontal: 25, borderRadius: 50 },
+  sidebarItem: {
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 50,
+    marginBottom: 10,
+  },
   sidebarItemActive: { backgroundColor: "#1f1f1f" },
   sidebarItemText: { color: "#fff", fontSize: 16 },
 };
