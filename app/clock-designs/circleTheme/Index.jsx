@@ -1,10 +1,15 @@
+// app/clock-designs/circleTheme/index.jsx
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { View, StyleSheet } from "react-native";
+
+// Import components from our "_components" folder
 import AnalogClock from "./_components/AnalogClock";
 import PillDateDisplay from "./_components/PillDateDisplay";
 import CircleTimeDigit from "./_components/CircleTimeDigit";
 import BatteryCircle from "./_components/BatteryCircle";
-import { useBatteryInfo } from "./_helpers.jsx";
+
+// Import battery hook from our "_helpers" file
+import { useBatteryInfo } from "./_helpers";
 
 export default function CircleTheme({ color = "#000", previewMode = false }) {
   const [time, setTime] = useState(new Date());
@@ -66,6 +71,7 @@ export default function CircleTheme({ color = "#000", previewMode = false }) {
           <AnalogClock time={time} bgColor={color} size={leftSize} />
         </View>
       </View>
+
       {/* Right half */}
       <View style={styles.rightContainer} onLayout={onLayoutRight}>
         <View style={rightContainerStyle}>
@@ -87,6 +93,7 @@ export default function CircleTheme({ color = "#000", previewMode = false }) {
               margin={elementMargin}
             />
           </View>
+
           {/* Bottom half: Two circles side by side */}
           <View
             style={{

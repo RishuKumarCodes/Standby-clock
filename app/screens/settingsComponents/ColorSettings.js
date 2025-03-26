@@ -7,7 +7,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { useClockStyle } from "../context/ClockStyleContext";
+import { useClockStyle } from "../../context/ClockStyleContext";
 
 const colorGroups = [
   {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   card: {
-    backgroundColor: "#222",
+    backgroundColor: "#17211e",
     padding: 25,
     paddingHorizontal: 20,
     borderRadius: 15,

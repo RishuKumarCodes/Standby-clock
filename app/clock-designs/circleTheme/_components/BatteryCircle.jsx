@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Rect, Path } from "react-native-svg";
-import { hexToRgba } from "../helpers";
+import { hexToRgba } from "../_helpers";
 
 const BatteryIcon = ({ percentage, width = 10, height = 20 }) => {
   const strokeWidth = 2;

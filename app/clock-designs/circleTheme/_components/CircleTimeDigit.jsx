@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
-import { hexToRgba, pad } from "../helpers";
+import { hexToRgba, pad } from "../_helpers";
 
 const DefaultClockIcon = ({ width = 30, height = 30 }) => (
   <Svg width={width} height={height} viewBox="0 0 24 24">

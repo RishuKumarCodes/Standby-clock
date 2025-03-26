@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import * as Battery from "expo-battery";
 
 export const hexToRgba = (hex, opacity, intensity = 0.8) => {

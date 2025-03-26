@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, StyleSheet, Switch, StatusBar } from "react-native";
 import Slider from "@react-native-community/slider";
-import { useGridSettings } from "../context/GridSettingsContext.js";
-import { useScreenSettings } from "../context/ScreenSettingsContext.js";
+import { useGridSettings } from "../../context/GridSettingsContext.js";
+import { useScreenSettings } from "../../context/ScreenSettingsContext.js";
 import * as NavigationBar from "expo-navigation-bar";
 
 const OptimizedSlider = React.memo(({ value, onValueChange, onSlidingComplete }) => {

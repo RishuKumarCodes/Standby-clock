@@ -1,8 +1,15 @@
 import React, { useMemo, memo } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { hexToRgba } from "../helpers";
+import { hexToRgba } from "../_helpers";
 
-const PillDateDisplay = ({ time, bgColor, width, height, previewMode, margin }) => {
+const PillDateDisplay = ({
+  time,
+  bgColor,
+  width,
+  height,
+  previewMode,
+  margin,
+}) => {
   const dayName = time.toLocaleDateString("en-US", { weekday: "long" });
   const day = time.getDate();
   const month = time.toLocaleString("en-US", { month: "short" });
@@ -53,20 +60,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(
-  PillDateDisplay,
-  (prevProps, nextProps) => {
-    const prevTime = prevProps.time;
-    const nextTime = nextProps.time;
-    return (
-      prevTime.getDate() === nextTime.getDate() &&
-      prevTime.getMonth() === nextTime.getMonth() &&
-      prevTime.getFullYear() === nextTime.getFullYear() &&
-      prevProps.bgColor === nextProps.bgColor &&
-      prevProps.previewMode === nextProps.previewMode &&
-      prevProps.width === nextProps.width &&
-      prevProps.height === nextProps.height &&
-      prevProps.margin === nextProps.margin
-    );
-  }
-);
+export default memo(PillDateDisplay, (prevProps, nextProps) => {
+  const prevTime = prevProps.time;
+  const nextTime = nextProps.time;
+  return (
+    prevTime.getDate() === nextTime.getDate() &&
+    prevTime.getMonth() === nextTime.getMonth() &&
+    prevTime.getFullYear() === nextTime.getFullYear() &&
+    prevProps.bgColor === nextProps.bgColor &&
+    prevProps.previewMode === nextProps.previewMode &&
+    prevProps.width === nextProps.width &&
+    prevProps.height === nextProps.height &&
+    prevProps.margin === nextProps.margin
+  );
+});

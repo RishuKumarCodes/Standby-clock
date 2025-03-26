@@ -1,6 +1,6 @@
 import React, { useMemo, memo } from "react";
 import Svg, { Circle, Line } from "react-native-svg";
-import { hexToRgba } from "../helpers";
+import { hexToRgba } from "../_helpers";
 
 const AnalogClock = ({ time, bgColor, size }) => {
   const hours = time.getHours();

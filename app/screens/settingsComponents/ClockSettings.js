@@ -1,27 +1,27 @@
 import React, { useEffect } from "react";
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useClockStyle } from "../context/ClockStyleContext";
+import { useClockStyle } from "../../context/ClockStyleContext.js";
+import { H1Txt } from "../../components/CustomText.jsx";
 
-import MinimalBold from "../clock-designs/MinimalBold";
-import MinimalThin from "../clock-designs/MinimalThin";
-import AnalogClock from "../clock-designs/AnalogClock";
-import weatherBattery from "../clock-designs/weatherBattery/WeatherBattery.jsx";
-import NeonClock from "../clock-designs/NeonClock";
-import SegmentClock from "../clock-designs/SegmentClock";
-import CircleTheme from "../clock-designs/circleTheme/CircleTheme.jsx";
+import MinimalBold from "../../clock-designs/MinimalBold";
+import MinimalThin from "../../clock-designs/MinimalThin";
+import AnalogClock from "../../clock-designs/AnalogClock";
+import weatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
+import NeonClock from "../../clock-designs/NeonClock";
+import SegmentClock from "../../clock-designs/SegmentClock";
+import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";
 
 const ClockSettings = () => {
   const { clockStyle, setClockStyle, userColor, setUserColor } =
     useClockStyle();
 
-  // ✅ Fetch the saved color when the component mounts
   useEffect(() => {
     const loadColor = async () => {
       try {
         const savedColor = await AsyncStorage.getItem("clockColor");
         if (savedColor) {
-          setUserColor(savedColor); // Set the color in the context
+          setUserColor(savedColor);
         }
       } catch (error) {
         console.error("Error loading saved color:", error);
@@ -32,18 +32,18 @@ const ClockSettings = () => {
   }, []);
 
   const clockComponents = {
-    "Minimal bold": MinimalBold,
-    "Minimal focus": MinimalThin,
-    "Analog & Calendar": AnalogClock,
+    MinimalBold: MinimalBold,
+    MinimalThin: MinimalThin,
+    AnalogClock: AnalogClock,
     weatherBattery: weatherBattery,
-    "Segment display": SegmentClock,
+    SegmentClock: SegmentClock,
     CircleTheme: CircleTheme,
-    "Neon clock": NeonClock,
+    NeonClock: NeonClock,
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subheading}>Select Clock Style:</Text>
+      <H1Txt style={styles.subheading}>Select Clock Style:</H1Txt>
       <View style={styles.styleOptions}>
         {Object.keys(clockComponents).map((styleName) => {
           const PreviewComponent = clockComponents[styleName];
@@ -57,7 +57,6 @@ const ClockSettings = () => {
               onPress={() => setClockStyle(styleName)}
             >
               <View style={styles.previewContainer}>
-                {/* ✅ Pass the saved color */}
                 <PreviewComponent
                   previewMode={true}
                   color={userColor || "#9ac78f"}
@@ -73,16 +72,15 @@ const ClockSettings = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    marginTop: 40,
     paddingHorizontal: 5,
     backgroundColor: "#000",
     flex: 1,
   },
   subheading: {
     color: "#fff",
-    paddingBottom: 10,
-    fontSize: 18,
-    marginBottom: 10,
+    paddingBottom: 20,
+    fontSize: 20,
   },
   styleOptions: {
     flexDirection: "row",
@@ -91,16 +89,17 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   styleOption: {
-    backgroundColor: "#1a1a1a",
-    borderRadius: 10,
+    backgroundColor: "#141a18",
+    borderRadius: 20,
     width: "47.6%",
-    height: 150,
+    aspectRatio: 19.5 / 9,
     alignItems: "center",
     justifyContent: "center",
   },
+
   selectedOption: {
-    borderColor: "#fff",
-    borderWidth: 2,
+    borderColor: "#E6F904",
+    borderWidth: 3.4,
   },
   previewContainer: {
     width: "100%",

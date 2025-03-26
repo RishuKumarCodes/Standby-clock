@@ -37,6 +37,7 @@ export default function AlternatingDimOverlay() {
   return (
     <>
       <Animated.View
+        pointerEvents="none"
         style={[
           styles.overlay,
           { opacity: Animated.multiply(fadeAnimA, gridOpacity) },
@@ -59,6 +60,7 @@ export default function AlternatingDimOverlay() {
       </Animated.View>
 
       <Animated.View
+        pointerEvents="none"
         style={[
           styles.overlay,
           { opacity: Animated.multiply(fadeAnimB, gridOpacity) },
