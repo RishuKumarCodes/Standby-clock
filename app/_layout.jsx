@@ -13,6 +13,7 @@ export default function Layout() {
     Font.loadAsync({
       "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
       "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
+      "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
     })
       .then(() => setFontsLoaded(true))
       .catch((err) => console.error("Error loading fonts:", err));

@@ -77,18 +77,19 @@ export default function SettingsScreen({ onClose }) {
         setActiveTab={setActiveTab}
         onClose={handleClose}
       />
-      <ScrollView
-        style={styles.mainContent}
-        contentContainerStyle={styles.mainContentContainer}
-      >
+      <View style={styles.mainContent}>
         {activeTab === "clock" ? (
-          <ClockSettings />
+          <ScrollView contentContainerStyle={styles.mainContentContainer}>
+            <ClockSettings />
+          </ScrollView>
         ) : activeTab === "colors" ? (
           <ColorSettings />
         ) : activeTab === "general" ? (
-          <GeneralSettings />
+          <ScrollView contentContainerStyle={styles.mainContentContainer}>
+            <GeneralSettings />
+          </ScrollView>
         ) : null}
-      </ScrollView>
+      </View>
     </Animated.View>
   );
 }
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal:45,
+    paddingHorizontal: 45,
     flexDirection: "row",
     backgroundColor: "#000", // Adjust as needed
   },

@@ -9,21 +9,30 @@ import {
 } from "react-native";
 import { useClockStyle } from "../../context/ClockStyleContext";
 
+// Import clock components
+import MinimalBold from "../../clock-designs/MinimalBold.jsx";
+import MinimalThin from "../../clock-designs/MinimalThin.jsx";
+import AnalogClock from "../../clock-designs/AnalogClock.jsx";
+import weatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
+import NeonClock from "../../clock-designs/NeonClock.jsx";
+import SegmentClock from "../../clock-designs/SegmentClock.jsx";
+import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";
+import { H1Txt, MdTxt } from "@/app/components/CustomText";
+
+const clockComponents = {
+  MinimalBold,
+  MinimalThin,
+  AnalogClock,
+  weatherBattery,
+  NeonClock,
+  SegmentClock,
+  CircleTheme,
+};
+
 const colorGroups = [
   {
-    title: "Neutral Colors",
-    colors: [
-      "#FFFFFF",
-      "#FFDAB9",
-      "#E6E6FA",
-      "#C0C0C0",
-      "#808080",
-      "#525252",
-      "#2e2e2e",
-      "#565C6A",
-      "#6B5762",
-      "#002244",
-    ],
+    title: "Neutrals",
+    colors: ["#FFFFFF", "#dedeff", "#FFDAB9", "#737373", "#565C6A", "#6B5762"],
   },
   {
     title: "Pastels",
@@ -33,49 +42,29 @@ const colorGroups = [
       "#B0E0E6",
       "#7AAAF1",
       "#8683FF",
+      "#c78fc0",
       "#E683BD",
       "#FF788C",
       "#FF8D7B",
       "#FFA568",
       "#F8D175",
+      "#b88d33",
     ],
   },
   {
-    title: "Saturated Tones",
-    colors: [
-      "#008080",
-      "#2196F3",
-      "#673AB7",
-      "#E91E63",
-      "#B22222",
-      "#800000",
-      "#c90000",
-      "#0000a8",
-      "#00ad00",
-    ],
+    title: "Saturated",
+    colors: ["#008080", "#673AB7", "#B03052", "#d1482c", "#B22222", "#800000"],
   },
   {
-    title: "Neon & Vibrant",
-    colors: [
-      "#00FF00",
-      "#00FFFF",
-      "#1E90FF",
-      "#8A2BE2",
-      "#FF00FF",
-      "#FF1493",
-      "#FF4500",
-      "#FFD700",
-    ],
+    title: "Neon",
+    colors: ["#00FFFF", "#39FF14", "#FFFF33", "#FF00FF", "#FF0000", "#001eff"],
   },
 ];
 
 export default function ColorSettings() {
-  const { userColor, setUserColor } = useClockStyle();
-
-  // Local state for custom color
+  const { userColor, setUserColor, clockStyle } = useClockStyle();
   const [tempColor, setTempColor] = useState(userColor);
 
-  // Function to generate a random hex color
   const generateRandomColor = () => {
     let color = "#";
     const letters = "0123456789ABCDEF";
@@ -85,182 +74,183 @@ export default function ColorSettings() {
     return color;
   };
 
-  // Apply custom color from text input
   const handleApplyColor = () => {
     setUserColor(tempColor);
   };
 
-  // Handle random color generation
   const handleGenerateRandomColor = () => {
     const randomColor = generateRandomColor();
     setUserColor(randomColor);
     setTempColor(randomColor);
   };
 
+  // Select the saved clock component (fallback to MinimalBold if not found)
+  const PreviewComponent = clockComponents[clockStyle] || MinimalBold;
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.heading}>Choose your favorite color:</Text>
-
-      {/* Cards container */}
-      <View style={styles.cardRow}>
-        {/* Custom color card */}
-        <View style={[styles.card, styles.cardLeft]}>
-          <Text style={styles.cardTitle}>Enter a Custom Color (Hex):</Text>
-          <View style={styles.customSelector}>
-            <TextInput
-              style={styles.input}
-              value={tempColor}
-              onChangeText={setTempColor}
-              placeholder="#FFFFFF"
-              placeholderTextColor="#888"
+    <View style={styles.container}>
+      <View style={styles.sectionsContainer}>
+        {/* Left Section */}
+        <ScrollView style={styles.leftSection}>
+          <H1Txt>Select color:</H1Txt>
+          {/* Clock Preview */}
+          <View style={styles.clockPreviewContainer}>
+            <PreviewComponent
+              previewMode={true}
+              color={userColor || "#9ac78f"}
             />
-            <TouchableOpacity
-              style={styles.applyButton}
-              onPress={handleApplyColor}
-            >
-              <Text style={styles.applyButtonText}>Apply</Text>
-            </TouchableOpacity>
           </View>
-        </View>
+          {/* Custom Color Input */}
+          <View style={[styles.CustomColCard]}>
+            <View style={styles.cardElement}>
+              <TextInput
+                style={styles.input}
+                value={tempColor}
+                onChangeText={setTempColor}
+                placeholder="#FFFFFF"
+                placeholderTextColor="#888"
+              />
+              <TouchableOpacity
+                style={styles.cardBtn}
+                onPress={handleApplyColor}
+              >
+                <Text style={styles.cardBtnText}>Apply</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          {/* Random Color Generator */}
+          <View style={[styles.CustomColCard]}>
+            <View style={styles.cardElement}>
+              <TouchableOpacity
+                style={styles.cardBtn}
+                onPress={handleGenerateRandomColor}
+              >
+                <Text style={styles.cardBtnText}>Randomise</Text>
+              </TouchableOpacity>
+              <View
+                style={[
+                  styles.randomColPreview,
+                  { backgroundColor: userColor || "#000" },
+                ]}
+              />
+            </View>
+          </View>
+        </ScrollView>
 
-        {/* Random color generator card */}
-        <View style={[styles.card, styles.cardRight]}>
-          <Text style={styles.cardTitle}>Generate Random Color</Text>
-          <View style={styles.randomRow}>
-            <View
-              style={[
-                styles.randomPreview,
-                { backgroundColor: userColor || "#000" },
-              ]}
-            />
-            <TouchableOpacity
-              style={styles.generateButton}
-              onPress={handleGenerateRandomColor}
-            >
-              <Text style={styles.generateButtonText}>Randomise</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        {/* Right Section */}
+        <ScrollView
+          style={styles.rightSection}
+          contentContainerStyle={styles.rightContent}
+        >
+          {colorGroups.map((group) => (
+            <View key={group.title} style={styles.groupContainer}>
+              <MdTxt>{group.title}</MdTxt>
+              <View style={styles.colorRow}>
+                {group.colors.map((color) => {
+                  const isSelected =
+                    userColor?.toLowerCase() === color.toLowerCase();
+                  return (
+                    <TouchableOpacity
+                      key={color}
+                      style={[
+                        styles.swatch,
+                        { backgroundColor: color },
+                        isSelected && styles.selectedSwatch,
+                      ]}
+                      onPress={() => {
+                        setUserColor(color);
+                        setTempColor(color);
+                      }}
+                    />
+                  );
+                })}
+              </View>
+            </View>
+          ))}
+        </ScrollView>
       </View>
-
-      {/* Multiple color groups */}
-      {colorGroups.map((group) => (
-        <View key={group.title} style={styles.groupContainer}>
-          <Text style={styles.groupTitle}>{group.title}</Text>
-          <View style={styles.colorRow}>
-            {group.colors.map((color) => {
-              const isSelected =
-                userColor?.toLowerCase() === color.toLowerCase();
-              return (
-                <TouchableOpacity
-                  key={color}
-                  style={[
-                    styles.swatch,
-                    { backgroundColor: color },
-                    isSelected && styles.selectedSwatch,
-                  ]}
-                  onPress={() => {
-                    setUserColor(color);
-                    setTempColor(color);
-                  }}
-                />
-              );
-            })}
-          </View>
-        </View>
-      ))}
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingHorizontal: 5,
+    width: "100%",
+    height: "100%",
+    paddingLeft: 5,
   },
-  heading: {
-    color: "#fff",
-    fontSize: 20,
-    marginBottom: 25,
-  },
-  cardRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 25,
-  },
-  card: {
-    backgroundColor: "#17211e",
-    padding: 25,
-    paddingHorizontal: 20,
-    borderRadius: 15,
+  sectionsContainer: {
     flex: 1,
-  },
-  cardLeft: {
-    marginRight: 10,
-  },
-  cardRight: {
-    marginLeft: 10,
-  },
-  cardTitle: {
-    color: "#fff",
-    fontSize: 14,
-    marginBottom: 15,
-  },
-  customSelector: {
     flexDirection: "row",
+  },
+
+  // -----------------------------------LEFT SIDE --------------------------
+  leftSection: {
+    flex: 1,
+    paddingVertical: 36,
+  },
+  clockPreviewContainer: {
     alignItems: "center",
+    aspectRatio: 19.5 / 9,
+    marginBottom: 10,
+    width: "100%",
+  },
+  CustomColCard: {
+    backgroundColor: "#101413",
+    borderRadius: 50,
+    padding: 7,
+    marginHorizontal: "auto",
+    width: 250,
+    marginBottom: 10,
   },
   input: {
     flex: 1,
-    backgroundColor: "#0f0f0f",
     color: "#fff",
     padding: 10,
-    paddingHorizontal:18,
+    paddingHorizontal: 18,
     borderRadius: 20,
   },
-  applyButton: {
-    marginLeft: 10,
-    backgroundColor: "#363636",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-  },
-  applyButtonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  randomRow: {
+  cardElement: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  generateButton: {
-    backgroundColor: "#363636",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    marginLeft: 10,
+
+  cardBtn: {
+    backgroundColor: "#192823",
+    paddingVertical: 9,
+    paddingHorizontal: 25,
+    borderRadius: 30,
   },
-  generateButtonText: {
+
+  cardBtnText: {
     color: "#fff",
-    fontSize: 16,
+    fontFamily: "Poppins-Regular",
+    fontSize: 14,
   },
-  randomPreview: {
+
+  randomColPreview: {
     width: 40,
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
     borderColor: "#000",
   },
+  // -----------------------------------RIGHT SIDE --------------------------
+
+  rightSection: {
+    flex: 1,
+  },
+  rightContent: {
+    paddingTop: 70,
+    paddingBottom: 40,
+    maxWidth:340,
+  },
+
   groupContainer: {
     marginBottom: 20,
   },
-  groupTitle: {
-    color: "#fff",
-    fontSize: 16,
-    marginBottom: 8,
-    fontWeight: "bold",
-  },
+
   colorRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -272,13 +262,8 @@ const styles = StyleSheet.create({
     margin: 5,
     borderWidth: 2,
     borderColor: "#000",
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 4,
   },
   selectedSwatch: {
-    borderColor: "#fff",
+    borderColor: "#E6F904",
   },
 });

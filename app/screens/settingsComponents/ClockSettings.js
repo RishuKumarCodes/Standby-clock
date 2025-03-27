@@ -43,7 +43,7 @@ const ClockSettings = () => {
 
   return (
     <View style={styles.container}>
-      <H1Txt style={styles.subheading}>Select Clock Style:</H1Txt>
+      <H1Txt style={styles.heading}>Select Clock Style:</H1Txt>
       <View style={styles.styleOptions}>
         {Object.keys(clockComponents).map((styleName) => {
           const PreviewComponent = clockComponents[styleName];
@@ -72,15 +72,13 @@ const ClockSettings = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
-    paddingHorizontal: 5,
+    paddingTop: 35,
+    paddingLeft: 5,
     backgroundColor: "#000",
     flex: 1,
   },
-  subheading: {
-    color: "#fff",
+  heading: {
     paddingBottom: 20,
-    fontSize: 20,
   },
   styleOptions: {
     flexDirection: "row",

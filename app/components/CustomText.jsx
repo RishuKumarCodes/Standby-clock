@@ -5,24 +5,30 @@ const H1Txt = ({ style, ...props }) => {
   return <Text style={[styles.h1, style]} {...props} />;
 };
 
-const mdTxt = ({ style, ...props }) => {
+const MdTxt = ({ style, ...props }) => {
   return <Text style={[styles.md, style]} {...props} />;
 };
 
-const dimTxt = ({ style, ...props }) => {
+const DimTxt = ({ style, ...props }) => {
   return <Text style={[styles.dim, style]} {...props} />;
 };
 
 const styles = StyleSheet.create({
   h1: {
     fontFamily: "Poppins-SemiBold",
+    color: "#fff",
+    fontSize: 20,
   },
   md: {
-    fontFamily: "Poppins-Medium",
+    color: "#e0e0e0",
+    fontSize: 16,
+    fontFamily: "Poppins-Regular",
   },
   dim: {
     fontFamily: "Poppins-Regular",
+    color: "#636363",
+    fontSize: 12,
   },
 });
 
-export { H1Txt, mdTxt, dimTxt };
+export { H1Txt, MdTxt, DimTxt };
