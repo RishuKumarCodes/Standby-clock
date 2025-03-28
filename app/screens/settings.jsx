@@ -11,12 +11,16 @@ import Sidebar from "./settingsComponents/sidebar.js";
 import ClockSettings from "./settingsComponents/ClockSettings.js";
 import ColorSettings from "./settingsComponents/ColorSettings.js";
 import GeneralSettings from "./settingsComponents/GeneralSettings.jsx";
+import WidgetsSettings from "./settingsComponents/WidgetsSettings.jsx";
+import RateUs from "./settingsComponents/RateUs.jsx";
+import { useScreenSettings } from "../context/ScreenSettingsContext"; 
 
 export default function SettingsScreen({ onClose }) {
   const [activeTab, setActiveTab] = useState("clock");
   const [opacityAnim] = useState(new Animated.Value(0));
   const [scaleAnim] = useState(new Animated.Value(1.2));
-
+  const { statusBarVisible } = useScreenSettings();
+  
   useEffect(() => {
     // Animate in settings screen
     Animated.parallel([
@@ -68,6 +72,7 @@ export default function SettingsScreen({ onClose }) {
     <Animated.View
       style={[
         styles.container,
+        { paddingLeft: statusBarVisible ? 10 : 45 },
         { opacity: opacityAnim, transform: [{ scale: scaleAnim }] },
       ]}
     >
@@ -88,6 +93,14 @@ export default function SettingsScreen({ onClose }) {
           <ScrollView contentContainerStyle={styles.mainContentContainer}>
             <GeneralSettings />
           </ScrollView>
+        ) : activeTab === "widgets" ? (
+          <ScrollView contentContainerStyle={styles.mainContentContainer}>
+            <WidgetsSettings />
+          </ScrollView>
+        ) : activeTab === "rateUs" ? (
+          <ScrollView contentContainerStyle={styles.mainContentContainer}>
+            <RateUs />
+          </ScrollView>
         ) : null}
       </View>
     </Animated.View>
@@ -96,14 +109,15 @@ export default function SettingsScreen({ onClose }) {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute", // Render as overlay
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
     paddingHorizontal: 45,
+    paddingLeft:0,
     flexDirection: "row",
-    backgroundColor: "#000", // Adjust as needed
+    backgroundColor: "#000",
   },
   mainContent: {
     flex: 1,

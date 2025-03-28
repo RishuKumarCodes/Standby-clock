@@ -1,4 +1,3 @@
-// GeneralSettings.jsx
 import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
@@ -11,6 +10,7 @@ import {
 import Slider from "@react-native-community/slider";
 import { useGridSettings } from "../../context/GridSettingsContext.js";
 import { useScreenSettings } from "../../context/ScreenSettingsContext.js";
+import { useSleepOverlay } from "../../context/SleepOverlayContext.js";
 import * as NavigationBar from "expo-navigation-bar";
 import { DimTxt, H1Txt, MdTxt } from "@/app/components/CustomText.jsx";
 import ToggleButton from "@/app/components/ToggleButton";
@@ -47,13 +47,13 @@ export default function GeneralSettings() {
     setGridOpacity,
   } = useGridSettings();
 
+  const { sleepMode, setSleepMode } = useSleepOverlay();
+
   const {
     navBarVisible,
     setNavBarVisible,
     statusBarVisible,
     setStatusBarVisible,
-    notificationsEnabled,
-    setNotificationsEnabled,
   } = useScreenSettings();
 
   const [sliderValue, setSliderValue] = useState(gridOpacity);
@@ -101,9 +101,9 @@ export default function GeneralSettings() {
                 </View>
               ) : (
                 <View>
-                  <DimTxt>- Adds grid to prevent display burn-in</DimTxt>
-                  <DimTxt>- Overlay inverts every minute</DimTxt>
-                  <DimTxt>- Only beneficial for OLED displays</DimTxt>
+                  <DimTxt>- Protects against display burn-in.</DimTxt>
+                  <DimTxt>- Adds grid overlay, flips per minute.</DimTxt>
+                  <DimTxt>- Only beneficial for OLED displays.</DimTxt>
                 </View>
               )}
             </View>
@@ -125,18 +125,18 @@ export default function GeneralSettings() {
 
         {/* Right side card */}
         <View style={styles.card}>
+          <View style={[styles.cardRow, styles.marginTop]}>
+            <MdTxt>Show status bar</MdTxt>
+            <ToggleButton
+              value={statusBarVisible}
+              onValueChange={setStatusBarVisible}
+            />
+          </View>
           <View style={styles.cardRow}>
             <MdTxt>Show navigation bar</MdTxt>
             <ToggleButton
               value={navBarVisible}
               onValueChange={setNavBarVisible}
-            />
-          </View>
-          <View style={styles.cardRow}>
-            <MdTxt>Show status bar</MdTxt>
-            <ToggleButton
-              value={statusBarVisible}
-              onValueChange={setStatusBarVisible}
             />
           </View>
         </View>
@@ -145,27 +145,13 @@ export default function GeneralSettings() {
         <View style={styles.card}>
           <View style={styles.cardRow}>
             <View>
-              <MdTxt>Disable Notifications</MdTxt>
-              <DimTxt>- Enables DND while app is active</DimTxt>
-            </View>
-            <ToggleButton
-              value={notificationsEnabled}
-              onValueChange={setNotificationsEnabled}
-            />
-          </View>
-        </View>
-        <View style={styles.card}>
-          <View style={styles.cardRow}>
-            <View>
               <MdTxt>Double tap to sleep</MdTxt>
               <DimTxt>- Turns the display black</DimTxt>
             </View>
-            <ToggleButton
-              value={notificationsEnabled}
-              onValueChange={setNotificationsEnabled}
-            />
+            <ToggleButton value={sleepMode} onValueChange={setSleepMode} />
           </View>
         </View>
+        <View style={styles.card}></View>
       </View>
     </View>
   );
@@ -194,9 +180,11 @@ const styles = StyleSheet.create({
     gap: 15,
     flex: 1,
   },
+  marginTop: {
+    marginTop: 8,
+  },
   cardRow: {
     flexDirection: "row",
-    // alignItems: "center",
     justifyContent: "space-between",
   },
 });

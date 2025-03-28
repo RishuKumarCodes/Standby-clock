@@ -1,8 +1,7 @@
-// components/AlternatingDimOverlay.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
 import Svg, { Defs, Pattern, Rect } from "react-native-svg";
-import { useGridSettings } from "../context/GridSettingsContext"; // Using Grid Context
+import { useGridSettings } from "../context/GridSettingsContext";
 
 export default function AlternatingDimOverlay() {
   const { gridOverlayEnabled, gridOpacity } = useGridSettings();

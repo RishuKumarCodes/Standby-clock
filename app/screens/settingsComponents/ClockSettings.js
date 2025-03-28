@@ -7,7 +7,7 @@ import { H1Txt } from "../../components/CustomText.jsx";
 import MinimalBold from "../../clock-designs/MinimalBold";
 import MinimalThin from "../../clock-designs/MinimalThin";
 import AnalogClock from "../../clock-designs/AnalogClock";
-import weatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
+import WeatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
 import NeonClock from "../../clock-designs/NeonClock";
 import SegmentClock from "../../clock-designs/SegmentClock";
 import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";
@@ -35,7 +35,7 @@ const ClockSettings = () => {
     MinimalBold: MinimalBold,
     MinimalThin: MinimalThin,
     AnalogClock: AnalogClock,
-    weatherBattery: weatherBattery,
+    WeatherBattery: WeatherBattery,
     SegmentClock: SegmentClock,
     CircleTheme: CircleTheme,
     NeonClock: NeonClock,

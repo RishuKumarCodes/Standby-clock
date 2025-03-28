@@ -12,6 +12,9 @@ const MdTxt = ({ style, ...props }) => {
 const DimTxt = ({ style, ...props }) => {
   return <Text style={[styles.dim, style]} {...props} />;
 };
+const H1Light = ({ style, ...props }) => {
+  return <Text style={[styles.h1Light, style]} {...props} />;
+};
 
 const styles = StyleSheet.create({
   h1: {
@@ -29,6 +32,11 @@ const styles = StyleSheet.create({
     color: "#636363",
     fontSize: 12,
   },
+  h1Light: {
+    fontFamily: "Poppins-ExtraLight",
+    color: "#fff",
+    fontSize: 37,
+  },
 });
 
-export { H1Txt, MdTxt, DimTxt };
+export { H1Txt, MdTxt, DimTxt, H1Light };

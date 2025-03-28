@@ -9,11 +9,10 @@ import {
 } from "react-native";
 import { useClockStyle } from "../../context/ClockStyleContext";
 
-// Import clock components
 import MinimalBold from "../../clock-designs/MinimalBold.jsx";
 import MinimalThin from "../../clock-designs/MinimalThin.jsx";
 import AnalogClock from "../../clock-designs/AnalogClock.jsx";
-import weatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
+import WeatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
 import NeonClock from "../../clock-designs/NeonClock.jsx";
 import SegmentClock from "../../clock-designs/SegmentClock.jsx";
 import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";
@@ -23,7 +22,7 @@ const clockComponents = {
   MinimalBold,
   MinimalThin,
   AnalogClock,
-  weatherBattery,
+  WeatherBattery,
   NeonClock,
   SegmentClock,
   CircleTheme,

@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import { GridSettingsProvider } from "./context/GridSettingsContext.js";
 import { ScreenSettingsProvider } from "./context/ScreenSettingsContext.js";
 import { ClockStyleProvider } from "./context/ClockStyleContext.js";
+import { SleepOverlayProvider } from "./context/SleepOverlayContext.js";
 import { View, ActivityIndicator } from "react-native";
 
 export default function Layout() {
@@ -11,9 +12,9 @@ export default function Layout() {
 
   useEffect(() => {
     Font.loadAsync({
+      "Poppins-ExtraLight": require("../assets/fonts/Poppins-ExtraLight.ttf"),
       "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
       "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
-      "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
     })
       .then(() => setFontsLoaded(true))
       .catch((err) => console.error("Error loading fonts:", err));
@@ -37,9 +38,11 @@ export default function Layout() {
   return (
     <GridSettingsProvider>
       <ScreenSettingsProvider>
-        <ClockStyleProvider>
-          <Stack screenOptions={{ headerShown: false }} />
-        </ClockStyleProvider>
+        <SleepOverlayProvider>
+          <ClockStyleProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+          </ClockStyleProvider>
+        </SleepOverlayProvider>
       </ScreenSettingsProvider>
     </GridSettingsProvider>
   );

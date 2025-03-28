@@ -9,7 +9,7 @@ import {
 } from "react-native-gesture-handler";
 import ClockScreen from "./homeTabs/ClockScreen";
 import TimerScreen from "./homeTabs/TimerScreen";
-import SettingsScreen from "./settings"; // Import settings screen
+import SettingsScreen from "./settings";
 
 export default function HomePage() {
   const [scaleAnim] = useState(new Animated.Value(1));
@@ -65,7 +65,10 @@ export default function HomePage() {
   };
 
   const onPinchHandlerStateChange = (event) => {
-    if (event.nativeEvent.state === State.END && event.nativeEvent.scale < 0.8) {
+    if (
+      event.nativeEvent.state === State.END &&
+      event.nativeEvent.scale < 0.8
+    ) {
       animateToSettings();
     }
   };

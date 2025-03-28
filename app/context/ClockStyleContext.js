@@ -1,51 +1,61 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ClockStyleContext = createContext();
 
 export function ClockStyleProvider({ children }) {
-  const [clockStyle, setClockStyle] = useState(null);
-  const [userColor, setUserColor] = useState(null);
-  const [selectedTheme, setSelectedTheme] = useState(null);
+  const [clockStyle, setClockStyle] = useState("MinimalBold");
+  const [userColor, setUserColor] = useState("#fff");
 
-  // Load saved preferences on app start
   useEffect(() => {
     (async () => {
       try {
-        const savedStyle = await AsyncStorage.getItem("clockStyle");
-        const savedColor = await AsyncStorage.getItem("userColor");
-        const savedTheme = await AsyncStorage.getItem("selectedTheme");
-
+        const [savedStyle, savedColor] = await Promise.all([
+          AsyncStorage.getItem("clockStyle"),
+          AsyncStorage.getItem("userColor"),
+        ]);
         if (savedStyle !== null) setClockStyle(savedStyle);
         if (savedColor !== null) setUserColor(savedColor);
-        if (savedTheme !== null) setSelectedTheme(savedTheme);
       } catch (err) {
         console.warn("Error loading saved preferences:", err);
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
 
-  // Save settings when they change
+  // Save clockStyle
   useEffect(() => {
     if (clockStyle !== null) {
-      AsyncStorage.setItem("clockStyle", clockStyle).catch(console.warn);
+      AsyncStorage.setItem("clockStyle", clockStyle).catch((err) =>
+        console.warn("Error saving clockStyle:", err)
+      );
     }
   }, [clockStyle]);
 
+  // Save userColor
   useEffect(() => {
     if (userColor !== null) {
-      AsyncStorage.setItem("userColor", userColor).catch(console.warn);
+      AsyncStorage.setItem("userColor", userColor).catch((err) =>
+        console.warn("Error saving userColor:", err)
+      );
     }
   }, [userColor]);
 
-  useEffect(() => {
-    if (selectedTheme !== null) {
-      AsyncStorage.setItem("selectedTheme", selectedTheme).catch(console.warn);
-    }
-  }, [selectedTheme]);
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({ clockStyle, setClockStyle, userColor, setUserColor }),
+    [clockStyle, userColor]
+  );
 
   return (
-    <ClockStyleContext.Provider value={{ clockStyle, setClockStyle, userColor, setUserColor, selectedTheme, setSelectedTheme }}>
+    <ClockStyleContext.Provider value={contextValue}>
       {children}
     </ClockStyleContext.Provider>
   );
