@@ -104,7 +104,7 @@ export default function WeatherClockContent({
   const isCharging = batteryState === Battery.BatteryState.CHARGING;
 
   // Memoize preview container style
-  const scaleFactor = 0.35;
+  const scaleFactor = 0.5;
   const previewScaleStyle = useMemo(
     () => ({
       transform: [{ scale: scaleFactor }],
@@ -146,7 +146,7 @@ export default function WeatherClockContent({
 
   return (
     <View style={styles.container}>
-      <ClockSection hours12={hours12} minuteStr={minuteStr} color={color} />
+      <ClockSection hours12={hours12} minuteStr={minuteStr} color={color} previewMode/>
       <InfoSection
         dayName={dayName}
         dayNumber={dayNumber}

@@ -1,3 +1,4 @@
+// HomePage.js
 import React, { useState } from "react";
 import { StyleSheet, View, Animated } from "react-native";
 import PagerView from "react-native-pager-view";
@@ -10,16 +11,19 @@ import {
 import ClockScreen from "./homeTabs/ClockScreen";
 import TimerScreen from "./homeTabs/TimerScreen";
 import SettingsScreen from "./settings";
+import { useScreenSettings } from "../context/ScreenSettingsContext";
 
 export default function HomePage() {
   const [scaleAnim] = useState(new Animated.Value(1));
   const [opacityAnim] = useState(new Animated.Value(1));
   const [showSettings, setShowSettings] = useState(false);
+  const { setActiveScreen } = useScreenSettings();
 
-  // Animate home page exit animation when opening settings
   const animateToSettings = () => {
     if (showSettings) return;
     setShowSettings(true);
+    // Indicate that we're now on the settings screen
+    setActiveScreen("settings");
     Animated.parallel([
       Animated.timing(scaleAnim, {
         toValue: 0.8,
@@ -34,7 +38,6 @@ export default function HomePage() {
     ]).start();
   };
 
-  // Animate home page back to normal when closing settings with a callback
   const animateBackHome = (callback) => {
     Animated.parallel([
       Animated.timing(scaleAnim, {
@@ -50,11 +53,11 @@ export default function HomePage() {
     ]).start(callback);
   };
 
-  // onClose for settings overlay
   const handleSettingsClose = () => {
-    // Animate home page reverse animation and remove settings overlay immediately after animation ends
     animateBackHome(() => {
       setShowSettings(false);
+      // Set active screen back to home
+      setActiveScreen("home");
     });
   };
 
@@ -98,7 +101,6 @@ export default function HomePage() {
         </LongPressGestureHandler>
       </PinchGestureHandler>
 
-      {/* Render SettingsScreen overlay when showSettings is true */}
       {showSettings && <SettingsScreen onClose={handleSettingsClose} />}
     </GestureHandlerRootView>
   );

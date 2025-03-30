@@ -1,11 +1,16 @@
+// AlternatingDimOverlay.js
 import React, { useEffect, useState, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
 import Svg, { Defs, Pattern, Rect } from "react-native-svg";
 import { useGridSettings } from "../context/GridSettingsContext";
+import { useScreenSettings } from "../context/ScreenSettingsContext";
 
 export default function AlternatingDimOverlay() {
   const { gridOverlayEnabled, gridOpacity } = useGridSettings();
-  if (!gridOverlayEnabled) return null;
+  const { activeScreen } = useScreenSettings();
+  
+  // Only render on the home screen
+  if (!gridOverlayEnabled || activeScreen !== "home") return null;
 
   const [toggle, setToggle] = useState(true);
   const fadeAnimA = useRef(new Animated.Value(1)).current;

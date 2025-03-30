@@ -64,7 +64,7 @@ const Sidebar = ({ activeTab, setActiveTab, onClose }) => {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[
             styles.sidebarItem,
             activeTab === "widgets" && styles.sidebarItemActive,
@@ -76,7 +76,7 @@ const Sidebar = ({ activeTab, setActiveTab, onClose }) => {
             size={24}
             color={activeTab === "widgets" ? "black" : "white"}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={[
             styles.sidebarItem,

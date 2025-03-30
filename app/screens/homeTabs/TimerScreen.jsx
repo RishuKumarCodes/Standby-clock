@@ -1,22 +1,34 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import TimerComponent from "../../componentsTimerPage/TimerComponent.jsx";
+import TodoComponent from "../../componentsTimerPage/TodoComponent.jsx";
 
-export default function TimerScreen() {
+const TimerScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Timer Screen</Text>
+      <View style={styles.timerSection}>
+        <TimerComponent totalTime={1500} />
+      </View>
+      <View style={styles.todoSection}>
+        <TodoComponent />
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: "row",
   },
-  text: {
-    color: "#fff",
-    fontSize: 24,
+  timerSection: {
+    width: "45%",
+  },
+  todoSection: {
+    flex: 1,
+    paddingLeft: 20,
+    justifyContent: "center",
   },
 });
+
+export default TimerScreen;

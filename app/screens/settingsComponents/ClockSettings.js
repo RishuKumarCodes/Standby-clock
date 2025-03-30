@@ -11,6 +11,7 @@ import WeatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.js
 import NeonClock from "../../clock-designs/NeonClock";
 import SegmentClock from "../../clock-designs/SegmentClock";
 import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";
+import EarthClock from "../../clock-designs/EarthClock/EarthClock.jsx";
 
 const ClockSettings = () => {
   const { clockStyle, setClockStyle, userColor, setUserColor } =
@@ -38,6 +39,7 @@ const ClockSettings = () => {
     WeatherBattery: WeatherBattery,
     SegmentClock: SegmentClock,
     CircleTheme: CircleTheme,
+    EarthClock: EarthClock,
     NeonClock: NeonClock,
   };
 

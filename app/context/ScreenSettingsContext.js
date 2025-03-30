@@ -9,6 +9,7 @@ export const ScreenSettingsProvider = ({ children }) => {
   const [navBarVisible, setNavBarVisible] = useState(false);
   const [statusBarVisible, setStatusBarVisible] = useState(false);
   const [settingsLoaded, setSettingsLoaded] = useState(false);
+  const [activeScreen, setActiveScreen] = useState("home");
 
   // Load settings when the provider mounts
   useEffect(() => {
@@ -76,6 +77,8 @@ export const ScreenSettingsProvider = ({ children }) => {
   return (
     <ScreenSettingsContext.Provider
       value={{
+        activeScreen,
+        setActiveScreen,
         navBarVisible,
         setNavBarVisible,
         statusBarVisible,

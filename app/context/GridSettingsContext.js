@@ -5,7 +5,7 @@ const GridSettingsContext = createContext();
 
 export function GridSettingsProvider({ children }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [gridOverlayEnabled, setGridOverlayEnabled] = useState(true); 
+  const [gridOverlayEnabled, setGridOverlayEnabled] = useState(false); 
   const [gridOpacity, setGridOpacity] = useState(1);
 
   // Load settings from AsyncStorage

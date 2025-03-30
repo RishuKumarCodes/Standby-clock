@@ -1,24 +1,11 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-} from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  useWindowDimensions,
-  TouchableOpacity,
-} from "react-native";
-import Svg, { Path } from "react-native-svg";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useFonts } from "expo-font";
 
-/* ====================================================
-   Helper Functions
-   ==================================================== */
+// Helper function to pad numbers with a leading zero.
 const pad = (num) => (num < 10 ? "0" + num : String(num));
 
+// Formats the time into a 12-hour "hh:mm" format.
 const formatTime = (date) => {
   const hours = date.getHours();
   const hours12 = hours % 12 || 12;
@@ -26,470 +13,154 @@ const formatTime = (date) => {
   return `${pad(hours12)}:${pad(minutes)}`;
 };
 
-const formatCountdown = (seconds) => {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${pad(m)}:${pad(s)}`;
+// Formats the date into "Tuesday 13 June".
+const formatDate = (date) => {
+  const weekdays = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const weekday = weekdays[date.getDay()];
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  return `${weekday} ${day} ${month}`;
 };
 
-/* ====================================================
-   HalfCircleProgress Component (Memoized)
-   ==================================================== */
-const HalfCircleProgress = React.memo(
-  ({ progress, size, strokeWidth, color, backgroundColor }) => {
-    const cx = size / 2;
-    const cy = size / 2;
-    const r = (size - strokeWidth) / 2;
-    const bgPath = `M ${cx + r} ${cy} A ${r} ${r} 0 0 0 ${cx - r} ${cy}`;
-    let progressPath = "";
-
-    if (progress > 0) {
-      const angle = progress * Math.PI;
-      const endX = cx + r * Math.cos(angle);
-      const endY = cy - r * Math.sin(angle);
-      const largeArcFlag = progress > 0.5 ? 1 : 0;
-      progressPath = `M ${
-        cx + r
-      } ${cy} A ${r} ${r} 0 ${largeArcFlag} 0 ${endX} ${endY}`;
-    }
-
-    return (
-      <Svg width={size} height={size} style={{ transform: [{ scaleX: -1 }] }}>
-        <Path
-          d={bgPath}
-          stroke={backgroundColor}
-          strokeWidth={strokeWidth}
-          fill="none"
-        />
-        {progressPath && (
-          <Path
-            d={progressPath}
-            stroke={color}
-            strokeWidth={strokeWidth}
-            fill="none"
-          />
-        )}
-      </Svg>
-    );
-  }
-);
-
-/* ====================================================
-   ClockDisplay Component (Memoized)
-   ==================================================== */
-const ClockDisplay = React.memo(
-  ({
-    isTimerVisible,
-    color,
-    largeClockFontSize,
-    smallClockFontSize,
-    clockTime,
-  }) =>
-    isTimerVisible ? (
-      <Text
-        style={[styles.topLeftClock, { color, fontSize: smallClockFontSize }]}
-      >
-        {clockTime}
-      </Text>
-    ) : (
-      <Text style={[styles.clockText, { color, fontSize: largeClockFontSize }]}>
-        {clockTime}
-      </Text>
-    )
-);
-
-/* ====================================================
-   Main Component: MinimalThin
-   ==================================================== */
-export default function MinimalThin({
-  color = "#32CD32",
-  previewMode = false,
-}) {
-  // Constants & State
-  const DEFAULT_FOCUS = 25 * 60; // 25 minutes
+export default function ClockOnly({ color = "#32CD32" }) {
   const [clockTime, setClockTime] = useState(formatTime(new Date()));
-  const [focusTimeLeft, setFocusTimeLeft] = useState(DEFAULT_FOCUS);
-  const [focusDuration, setFocusDuration] = useState(DEFAULT_FOCUS);
-  const [isFocusRunning, setIsFocusRunning] = useState(false);
-  const [isTimerVisible, setIsTimerVisible] = useState(false);
-  const [focusStart, setFocusStart] = useState(null);
-  const clockTimerRef = useRef(null);
+  const [dateText, setDateText] = useState(formatDate(new Date()));
+  const [parentDimensions, setParentDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  const timerRef = useRef(null);
 
-  // Window dimensions & orientation
-  const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
-  const displayWidth = isLandscape ? width : height;
-  const displayHeight = isLandscape ? height : width;
+  // Load the custom font using expo-font.
+  const [fontsLoaded] = useFonts({
+    Sacramento: require("../../assets/fonts/Sacramento-Regular.ttf"),
+  });
 
-  // Scaling factor for preview mode
-  const scaleFactor = previewMode ? 0.3 : 1;
+  // onLayout callback to get parent's dimensions.
+  const onLayout = (event) => {
+    const { width, height } = event.nativeEvent.layout;
+    setParentDimensions({ width, height });
+  };
 
-  // Computed sizes (scaled in preview mode)
-  const largeClockFontSize = useMemo(
-    () => displayWidth * 0.23 * scaleFactor,
-    [displayWidth, scaleFactor]
-  );
-  const smallClockFontSize = useMemo(
-    () => displayWidth * 0.085 * scaleFactor,
-    [displayWidth, scaleFactor]
-  );
-  const progressSize = useMemo(
-    () => displayWidth * 0.6 * scaleFactor,
-    [displayWidth, scaleFactor]
-  );
-  const strokeWidth = 8;
-  const ICON_SIZE = 30;
-  const ACTION_ICON_SIZE = 40;
+  // Only calculate font sizes if width is available (non-zero)
+  const ampm = parentDimensions.width > 0 ? parentDimensions.width * 0.09 : 1;
+  const clockFontSize =
+    parentDimensions.width > 0 ? parentDimensions.width * 0.19 : 1;
+  const dateFontSize =
+    parentDimensions.width > 0 ? parentDimensions.width * 0.045 : 1;
 
-  /* ----------------------------------------------------
-     Clock Update (Once Per Minute)
-     ---------------------------------------------------- */
   useEffect(() => {
     const updateClock = () => {
       const now = new Date();
       setClockTime(formatTime(now));
+      setDateText(formatDate(now));
       const msToNextMinute =
         (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-      clockTimerRef.current = setTimeout(updateClock, msToNextMinute);
+      timerRef.current = setTimeout(updateClock, msToNextMinute);
     };
+
     updateClock();
+
     return () => {
-      if (clockTimerRef.current) clearTimeout(clockTimerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
   }, []);
 
-  /* ----------------------------------------------------
-     Focus Timer Update (Once Per Second)
-     ---------------------------------------------------- */
-  useEffect(() => {
-    let focusTimerTimeout;
-    const updateFocusTimer = () => {
-      if (isFocusRunning && focusStart) {
-        const now = new Date();
-        const elapsed = Math.floor((now - focusStart) / 1000);
-        const remaining = Math.max(focusDuration - elapsed, 0);
-        setFocusTimeLeft((prev) => (prev !== remaining ? remaining : prev));
-        if (remaining === 0) {
-          setIsFocusRunning(false);
-          return;
-        }
-        const delay = 1000 - now.getMilliseconds();
-        focusTimerTimeout = setTimeout(updateFocusTimer, delay);
-      }
-    };
-    updateFocusTimer();
-    return () => {
-      if (focusTimerTimeout) clearTimeout(focusTimerTimeout);
-    };
-  }, [isFocusRunning, focusStart, focusDuration]);
+  // Don't render inner content until parent's dimensions and fonts are ready.
+  if (!fontsLoaded || parentDimensions.width === 0) {
+    return <View style={styles.outerContainer} onLayout={onLayout} />;
+  }
 
-  /* ----------------------------------------------------
-     Button Callback Functions (No Actions in Preview)
-     ---------------------------------------------------- */
-  const startFocus = useCallback(() => {
-    if (previewMode) return;
-    if (!isTimerVisible) {
-      // Fresh start
-      setIsTimerVisible(true);
-      setFocusDuration(DEFAULT_FOCUS);
-      setFocusTimeLeft(DEFAULT_FOCUS);
-      setFocusStart(Date.now());
-      setIsFocusRunning(true);
-    } else if (!isFocusRunning) {
-      // Resume timer: adjust focusStart to maintain progress
-      const elapsed = focusDuration - focusTimeLeft;
-      setFocusStart(Date.now() - elapsed * 1000);
-      setIsFocusRunning(true);
-    }
-  }, [
-    isTimerVisible,
-    isFocusRunning,
-    focusTimeLeft,
-    focusDuration,
-    previewMode,
-  ]);
+  // Render the date with simulated word spacing.
+  const renderDateWithSpacing = (text) => {
+    const words = text.split(" ");
+    return (
+      <Text style={[styles.dateText, { fontSize: dateFontSize }]}>
+        {words.map((word, index) => (
+          <Text
+            key={index}
+            style={index !== words.length - 1 ? { marginRight: 8 } : {}}
+          >
+            {word}
+            {index !== words.length - 1 ? "  " : ""}
+          </Text>
+        ))}
+      </Text>
+    );
+  };
 
-  const pauseFocus = useCallback(() => {
-    if (previewMode) return;
-    setIsFocusRunning(false);
-  }, [previewMode]);
-
-  const subtractTenMinutes = useCallback(() => {
-    if (previewMode) return;
-    if (isFocusRunning && focusStart) {
-      const elapsed = Math.floor((Date.now() - focusStart) / 1000);
-      let newTotal = focusDuration - 600;
-      newTotal = Math.max(newTotal, Math.max(600, elapsed + 1)); // Ensure valid total
-      const newRemaining = Math.max(newTotal - elapsed, 0);
-      setFocusDuration(newTotal);
-      setFocusTimeLeft(newRemaining);
-      if (newRemaining === 0) setIsFocusRunning(false);
-    } else {
-      setFocusDuration((prev) => Math.max(prev - 600, 600));
-      setFocusTimeLeft((prev) => Math.max(prev - 600, 0));
-    }
-  }, [isFocusRunning, focusStart, focusDuration, previewMode]);
-
-  const addTenMinutes = useCallback(() => {
-    if (previewMode) return;
-    if (isFocusRunning && focusStart) {
-      const elapsed = Math.floor((Date.now() - focusStart) / 1000);
-      const newTotal = focusDuration + 600;
-      const newRemaining = newTotal - elapsed;
-      setFocusDuration(newTotal);
-      setFocusTimeLeft(newRemaining);
-    } else {
-      setFocusDuration((prev) => prev + 600);
-      setFocusTimeLeft((prev) => prev + 600);
-    }
-  }, [isFocusRunning, focusStart, focusDuration, previewMode]);
-
-  const closeTimer = useCallback(() => {
-    if (previewMode) return;
-    setIsFocusRunning(false);
-    setIsTimerVisible(false);
-    setFocusTimeLeft(DEFAULT_FOCUS);
-    setFocusDuration(DEFAULT_FOCUS);
-    setFocusStart(null);
-  }, [previewMode]);
-
-  /* ----------------------------------------------------
-     Compute Progress for the Timer (0 to 1)
-     ---------------------------------------------------- */
-  const progress = useMemo(
-    () => (focusDuration ? 1 - focusTimeLeft / focusDuration : 0),
-    [focusTimeLeft, focusDuration]
-  );
-
-  /* ====================================================
-     Render Component
-     ==================================================== */
   return (
-    <View style={styles.container}>
-      <ClockDisplay
-        isTimerVisible={isTimerVisible}
-        color={color}
-        largeClockFontSize={largeClockFontSize}
-        smallClockFontSize={smallClockFontSize}
-        clockTime={clockTime}
-      />
-
-      {isTimerVisible ? (
-        <View
-          style={[
-            styles.timerContainer,
-            { marginTop: displayHeight * 0.5 * scaleFactor },
-          ]}
-        >
-          <HalfCircleProgress
-            progress={progress}
-            size={progressSize}
-            strokeWidth={strokeWidth}
-            color={color}
-            backgroundColor="#333"
-          />
-
-          <View
-            style={[
-              styles.countdownOverlay,
-              { width: progressSize, height: progressSize },
-            ]}
-          >
-            <View style={styles.innerContent}>
-              <Text
-                style={[
-                  styles.countdownText,
-                  { color, fontSize: displayWidth * 0.1 * scaleFactor },
-                ]}
-              >
-                {formatCountdown(focusTimeLeft)}
-              </Text>
-
-              <View style={styles.controlsRow}>
-                <TouchableOpacity
-                  disabled={previewMode}
-                  pointerEvents={previewMode ? "none" : "auto"}
-                  onPress={!previewMode ? subtractTenMinutes : null}
-                  style={styles.iconButton}
-                >
-                  <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 16 16">
-                    <Path
-                      d="M2 8 L14 8"
-                      stroke="#aaa"
-                      strokeWidth="1"
-                      fill="none"
-                    />
-                  </Svg>
-                </TouchableOpacity>
-
-                {isFocusRunning ? (
-                  <TouchableOpacity
-                    disabled={previewMode}
-                    pointerEvents={previewMode ? "none" : "auto"}
-                    onPress={!previewMode ? pauseFocus : null}
-                    style={styles.actionButton}
-                  >
-                    <Svg
-                      width={ACTION_ICON_SIZE}
-                      height={ACTION_ICON_SIZE}
-                      viewBox="0 0 16 16"
-                    >
-                      <Path
-                        d="M5 3 L5 13 M11 3 L11 13"
-                        fill="none"
-                        stroke="#ccc"
-                        strokeWidth="1"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                      />
-                    </Svg>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    disabled={previewMode}
-                    pointerEvents={previewMode ? "none" : "auto"}
-                    onPress={!previewMode ? startFocus : null}
-                    style={styles.actionButton}
-                  >
-                    <Svg
-                      width={ACTION_ICON_SIZE}
-                      height={ACTION_ICON_SIZE}
-                      viewBox="0 0 16 16"
-                    >
-                      <Path
-                        d="M5 3 L12 8 L5 13 Z"
-                        fill="none"
-                        stroke="#ccc"
-                        strokeWidth="1"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                      />
-                    </Svg>
-                  </TouchableOpacity>
-                )}
-
-                <TouchableOpacity
-                  disabled={previewMode}
-                  pointerEvents={previewMode ? "none" : "auto"}
-                  onPress={!previewMode ? addTenMinutes : null}
-                  style={styles.iconButton}
-                >
-                  <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 16 16">
-                    <Path
-                      d="M8 2 L8 14 M2 8 L14 8"
-                      stroke="#aaa"
-                      strokeWidth="1"
-                      fill="none"
-                    />
-                  </Svg>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
+    <View style={styles.outerContainer} onLayout={onLayout}>
+      <View style={styles.container}>
+        <View style={styles.clockTextContainer}>
+          <Text style={[styles.ampm, { color, fontSize: ampm }]}>am</Text>
+          <Text style={[styles.clockText, { color, fontSize: clockFontSize }]}>
+            {clockTime}
+          </Text>
         </View>
-      ) : (
-        <TouchableOpacity
-          disabled={previewMode}
-          pointerEvents={previewMode ? "none" : "auto"}
-          onPress={!previewMode ? startFocus : null}
-          style={styles.startButton}
-        >
-          <Text style={[styles.startButtonText, { color }]}>Focus</Text>
-        </TouchableOpacity>
-      )}
 
-      {isTimerVisible && (
-        <View style={styles.exitButtonContainer}>
-          <TouchableOpacity
-            disabled={previewMode}
-            pointerEvents={previewMode ? "none" : "auto"}
-            onPress={!previewMode ? closeTimer : null}
-            style={styles.exitButton}
-          >
-            <Svg width={20} height={20} viewBox="0 0 16 16">
-              <Path
-                d="M10 3 L5 8 L10 13"
-                fill="none"
-                stroke={color}
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </Svg>
-          </TouchableOpacity>
-        </View>
-      )}
+        {renderDateWithSpacing(dateText)}
+      </View>
     </View>
   );
 }
 
-/* ====================================================
-   Styles
-   ==================================================== */
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
+  },
+  clockTextContainer: {
+    textAlign: "center",
+    fontFamily: "Sacramento",
+    position: "absolute",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    right: "8%",
+    bottom: 0,
+  },
+  ampm: {
+    fontFamily: "Sacramento",
+    marginBottom: "4.2%",
+    opacity: 0.95,
   },
   clockText: {
-    fontWeight: "100",
+    fontFamily: "Sacramento",
+  },
+  dateText: {
+    position: "absolute",
+    top: "12%",
+    left: "6.5%",
     textAlign: "center",
-  },
-  topLeftClock: {
-    position: "absolute",
-    top: 10,
-    left: 10,
-    fontWeight: "100",
-  },
-  startButton: {
-    marginTop: 20,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "#333",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  startButtonText: {
-    fontSize: 16,
-  },
-  timerContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  countdownOverlay: {
-    position: "absolute",
-    bottom: "-15%",
-    left: 0,
-  },
-  innerContent: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  countdownText: {
-    fontWeight: "100",
-  },
-  controlsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 35,
-    marginTop: 20,
-  },
-  iconButton: {
-    padding: 8,
-  },
-  actionButton: {},
-  exitButtonContainer: {
-    position: "absolute",
-    bottom: 20,
-    left: 35,
-  },
-  exitButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    backgroundColor: "rgb(17, 17, 17)",
+    fontFamily: "Sacramento",
+    color: "#aaa",
   },
 });

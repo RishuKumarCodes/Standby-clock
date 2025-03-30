@@ -1,13 +1,32 @@
 import React, { memo } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 
-const ClockSection = ({ hours12, minuteStr, color }) => (
-  <View style={styles.clockSection}>
-    <Text style={[styles.bigTime, { color }]}>
-      {hours12}:{minuteStr}
-    </Text>
-  </View>
-);
+const { width } = Dimensions.get("window");
+
+const ClockSection = ({ hours12, minuteStr, color, sizePercentage = 0.42 , previewMode}) => {
+  // Compute font size as a percentage of the screen width.
+  const computedFontSize = width * sizePercentage;
+
+  // Increase lineHeight slightly to prevent text cropping
+  const computedLineHeight = computedFontSize * 1.26;
+
+  return (
+    <View style={styles.clockSection}>
+      <Text
+        style={[
+          styles.bigTime,
+          {
+            color,
+            fontSize: previewMode ? computedFontSize : computedFontSize * 0.6,
+            lineHeight: previewMode ? computedLineHeight : computedLineHeight * 0.6,
+          },
+        ]}
+      >
+        {hours12}:{minuteStr}
+      </Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   clockSection: {
@@ -15,12 +34,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   bigTime: {
-    fontSize: 290,
     fontFamily: "Oswald-Regular",
+    // backgroundColor: "gray",
     letterSpacing: -8,
     textAlign: "center",
     includeFontPadding: false,
-    lineHeight: 400,
   },
 });
 

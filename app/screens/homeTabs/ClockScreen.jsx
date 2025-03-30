@@ -13,6 +13,9 @@ const SegmentClock = lazy(() => import("../../clock-designs/SegmentClock.jsx"));
 const CircleTheme = lazy(() =>
   import("../../clock-designs/circleTheme/CircleTheme.jsx")
 );
+const EarthClock = lazy(() =>
+  import("../../clock-designs/EarthClock/EarthClock.jsx")
+);
 
 const clockComponents = {
   MinimalBold,
@@ -21,6 +24,7 @@ const clockComponents = {
   WeatherBattery,
   SegmentClock,
   CircleTheme,
+  EarthClock,
   NeonClock,
 };
 

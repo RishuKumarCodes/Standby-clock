@@ -151,7 +151,14 @@ export default function GeneralSettings() {
             <ToggleButton value={sleepMode} onValueChange={setSleepMode} />
           </View>
         </View>
-        <View style={styles.card}></View>
+        <View style={styles.card}>
+          <View style={styles.cardRow}>
+            <View>
+              <MdTxt>Disable notifications </MdTxt>
+              <DimTxt>- Currently unavilable on your device</DimTxt>
+            </View>
+          </View>
+        </View>
       </View>
     </View>
   );

@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  AppState,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions, AppState } from "react-native";
 import Svg, { Line, Circle } from "react-native-svg";
 
 /* ====================================================
@@ -23,15 +17,26 @@ const Clock = React.memo(({ time, size, color }) => {
   const minuteAngle = (360 / 60) * minutes;
   const secondAngle = (360 / 60) * seconds;
 
+  // Define forward and tail lengths for each hand
+  const hourForward = radius * 0.5;
+  const hourTail = radius * -0.07;
+  const minuteForward = radius * 0.77;
+  const minuteTail = radius * -0.07;
+  const secondForward = radius * 0.55;
+  const secondTail = radius * 0.25;
+
   return (
     <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       {/* Clock Ticks */}
       {[...Array(12)].map((_, i) => {
         const angle = (i * 30 * Math.PI) / 180;
-        const x1 = center + Math.sin(angle) * (radius - 20);
-        const y1 = center - Math.cos(angle) * (radius - 20);
+        const x1 = center + Math.sin(angle) * (radius - 32);
+        const y1 = center - Math.cos(angle) * (radius - 32);
         const x2 = center + Math.sin(angle) * radius;
         const y2 = center - Math.cos(angle) * radius;
+
+        // Make 12, 3, 6, 9 thicker and white
+        const isMainTick = i % 3 === 0;
         return (
           <Line
             key={i}
@@ -39,8 +44,8 @@ const Clock = React.memo(({ time, size, color }) => {
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke="#999"
-            strokeWidth="4"
+            stroke={isMainTick ? "#ccc" : "#777"}
+            strokeWidth={isMainTick ? "4" : "2"}
           />
         );
       })}
@@ -48,43 +53,39 @@ const Clock = React.memo(({ time, size, color }) => {
       {/* Hour Hand */}
       <Line
         x1={center}
-        y1={center}
+        y1={center + hourTail}
         x2={center}
-        y2={center - radius * 0.5}
+        y2={center - hourForward}
         stroke={color}
-        strokeWidth="6"
-        strokeLinecap="round"
+        strokeWidth="8"
         transform={`rotate(${hourAngle}, ${center}, ${center})`}
       />
       {/* Minute Hand */}
       <Line
         x1={center}
-        y1={center}
+        y1={center + minuteTail}
         x2={center}
-        y2={center - radius * 0.7}
+        y2={center - minuteForward}
         stroke={color}
         opacity={0.6}
         strokeWidth="4"
-        strokeLinecap="round"
         transform={`rotate(${minuteAngle}, ${center}, ${center})`}
       />
       {/* Second Hand */}
       <Line
         x1={center}
-        y1={center}
+        y1={center + secondTail}
         x2={center}
-        y2={center - radius * 0.9}
+        y2={center - secondForward}
         stroke="#db1f14"
         strokeWidth="2"
-        strokeLinecap="round"
         transform={`rotate(${secondAngle}, ${center}, ${center})`}
       />
       {/* Center Dot */}
-      <Circle cx={center} cy={center} r="6" fill={color} />
+      <Circle cx={center} cy={center} r="5.7" fill="#db1f14" />
     </Svg>
   );
 });
-
 /* ====================================================
    Calendar Component (Memoized)
    ==================================================== */
@@ -94,41 +95,90 @@ const Calendar = React.memo(({ date, calendarSize, color }) => {
   const day = date.getDate();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayIndex = new Date(year, month, 1).getDay();
+  const cellWidth = calendarSize / 7.2;
+  const { width } = Dimensions.get("window");
+  const monthFontSize = width * 0.033;
+  const dayTextFontSize = width * 0.02;
+  const dateFontSize = width * 0.024;
 
   const monthName = date
     .toLocaleString("default", { month: "long" })
     .toUpperCase();
 
+  // Create an array of dates including empty placeholders for days before the first day
+  const totalCells = firstDayIndex + daysInMonth;
+  const dateCells = Array.from({ length: totalCells }, (_, i) => {
+    if (i < firstDayIndex) return null;
+    return i - firstDayIndex + 1;
+  });
+
+  // Split the dateCells into rows of 7
+  const rows = [];
+  for (let i = 0; i < dateCells.length; i += 7) {
+    rows.push(dateCells.slice(i, i + 7));
+  }
+
   return (
     <View style={[styles.calendarContainer, { width: calendarSize }]}>
-      <Text style={[styles.monthText, { color: "#db1f14", marginLeft: 12 }]}>
+      <Text
+        style={[
+          styles.monthText,
+          {
+            color: "#db1f14",
+            marginLeft: 12,
+            marginTop: -10,
+            fontSize: monthFontSize,
+          },
+        ]}
+      >
         {monthName}
       </Text>
-      <View style={styles.calendarGrid}>
+      {/* Weekday Row */}
+      <View style={styles.weekRow}>
         {["S", "M", "T", "W", "T", "F", "S"].map((dayName, index) => (
           <Text
             key={index}
-            style={[styles.dayText, { color: "#fff", opacity: 0.44 }]}
+            style={[
+              styles.dayText,
+              {
+                color: "#fff",
+                opacity: 0.44,
+                width: cellWidth,
+                textAlign: "center",
+                fontSize: dayTextFontSize,
+                marginHorizontal: 4.5,
+              },
+            ]}
           >
             {dayName}
           </Text>
         ))}
-        {Array.from({ length: firstDayIndex }).map((_, i) => (
-          <Text key={`empty-${i}`} style={styles.emptyDate} />
-        ))}
-        {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((d) => (
-          <Text
-            key={d}
-            style={[
-              styles.dateText,
-              { color },
-              d === day && styles.selectedDate,
-            ]}
-          >
-            {d}
-          </Text>
-        ))}
       </View>
+      {/* Dates Grid */}
+      {rows.map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.weekRow}>
+          {row.map((d, index) => (
+            <Text
+              key={index}
+              style={[
+                styles.dateText,
+                {
+                  width: cellWidth,
+                  height: cellWidth,
+                  lineHeight: cellWidth,
+                  marginHorizontal: 4.5,
+                  color,
+                  textAlign: "center",
+                  fontSize: dateFontSize,
+                },
+                d === day && styles.selectedDate,
+              ]}
+            >
+              {d ? d : ""}
+            </Text>
+          ))}
+        </View>
+      ))}
     </View>
   );
 });
@@ -136,11 +186,13 @@ const Calendar = React.memo(({ date, calendarSize, color }) => {
 /* ====================================================
    Main Component: ClockWithCalendar
    ==================================================== */
-export default function ClockWithCalendar({ color = "#FFF", previewMode = false }) {
+export default function ClockWithCalendar({
+  color = "#FFF",
+  previewMode = false,
+}) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const appState = useRef(AppState.currentState);
 
-  // Listen for app state changes to update time when active
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
       if (
@@ -151,7 +203,10 @@ export default function ClockWithCalendar({ color = "#FFF", previewMode = false 
       }
       appState.current = nextAppState;
     };
-    const subscription = AppState.addEventListener("change", handleAppStateChange);
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
     return () => subscription.remove();
   }, []);
 
@@ -167,18 +222,26 @@ export default function ClockWithCalendar({ color = "#FFF", previewMode = false 
 
   const { width } = Dimensions.get("window");
 
-  // Compute sizes based on screen width
   const clockSize = width * 0.36;
-  const calendarSize = width * 0.4;
+  const calendarSize = width * 0.35;
 
-  // If in preview mode, scale down the entire content
-  const scaleFactor = previewMode ? 0.38 : 1;
+  const scaleFactor = previewMode ? 0.37 : 1;
 
   return (
     <View style={styles.outerContainer}>
-      <View style={[styles.container, { transform: [{ scale: scaleFactor }] }]}>
+      <View
+        style={[
+          styles.container,
+          { transform: [{ scale: scaleFactor }] },
+          previewMode && { gap: 40 },
+        ]}
+      >
         <Clock time={currentTime} size={clockSize} color={color} />
-        <Calendar date={currentTime} calendarSize={calendarSize} color={color} />
+        <Calendar
+          date={currentTime}
+          calendarSize={calendarSize}
+          color={color}
+        />
       </View>
     </View>
   );
@@ -189,7 +252,6 @@ export default function ClockWithCalendar({ color = "#FFF", previewMode = false 
    ==================================================== */
 const styles = StyleSheet.create({
   outerContainer: {
-    // Center the scaled component in its parent
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -197,6 +259,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-evenly",
+    paddingRight: "6%",
+    paddingLeft: "3%",
     alignItems: "center",
     width: "100%",
   },
@@ -204,45 +268,34 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   monthText: {
-    fontSize: 26,
-    fontWeight: "bold",
+    fontFamily: "Poppins-SemiBold",
   },
-  calendarGrid: {
+  weekRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    width: "100%",
-    justifyContent: "flex-start",
-    marginTop: 5,
   },
   dayText: {
-    fontSize: 18,
     fontWeight: "bold",
     width: 40,
     textAlign: "center",
     marginVertical: 0.5,
-    margin: 3,
+    margin: 2,
   },
   dateText: {
-    fontSize: 18,
-    width: 40,
-    height: 40,
-    textAlign: "center",
-    textAlignVertical: "center",
-    lineHeight: 40,
-    marginVertical: 0.5,
-    margin: 3,
+    fontFamily: "Poppins-Regular",
+    marginVertical: 0,
+    margin: 2,
   },
   selectedDate: {
     backgroundColor: "#db1f14",
+    fontFamily: "Poppins-SemiBold",
+    paddingTop: 2,
     color: "white",
-    borderRadius: 20,
+    borderRadius: 30,
     overflow: "hidden",
-    paddingHorizontal: 8,
-    fontWeight: "bold",
   },
   emptyDate: {
     width: 40,
-    marginVertical: 0.5,
-    margin: 3,
+    marginVertical: 0,
+    margin: 2,
   },
 });

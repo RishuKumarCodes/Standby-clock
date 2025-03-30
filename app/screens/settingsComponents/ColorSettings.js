@@ -16,6 +16,8 @@ import WeatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.js
 import NeonClock from "../../clock-designs/NeonClock.jsx";
 import SegmentClock from "../../clock-designs/SegmentClock.jsx";
 import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";
+import EarthClock from "../../clock-designs/EarthClock/EarthClock.jsx";
+
 import { H1Txt, MdTxt } from "@/app/components/CustomText";
 
 const clockComponents = {
@@ -24,6 +26,7 @@ const clockComponents = {
   AnalogClock,
   WeatherBattery,
   NeonClock,
+  EarthClock,
   SegmentClock,
   CircleTheme,
 };
