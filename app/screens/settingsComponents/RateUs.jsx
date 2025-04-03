@@ -26,7 +26,7 @@ const RateUs = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.Container}>
       <H1Light style={styles.title}>
         We hope you're enoying our NO-ads experience.
       </H1Light>
@@ -69,11 +69,9 @@ const RateUs = () => {
 export default RateUs;
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
+  Container: {
     paddingTop: screenHeight * 0.25,
     paddingBottom: 40,
-    justifyContent: "space-around",
     alignItems: "center",
   },
   content: {

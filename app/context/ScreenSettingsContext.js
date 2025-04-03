@@ -11,7 +11,6 @@ export const ScreenSettingsProvider = ({ children }) => {
   const [settingsLoaded, setSettingsLoaded] = useState(false);
   const [activeScreen, setActiveScreen] = useState("home");
 
-  // Load settings when the provider mounts
   useEffect(() => {
     const loadSettings = async () => {
       try {
@@ -34,7 +33,7 @@ export const ScreenSettingsProvider = ({ children }) => {
     loadSettings();
   }, []);
 
-  // Save navBarVisible changes and update NavigationBar once settings are loaded
+  // Save navBarVisible
   useEffect(() => {
     const saveNavBarSetting = async () => {
       try {
@@ -51,7 +50,7 @@ export const ScreenSettingsProvider = ({ children }) => {
     }
   }, [navBarVisible, settingsLoaded]);
 
-  // Save statusBarVisible changes once settings are loaded
+  // Save statusBarVisible
   useEffect(() => {
     const saveStatusBarSetting = async () => {
       try {
@@ -69,7 +68,6 @@ export const ScreenSettingsProvider = ({ children }) => {
     }
   }, [statusBarVisible, settingsLoaded]);
 
-  // Optionally, render nothing until the settings are loaded
   if (!settingsLoaded) {
     return null;
   }
@@ -92,7 +90,6 @@ export const ScreenSettingsProvider = ({ children }) => {
 
 export const useScreenSettings = () => useContext(ScreenSettingsContext);
 
-// A component to render the status bar based on the current setting
 export const ScreenSettings = () => {
   const { statusBarVisible } = useScreenSettings();
   return <StatusBar hidden={!statusBarVisible} style="light" />;

@@ -8,7 +8,7 @@ const AnalogClock = lazy(() => import("../../clock-designs/AnalogClock.jsx"));
 const WeatherBattery = lazy(() =>
   import("../../clock-designs/weatherBattery/WeatherBattery.jsx")
 );
-const NeonClock = lazy(() => import("../../clock-designs/NeonClock.jsx"));
+const WindowsClock = lazy(() => import("../../clock-designs/WindowsClock.jsx"));
 const SegmentClock = lazy(() => import("../../clock-designs/SegmentClock.jsx"));
 const CircleTheme = lazy(() =>
   import("../../clock-designs/circleTheme/CircleTheme.jsx")
@@ -25,7 +25,7 @@ const clockComponents = {
   SegmentClock,
   CircleTheme,
   EarthClock,
-  NeonClock,
+  WindowsClock,
 };
 
 export default function ClockScreen() {

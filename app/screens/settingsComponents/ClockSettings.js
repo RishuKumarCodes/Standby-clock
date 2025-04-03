@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
+import { View, Pressable, StyleSheet } from "react-native";
 import { useClockStyle } from "../../context/ClockStyleContext.js";
 import { H1Txt } from "../../components/CustomText.jsx";
 
@@ -8,29 +7,14 @@ import MinimalBold from "../../clock-designs/MinimalBold";
 import MinimalThin from "../../clock-designs/MinimalThin";
 import AnalogClock from "../../clock-designs/AnalogClock";
 import WeatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
-import NeonClock from "../../clock-designs/NeonClock";
+import WindowsClock from "../../clock-designs/WindowsClock.jsx";
 import SegmentClock from "../../clock-designs/SegmentClock";
 import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";
 import EarthClock from "../../clock-designs/EarthClock/EarthClock.jsx";
+import { ScrollView } from "react-native-gesture-handler";
 
 const ClockSettings = () => {
-  const { clockStyle, setClockStyle, userColor, setUserColor } =
-    useClockStyle();
-
-  useEffect(() => {
-    const loadColor = async () => {
-      try {
-        const savedColor = await AsyncStorage.getItem("clockColor");
-        if (savedColor) {
-          setUserColor(savedColor);
-        }
-      } catch (error) {
-        console.error("Error loading saved color:", error);
-      }
-    };
-
-    loadColor();
-  }, []);
+  const { clockStyle, setClockStyle, userColor } = useClockStyle();
 
   const clockComponents = {
     MinimalBold: MinimalBold,
@@ -40,41 +24,43 @@ const ClockSettings = () => {
     SegmentClock: SegmentClock,
     CircleTheme: CircleTheme,
     EarthClock: EarthClock,
-    NeonClock: NeonClock,
+    WindowsClock: WindowsClock,
   };
 
   return (
-    <View style={styles.container}>
-      <H1Txt style={styles.heading}>Select Clock Style:</H1Txt>
-      <View style={styles.styleOptions}>
-        {Object.keys(clockComponents).map((styleName) => {
-          const PreviewComponent = clockComponents[styleName];
-          return (
-            <TouchableOpacity
-              key={styleName}
-              style={[
-                styles.styleOption,
-                clockStyle === styleName && styles.selectedOption,
-              ]}
-              onPress={() => setClockStyle(styleName)}
-            >
-              <View style={styles.previewContainer}>
-                <PreviewComponent
-                  previewMode={true}
-                  color={userColor || "#9ac78f"}
-                />
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+    <ScrollView>
+      <View style={styles.container}>
+        <H1Txt style={styles.heading}>Select Clock Style:</H1Txt>
+        <View style={styles.styleOptions}>
+          {Object.keys(clockComponents).map((styleName) => {
+            const PreviewComponent = clockComponents[styleName];
+            return (
+              <Pressable
+                key={styleName}
+                style={[
+                  styles.styleOption,
+                  clockStyle === styleName && styles.selectedOption,
+                ]}
+                onPress={() => setClockStyle(styleName)}
+              >
+                <View style={styles.previewContainer} pointerEvents="none">
+                  <PreviewComponent
+                    previewMode={true}
+                    color={userColor || "#fff"}
+                  />
+                </View>
+              </Pressable>
+            );
+          })}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 35,
+    paddingVertical: 35,
     paddingLeft: 5,
     backgroundColor: "#000",
     flex: 1,

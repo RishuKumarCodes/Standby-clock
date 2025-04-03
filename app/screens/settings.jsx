@@ -1,107 +1,102 @@
-import React, { useState, useEffect } from "react";
-import {
-  Animated,
-  View,
-  ScrollView,
-  StyleSheet,
-  Easing,
-  BackHandler,
-} from "react-native";
+import React, { useEffect, useCallback, useState, useMemo } from "react";
+import { View, StyleSheet, BackHandler } from "react-native";
 import Sidebar from "./settingsComponents/sidebar.js";
 import ClockSettings from "./settingsComponents/ClockSettings.js";
 import ColorSettings from "./settingsComponents/ColorSettings.js";
 import GeneralSettings from "./settingsComponents/GeneralSettings.jsx";
 import WidgetsSettings from "./settingsComponents/WidgetsSettings.jsx";
 import RateUs from "./settingsComponents/RateUs.jsx";
-import { useScreenSettings } from "../context/ScreenSettingsContext"; 
+import { useScreenSettings } from "../context/ScreenSettingsContext";
+import Animated, {
+  useSharedValue,
+  withTiming,
+  useAnimatedStyle,
+  Easing,
+  runOnJS,
+} from "react-native-reanimated";
 
 export default function SettingsScreen({ onClose }) {
   const [activeTab, setActiveTab] = useState("clock");
-  const [opacityAnim] = useState(new Animated.Value(0));
-  const [scaleAnim] = useState(new Animated.Value(1.2));
   const { statusBarVisible } = useScreenSettings();
-  
-  useEffect(() => {
-    // Animate in settings screen
-    Animated.parallel([
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 350,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 350,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start();
 
-    const backAction = () => {
-      handleClose();
-      return true;
-    };
+  // Shared values for animations
+  const scale = useSharedValue(1.2);
+  const opacity = useSharedValue(0);
+
+  // Tab mapping for cleaner lookup
+  const tabComponents = {
+    clock: ClockSettings,
+    colors: ColorSettings,
+    general: GeneralSettings,
+    widgets: WidgetsSettings,
+    rateUs: RateUs,
+  };
+
+  const ActiveComponent = useMemo(
+    () => tabComponents[activeTab] || null,
+    [activeTab]
+  );
+
+  // Function to trigger animations
+  const animateIn = () => {
+    opacity.value = withTiming(1, {
+      duration: 350,
+      easing: Easing.out(Easing.cubic),
+    });
+    scale.value = withTiming(1, {
+      duration: 350,
+      easing: Easing.out(Easing.cubic),
+    });
+  };
+
+  const animateOut = useCallback(() => {
+    opacity.value = withTiming(0, {
+      duration: 300,
+      easing: Easing.out(Easing.cubic),
+    });
+    scale.value = withTiming(
+      1.5,
+      { duration: 300, easing: Easing.out(Easing.cubic) },
+      () => {
+        runOnJS(onClose)();
+      }
+    );
+  }, [onClose]);
+
+  useEffect(() => {
+    animateIn();
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction
+      () => {
+        animateOut();
+        return true;
+      }
     );
-    return () => backHandler.remove();
-  }, []);
 
-  const handleClose = () => {
-    // Reverse the settings animation before closing
-    Animated.parallel([
-      Animated.timing(opacityAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1.5,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      onClose(); // Notify parent to remove the overlay
-    });
-  };
+    return () => backHandler.remove();
+  }, [animateOut]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <Animated.View
       style={[
         styles.container,
         { paddingLeft: statusBarVisible ? 10 : 45 },
-        { opacity: opacityAnim, transform: [{ scale: scaleAnim }] },
+        animatedStyle,
       ]}
     >
-      {/* Pass handleClose as the onClose prop to Sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onClose={handleClose}
+        onClose={animateOut}
       />
       <View style={styles.mainContent}>
-        {activeTab === "clock" ? (
-          <ScrollView contentContainerStyle={styles.mainContentContainer}>
-            <ClockSettings />
-          </ScrollView>
-        ) : activeTab === "colors" ? (
-          <ColorSettings />
-        ) : activeTab === "general" ? (
-          <ScrollView contentContainerStyle={styles.mainContentContainer}>
-            <GeneralSettings />
-          </ScrollView>
-        ) : activeTab === "widgets" ? (
-          <ScrollView contentContainerStyle={styles.mainContentContainer}>
-            <WidgetsSettings />
-          </ScrollView>
-        ) : activeTab === "rateUs" ? (
-          <ScrollView contentContainerStyle={styles.mainContentContainer}>
-            <RateUs />
-          </ScrollView>
-        ) : null}
+        {ActiveComponent && <ActiveComponent />}
       </View>
     </Animated.View>
   );
@@ -115,7 +110,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     paddingHorizontal: 45,
-    paddingLeft:0,
+    paddingLeft: 0,
     flexDirection: "row",
     backgroundColor: "#000",
   },
@@ -124,5 +119,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     paddingLeft: 24,
   },
-  mainContentContainer: { paddingBottom: 40 },
 });

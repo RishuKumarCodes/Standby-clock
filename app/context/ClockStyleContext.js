@@ -30,7 +30,7 @@ export function ClockStyleProvider({ children }) {
     })();
   }, []);
 
-  // Save clockStyle
+  // clockStyle
   useEffect(() => {
     if (clockStyle !== null) {
       AsyncStorage.setItem("clockStyle", clockStyle).catch((err) =>
@@ -39,7 +39,7 @@ export function ClockStyleProvider({ children }) {
     }
   }, [clockStyle]);
 
-  // Save userColor
+  // userColor
   useEffect(() => {
     if (userColor !== null) {
       AsyncStorage.setItem("userColor", userColor).catch((err) =>

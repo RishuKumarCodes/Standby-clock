@@ -14,6 +14,7 @@ import { useSleepOverlay } from "../../context/SleepOverlayContext.js";
 import * as NavigationBar from "expo-navigation-bar";
 import { DimTxt, H1Txt, MdTxt } from "@/app/components/CustomText.jsx";
 import ToggleButton from "@/app/components/ToggleButton";
+import { ScrollView } from "react-native-gesture-handler";
 
 if (
   Platform.OS === "android" &&
@@ -84,9 +85,8 @@ export default function GeneralSettings() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <H1Txt style={styles.heading}>General Settings</H1Txt>
-
       <View style={styles.cardsContainer}>
         {/* Left side card */}
         <View style={styles.card}>
@@ -160,7 +160,7 @@ export default function GeneralSettings() {
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -168,8 +168,6 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 36,
     paddingHorizontal: 5,
-    flex: 1,
-    backgroundColor: "#000",
   },
   heading: {
     paddingBottom: 20,

@@ -1,42 +1,30 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Dimensions, AppState } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, StyleSheet, Dimensions, AppState, Text } from "react-native";
+import { useClockStatus, useSeconds } from "../context/ClockStatusContext";
 import Svg, { Line, Circle } from "react-native-svg";
 
-/* ====================================================
-   Clock Component (Memoized)
-   ==================================================== */
-const Clock = React.memo(({ time, size, color }) => {
+// Clock Component (Memoized)
+const Clock = React.memo(({ size, color }) => {
+  const { hour, min } = useClockStatus();
+  const seconds = useSeconds();
+
   const center = size / 2;
   const radius = size / 2.1;
-  const hours = time.getHours() % 12;
-  const minutes = time.getMinutes();
-  const seconds = time.getSeconds();
 
-  // Calculate angles for each hand
-  const hourAngle = (360 / 12) * hours + (30 / 60) * minutes;
-  const minuteAngle = (360 / 60) * minutes;
+  const hourAngle = (360 / 12) * hour + (30 / 60) * min;
+  const minuteAngle = (360 / 60) * min;
   const secondAngle = (360 / 60) * seconds;
-
-  // Define forward and tail lengths for each hand
-  const hourForward = radius * 0.5;
-  const hourTail = radius * -0.07;
-  const minuteForward = radius * 0.77;
-  const minuteTail = radius * -0.07;
-  const secondForward = radius * 0.55;
-  const secondTail = radius * 0.25;
 
   return (
     <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {/* Clock Ticks */}
       {[...Array(12)].map((_, i) => {
         const angle = (i * 30 * Math.PI) / 180;
         const x1 = center + Math.sin(angle) * (radius - 32);
         const y1 = center - Math.cos(angle) * (radius - 32);
         const x2 = center + Math.sin(angle) * radius;
         const y2 = center - Math.cos(angle) * radius;
-
-        // Make 12, 3, 6, 9 thicker and white
         const isMainTick = i % 3 === 0;
+
         return (
           <Line
             key={i}
@@ -53,9 +41,9 @@ const Clock = React.memo(({ time, size, color }) => {
       {/* Hour Hand */}
       <Line
         x1={center}
-        y1={center + hourTail}
+        y1={center - radius * 0.07}
         x2={center}
-        y2={center - hourForward}
+        y2={center - radius * 0.5}
         stroke={color}
         strokeWidth="8"
         transform={`rotate(${hourAngle}, ${center}, ${center})`}
@@ -63,9 +51,9 @@ const Clock = React.memo(({ time, size, color }) => {
       {/* Minute Hand */}
       <Line
         x1={center}
-        y1={center + minuteTail}
+        y1={center - radius * 0.07}
         x2={center}
-        y2={center - minuteForward}
+        y2={center - radius * 0.77}
         stroke={color}
         opacity={0.6}
         strokeWidth="4"
@@ -74,9 +62,9 @@ const Clock = React.memo(({ time, size, color }) => {
       {/* Second Hand */}
       <Line
         x1={center}
-        y1={center + secondTail}
+        y1={center + radius * 0.25}
         x2={center}
-        y2={center - secondForward}
+        y2={center - radius * 0.55}
         stroke="#db1f14"
         strokeWidth="2"
         transform={`rotate(${secondAngle}, ${center}, ${center})`}
@@ -86,95 +74,73 @@ const Clock = React.memo(({ time, size, color }) => {
     </Svg>
   );
 });
-/* ====================================================
-   Calendar Component (Memoized)
-   ==================================================== */
-const Calendar = React.memo(({ date, calendarSize, color }) => {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayIndex = new Date(year, month, 1).getDay();
-  const cellWidth = calendarSize / 7.2;
+
+//  Calendar Component (Memoized)
+const Calendar = React.memo(({ size, color }) => {
+  const { date, month, day } = useClockStatus();
+  const year = new Date().getFullYear();
+  const firstDayIndex = new Date(year, new Date().getMonth(), 1).getDay();
+  const daysInMonth = new Date(year, new Date().getMonth() + 1, 0).getDate();
+  const cellWidth = size / 6.8;
+
   const { width } = Dimensions.get("window");
   const monthFontSize = width * 0.033;
   const dayTextFontSize = width * 0.02;
   const dateFontSize = width * 0.024;
 
-  const monthName = date
-    .toLocaleString("default", { month: "long" })
-    .toUpperCase();
-
-  // Create an array of dates including empty placeholders for days before the first day
   const totalCells = firstDayIndex + daysInMonth;
-  const dateCells = Array.from({ length: totalCells }, (_, i) => {
-    if (i < firstDayIndex) return null;
-    return i - firstDayIndex + 1;
-  });
-
-  // Split the dateCells into rows of 7
-  const rows = [];
-  for (let i = 0; i < dateCells.length; i += 7) {
-    rows.push(dateCells.slice(i, i + 7));
-  }
+  const dateCells = Array.from({ length: totalCells }, (_, i) =>
+    i < firstDayIndex ? null : i - firstDayIndex + 1
+  );
 
   return (
-    <View style={[styles.calendarContainer, { width: calendarSize }]}>
+    <View style={[styles.calendarContainer, { width: size }]}>
       <Text
         style={[
           styles.monthText,
-          {
-            color: "#db1f14",
-            marginLeft: 12,
-            marginTop: -10,
-            fontSize: monthFontSize,
-          },
+          { color: "#db1f14", marginLeft: 12, fontSize: monthFontSize },
         ]}
       >
-        {monthName}
+        {month.toUpperCase()}
       </Text>
       {/* Weekday Row */}
       <View style={styles.weekRow}>
-        {["S", "M", "T", "W", "T", "F", "S"].map((dayName, index) => (
+        {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
           <Text
-            key={index}
+            key={i}
             style={[
               styles.dayText,
               {
-                color: "#fff",
-                opacity: 0.44,
-                width: cellWidth,
-                textAlign: "center",
                 fontSize: dayTextFontSize,
-                marginHorizontal: 4.5,
+                color: "#fff",
+                opacity: 0.4,
+                width: cellWidth,
               },
             ]}
           >
-            {dayName}
+            {d}
           </Text>
         ))}
       </View>
       {/* Dates Grid */}
-      {rows.map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.weekRow}>
-          {row.map((d, index) => (
+      {Array.from({ length: Math.ceil(totalCells / 7) }, (_, row) => (
+        <View key={row} style={styles.weekRow}>
+          {dateCells.slice(row * 7, row * 7 + 7).map((d, i) => (
             <Text
-              key={index}
+              key={i}
               style={[
                 styles.dateText,
                 {
+                  fontSize: dateFontSize,
                   width: cellWidth,
                   height: cellWidth,
                   lineHeight: cellWidth,
-                  marginHorizontal: 4.5,
                   color,
-                  textAlign: "center",
-                  fontSize: dateFontSize,
                 },
-                d === day && styles.selectedDate,
+                d === date && styles.selectedDate,
               ]}
             >
-              {d ? d : ""}
+              {d || ""}
             </Text>
           ))}
         </View>
@@ -183,26 +149,18 @@ const Calendar = React.memo(({ date, calendarSize, color }) => {
   );
 });
 
-/* ====================================================
-   Main Component: ClockWithCalendar
-   ==================================================== */
+//  Main Component
 export default function ClockWithCalendar({
   color = "#FFF",
   previewMode = false,
 }) {
-  const [currentTime, setCurrentTime] = useState(new Date());
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === "active"
-      ) {
-        setCurrentTime(new Date());
-      }
       appState.current = nextAppState;
     };
+
     const subscription = AppState.addEventListener(
       "change",
       handleAppStateChange
@@ -210,21 +168,9 @@ export default function ClockWithCalendar({
     return () => subscription.remove();
   }, []);
 
-  // Update time every second (only if app is active)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (appState.current === "active") {
-        setCurrentTime(new Date());
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   const { width } = Dimensions.get("window");
-
   const clockSize = width * 0.36;
   const calendarSize = width * 0.35;
-
   const scaleFactor = previewMode ? 0.37 : 1;
 
   return (
@@ -236,20 +182,13 @@ export default function ClockWithCalendar({
           previewMode && { gap: 40 },
         ]}
       >
-        <Clock time={currentTime} size={clockSize} color={color} />
-        <Calendar
-          date={currentTime}
-          calendarSize={calendarSize}
-          color={color}
-        />
+        <Clock size={clockSize} color={color} />
+        <Calendar size={calendarSize} color={color} />
       </View>
     </View>
   );
 }
 
-/* ====================================================
-   Styles
-   ==================================================== */
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
@@ -277,13 +216,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     width: 40,
     textAlign: "center",
-    marginVertical: 0.5,
-    margin: 2,
+    marginTop: 0.5,
+    marginBottom: "3%",
+    margin: 3.5,
   },
   dateText: {
+    textAlign: "center",
     fontFamily: "Poppins-Regular",
     marginVertical: 0,
-    margin: 2,
+    margin: 3.5,
   },
   selectedDate: {
     backgroundColor: "#db1f14",

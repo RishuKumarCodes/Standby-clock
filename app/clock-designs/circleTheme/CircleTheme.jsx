@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { View, StyleSheet } from "react-native";
 import AnalogClock from "./_components/AnalogClock";
 import PillDateDisplay from "./_components/PillDateDisplay";
-import CircleTimeDigit from "./_components/CircleTimeDigit";
-import BatteryCircle from "./_components/BatteryCircle";
+import DayDate from "./_components/DayDate";
+import Battery from "./_components/Battery";
 import { useBatteryInfo } from "./_helpers.jsx";
 
 export default function CircleTheme({ color = "#000", previewMode = false }) {
@@ -79,11 +79,9 @@ export default function CircleTheme({ color = "#000", previewMode = false }) {
             }}
           >
             <PillDateDisplay
-              time={time}
               bgColor={color}
               width={pillWidth}
               height={pillHeight}
-              previewMode={previewMode}
               margin={elementMargin}
             />
           </View>
@@ -97,19 +95,17 @@ export default function CircleTheme({ color = "#000", previewMode = false }) {
               alignItems: "center",
             }}
           >
-            <CircleTimeDigit
+            <DayDate
               time={time}
               bgColor={color}
               size={circleSize}
-              previewMode={previewMode}
               margin={elementMargin}
             />
-            <BatteryCircle
+            <Battery
               batteryLevel={batteryLevel}
               batteryState={batteryState}
               bgColor={color}
               size={circleSize}
-              previewMode={previewMode}
               margin={elementMargin}
             />
           </View>

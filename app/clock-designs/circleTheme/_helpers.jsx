@@ -20,7 +20,6 @@ export const hexToRgba = (hex, opacity, intensity = 0.8) => {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
-export const pad = (n) => (n < 10 ? `0${n}` : n);
 
 export const useBatteryInfo = () => {
   const [batteryLevel, setBatteryLevel] = useState(null);

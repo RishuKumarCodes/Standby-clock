@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import { GridSettingsProvider } from "./context/GridSettingsContext.js";
 import { ScreenSettingsProvider } from "./context/ScreenSettingsContext.js";
 import { ClockStyleProvider } from "./context/ClockStyleContext.js";
+import { ClockStatusProvider } from "./context/ClockStatusContext.js";
 import { SleepOverlayProvider } from "./context/SleepOverlayContext.js";
 import { View, ActivityIndicator } from "react-native";
 
@@ -40,7 +41,9 @@ export default function Layout() {
       <ScreenSettingsProvider>
         <SleepOverlayProvider>
           <ClockStyleProvider>
-            <Stack screenOptions={{ headerShown: false }} />
+            <ClockStatusProvider>
+              <Stack screenOptions={{ headerShown: false }} />
+            </ClockStatusProvider>
           </ClockStyleProvider>
         </SleepOverlayProvider>
       </ScreenSettingsProvider>

@@ -5,8 +5,8 @@ import { View, StyleSheet } from "react-native";
 // Import components from our "_components" folder
 import AnalogClock from "./_components/AnalogClock";
 import PillDateDisplay from "./_components/PillDateDisplay";
-import CircleTimeDigit from "./_components/CircleTimeDigit";
-import BatteryCircle from "./_components/BatteryCircle";
+import CircleTimeDigit from "./_components/DayDate";
+import Battery from "./_components/Battery";
 
 // Import battery hook from our "_helpers" file
 import { useBatteryInfo } from "./_helpers";
@@ -111,7 +111,7 @@ export default function CircleTheme({ color = "#000", previewMode = false }) {
               previewMode={previewMode}
               margin={elementMargin}
             />
-            <BatteryCircle
+            <Battery
               batteryLevel={batteryLevel}
               batteryState={batteryState}
               bgColor={color}
