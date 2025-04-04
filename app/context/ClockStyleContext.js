@@ -12,16 +12,22 @@ const ClockStyleContext = createContext();
 export function ClockStyleProvider({ children }) {
   const [clockStyle, setClockStyle] = useState("MinimalBold");
   const [userColor, setUserColor] = useState("#fff");
+  const [showChargingStatus, setShowChargingStatus] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const [savedStyle, savedColor] = await Promise.all([
-          AsyncStorage.getItem("clockStyle"),
-          AsyncStorage.getItem("userColor"),
-        ]);
+        const [savedStyle, savedColor, savedShowChargingStatus] =
+          await Promise.all([
+            AsyncStorage.getItem("clockStyle"),
+            AsyncStorage.getItem("userColor"),
+            AsyncStorage.getItem("showChargingStatus"),
+          ]);
         if (savedStyle !== null) setClockStyle(savedStyle);
         if (savedColor !== null) setUserColor(savedColor);
+        if (savedShowChargingStatus !== null)
+          setShowChargingStatus(JSON.parse(savedShowChargingStatus));
       } catch (err) {
         console.warn("Error loading saved preferences:", err);
       } finally {
@@ -30,7 +36,6 @@ export function ClockStyleProvider({ children }) {
     })();
   }, []);
 
-  // clockStyle
   useEffect(() => {
     if (clockStyle !== null) {
       AsyncStorage.setItem("clockStyle", clockStyle).catch((err) =>
@@ -39,7 +44,6 @@ export function ClockStyleProvider({ children }) {
     }
   }, [clockStyle]);
 
-  // userColor
   useEffect(() => {
     if (userColor !== null) {
       AsyncStorage.setItem("userColor", userColor).catch((err) =>
@@ -48,10 +52,21 @@ export function ClockStyleProvider({ children }) {
     }
   }, [userColor]);
 
-  // Memoize context value to prevent unnecessary re-renders
+  useEffect(() => {
+    AsyncStorage.setItem("showChargingStatus", JSON.stringify(showChargingStatus))
+      .catch((err) => console.warn("Error saving showChargingStatus:", err));
+  }, [showChargingStatus]);
+
   const contextValue = useMemo(
-    () => ({ clockStyle, setClockStyle, userColor, setUserColor }),
-    [clockStyle, userColor]
+    () => ({
+      clockStyle,
+      setClockStyle,
+      userColor,
+      setUserColor,
+      showChargingStatus,
+      setShowChargingStatus,
+    }),
+    [clockStyle, userColor, showChargingStatus]
   );
 
   return (

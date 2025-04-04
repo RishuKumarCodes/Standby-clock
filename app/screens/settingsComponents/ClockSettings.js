@@ -6,7 +6,7 @@ import { H1Txt } from "../../components/CustomText.jsx";
 import MinimalBold from "../../clock-designs/MinimalBold";
 import MinimalThin from "../../clock-designs/MinimalThin";
 import AnalogClock from "../../clock-designs/AnalogClock";
-import WeatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
+import WeatherBattery from "../../clock-designs/WeatherBattery.jsx";
 import WindowsClock from "../../clock-designs/WindowsClock.jsx";
 import SegmentClock from "../../clock-designs/SegmentClock";
 import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";

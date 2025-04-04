@@ -4,7 +4,6 @@ import Sidebar from "./settingsComponents/sidebar.js";
 import ClockSettings from "./settingsComponents/ClockSettings.js";
 import ColorSettings from "./settingsComponents/ColorSettings.js";
 import GeneralSettings from "./settingsComponents/GeneralSettings.jsx";
-import WidgetsSettings from "./settingsComponents/WidgetsSettings.jsx";
 import RateUs from "./settingsComponents/RateUs.jsx";
 import { useScreenSettings } from "../context/ScreenSettingsContext";
 import Animated, {
@@ -19,16 +18,13 @@ export default function SettingsScreen({ onClose }) {
   const [activeTab, setActiveTab] = useState("clock");
   const { statusBarVisible } = useScreenSettings();
 
-  // Shared values for animations
   const scale = useSharedValue(1.2);
   const opacity = useSharedValue(0);
 
-  // Tab mapping for cleaner lookup
   const tabComponents = {
     clock: ClockSettings,
     colors: ColorSettings,
     general: GeneralSettings,
-    widgets: WidgetsSettings,
     rateUs: RateUs,
   };
 

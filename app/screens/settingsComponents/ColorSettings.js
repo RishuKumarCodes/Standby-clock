@@ -12,7 +12,7 @@ import { useClockStyle } from "../../context/ClockStyleContext";
 import MinimalBold from "../../clock-designs/MinimalBold.jsx";
 import MinimalThin from "../../clock-designs/MinimalThin.jsx";
 import AnalogClock from "../../clock-designs/AnalogClock.jsx";
-import WeatherBattery from "../../clock-designs/weatherBattery/WeatherBattery.jsx";
+import WeatherBattery from "../../clock-designs/WeatherBattery.jsx";
 import NeonClock from "../../clock-designs/WindowsClock.jsx";
 import SegmentClock from "../../clock-designs/SegmentClock.jsx";
 import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";

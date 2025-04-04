@@ -4,7 +4,6 @@ import { Svg, Path } from "react-native-svg";
 import Entypo from "@expo/vector-icons/Entypo";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
-// import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 const Sidebar = ({ activeTab, setActiveTab, onClose }) => {
   const GeneralSettings = ({ color }) => (
@@ -64,19 +63,6 @@ const Sidebar = ({ activeTab, setActiveTab, onClose }) => {
             />
           </View>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={[
-            styles.sidebarItem,
-            activeTab === "widgets" && styles.sidebarItemActive,
-          ]}
-          onPress={() => setActiveTab("widgets")}
-        >
-          <MaterialCommunityIcons
-            name="widgets-outline"
-            size={24}
-            color={activeTab === "widgets" ? "black" : "white"}
-          />
-        </TouchableOpacity> */}
         <TouchableOpacity
           style={[
             styles.sidebarItem,

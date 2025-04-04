@@ -6,7 +6,7 @@ const MinimalBold = lazy(() => import("../../clock-designs/MinimalBold.jsx"));
 const MinimalThin = lazy(() => import("../../clock-designs/MinimalThin.jsx"));
 const AnalogClock = lazy(() => import("../../clock-designs/AnalogClock.jsx"));
 const WeatherBattery = lazy(() =>
-  import("../../clock-designs/weatherBattery/WeatherBattery.jsx")
+  import("../../clock-designs/WeatherBattery.jsx")
 );
 const WindowsClock = lazy(() => import("../../clock-designs/WindowsClock.jsx"));
 const SegmentClock = lazy(() => import("../../clock-designs/SegmentClock.jsx"));

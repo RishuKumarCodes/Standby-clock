@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import { useClockStatus } from "../context/ClockStatusContext";
+import BatteryCharging from "../components/BatteryCharging";
 
 const pad = (num) => (num < 10 ? "0" + num : String(num));
 const formatTime = (hour, min) => `${pad(hour)}:${pad(min)}`;
@@ -58,6 +59,7 @@ export default function MinimalThin({ color = "#32CD32" }) {
           {dateText}
         </Text>
       </View>
+      <BatteryCharging />
     </View>
   );
 }

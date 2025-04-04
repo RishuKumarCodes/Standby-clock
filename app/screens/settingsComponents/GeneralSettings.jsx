@@ -11,6 +11,7 @@ import Slider from "@react-native-community/slider";
 import { useGridSettings } from "../../context/GridSettingsContext.js";
 import { useScreenSettings } from "../../context/ScreenSettingsContext.js";
 import { useSleepOverlay } from "../../context/SleepOverlayContext.js";
+import { useClockStyle } from "../../context/ClockStyleContext";
 import * as NavigationBar from "expo-navigation-bar";
 import { DimTxt, H1Txt, MdTxt } from "@/app/components/CustomText.jsx";
 import ToggleButton from "@/app/components/ToggleButton";
@@ -49,6 +50,8 @@ export default function GeneralSettings() {
   } = useGridSettings();
 
   const { sleepMode, setSleepMode } = useSleepOverlay();
+
+  const { showChargingStatus, setShowChargingStatus } = useClockStyle();
 
   const {
     navBarVisible,
@@ -154,9 +157,13 @@ export default function GeneralSettings() {
         <View style={styles.card}>
           <View style={styles.cardRow}>
             <View>
-              <MdTxt>Disable notifications </MdTxt>
-              <DimTxt>- Currently unavilable on your device</DimTxt>
+              <MdTxt>Show charging status </MdTxt>
+              <DimTxt>- Display battery % while charging</DimTxt>
             </View>
+            <ToggleButton
+              value={showChargingStatus}
+              onValueChange={setShowChargingStatus}
+            />
           </View>
         </View>
       </View>

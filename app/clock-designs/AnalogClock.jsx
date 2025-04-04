@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Dimensions, AppState, Text } from "react-native";
 import { useClockStatus, useSeconds } from "../context/ClockStatusContext";
 import Svg, { Line, Circle } from "react-native-svg";
+import BatteryCharging from "../components/BatteryCharging";
 
 // Clock Component (Memoized)
 const Clock = React.memo(({ size, color }) => {
@@ -185,6 +186,7 @@ export default function ClockWithCalendar({
         <Clock size={clockSize} color={color} />
         <Calendar size={calendarSize} color={color} />
       </View>
+      <BatteryCharging />
     </View>
   );
 }

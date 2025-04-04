@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { Battery } from "expo-battery";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
+import * as Battery from "expo-battery";
 
 const TimeContext = createContext();
 const SecondsContext = createContext();
@@ -13,7 +20,8 @@ function TimeProvider({ children }) {
 
   useEffect(() => {
     const now = new Date();
-    const msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+    const msToNextMinute =
+      (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
 
     const timeout = setTimeout(() => {
       setTime(new Date());
@@ -26,15 +34,20 @@ function TimeProvider({ children }) {
     return () => clearTimeout(timeout);
   }, []);
 
-  const timeData = useMemo(() => ({
-    hour: time.getHours(),
-    minute: time.getMinutes(),
-    date: time.getDate(),
-    day: time.toLocaleString("en-US", { weekday: "long" }),
-    month: time.toLocaleString("en-US", { month: "long" }),
-  }), [time]);
+  const timeData = useMemo(
+    () => ({
+      hour: time.getHours(),
+      minute: time.getMinutes(),
+      date: time.getDate(),
+      day: time.toLocaleString("en-US", { weekday: "long" }),
+      month: time.toLocaleString("en-US", { month: "long" }),
+    }),
+    [time]
+  );
 
-  return <TimeContext.Provider value={timeData}>{children}</TimeContext.Provider>;
+  return (
+    <TimeContext.Provider value={timeData}>{children}</TimeContext.Provider>
+  );
 }
 
 // ---------- SECONDS PROVIDER (UPDATES EVERY SECOND) ----------
@@ -48,33 +61,62 @@ function SecondsProvider({ children }) {
     return () => clearInterval(interval);
   }, []);
 
-  return <SecondsContext.Provider value={seconds}>{children}</SecondsContext.Provider>;
+  return (
+    <SecondsContext.Provider value={seconds}>
+      {children}
+    </SecondsContext.Provider>
+  );
 }
 
 // ---------- BATTERY PROVIDER ----------
 function BatteryProvider({ children }) {
   const [battery, setBattery] = useState(null);
-  const [chargingStatus, setChargingStatus] = useState(null);
+  const [chargingStatus, setChargingStatus] = useState(false);
 
-  const fetchBatteryStatus = async () => {
+  const fetchBatteryStatus = useCallback(async () => {
     try {
       const batteryLevel = await Battery.getBatteryLevelAsync();
       const charging = await Battery.getBatteryStateAsync();
+
       setBattery(Math.floor(batteryLevel * 100));
-      setChargingStatus(charging === 2 ? "Charging" : "Not Charging");
+
+      const isCharging =
+        charging === Battery.BatteryState.CHARGING ||
+        charging === Battery.BatteryState.FULL;
+      setChargingStatus(isCharging);
     } catch (error) {
       console.warn("Battery error:", error);
     }
-  };
+  }, []);
+
+  const batteryLevelWhileCharging = useMemo(() => {
+    return chargingStatus ? battery : null;
+  }, [chargingStatus, battery]);
 
   useEffect(() => {
     fetchBatteryStatus();
+
+    const batteryStateSubscription = Battery.addBatteryStateListener(
+      ({ batteryState }) => {
+        const isCharging =
+          batteryState === Battery.BatteryState.CHARGING ||
+          batteryState === Battery.BatteryState.FULL;
+        setChargingStatus(isCharging);
+      }
+    );
+
     const interval = setInterval(fetchBatteryStatus, 60000);
-    return () => clearInterval(interval);
-  }, []);
+
+    return () => {
+      batteryStateSubscription.remove();
+      clearInterval(interval);
+    };
+  }, [fetchBatteryStatus]);
 
   return (
-    <BatteryContext.Provider value={{ battery, chargingStatus }}>
+    <BatteryContext.Provider
+      value={{ battery, chargingStatus, batteryLevelWhileCharging }}
+    >
       {children}
     </BatteryContext.Provider>
   );
@@ -108,26 +150,46 @@ export function ClockStatusProvider({ children }) {
 
 function CombinedClockStatus({ children }) {
   const time = useContext(TimeContext);
-  const { battery, chargingStatus } = useContext(BatteryContext);
+  const { battery, chargingStatus, batteryLevelWhileCharging } =
+    useContext(BatteryContext);
   const { is24HourFormat, setIs24HourFormat } = useContext(FormatContext);
 
   const hour = is24HourFormat ? time.hour : time.hour % 12 || 12;
   const ampm = time.hour >= 12 ? "PM" : "AM";
 
-  const clockStatus = useMemo(() => ({
-    hour,
-    min: time.minute,
-    date: time.date,
-    day: time.day,
-    month: time.month,
-    ampm,
-    battery,
-    chargingStatus,
-    is24HourFormat,
-    setIs24HourFormat,
-  }), [hour, time.minute, time.date, time.day, time.month, ampm, battery, chargingStatus, is24HourFormat]);
+  const clockStatus = useMemo(
+    () => ({
+      hour,
+      min: time.minute,
+      date: time.date,
+      day: time.day,
+      month: time.month,
+      ampm,
+      battery,
+      chargingStatus,
+      batteryLevelWhileCharging,
+      is24HourFormat,
+      setIs24HourFormat,
+    }),
+    [
+      hour,
+      time.minute,
+      time.date,
+      time.day,
+      time.month,
+      ampm,
+      battery,
+      chargingStatus,
+      batteryLevelWhileCharging,
+      is24HourFormat,
+    ]
+  );
 
-  return <ClockStatusContext.Provider value={clockStatus}>{children}</ClockStatusContext.Provider>;
+  return (
+    <ClockStatusContext.Provider value={clockStatus}>
+      {children}
+    </ClockStatusContext.Provider>
+  );
 }
 
 // ---------- CUSTOM HOOKS ----------
