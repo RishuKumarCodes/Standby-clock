@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef, memo } from "react";
+import React, { memo, useMemo } from "react";
 import { View, StyleSheet } from "react-native";
 import Svg, { Path, Circle } from "react-native-svg";
+import { useClockStatus, useSeconds } from "../context/ClockStatusContext";
+import BatteryCharging from "../components/BatteryCharging";
 
 const DIGIT_WIDTH = 50;
 const DIGIT_HEIGHT = 100;
@@ -61,130 +63,92 @@ const SegmentSlash = memo(({ onColor }) => (
   </Svg>
 ));
 
-function pad(num) {
-  return num < 10 ? `0${num}` : `${num}`;
-}
+const pad = (num) => (num < 10 ? `0${num}` : `${num}`);
 
-function getFormattedTime(now) {
-  const hour12 = now.getHours() % 12 || 12;
-  return `${pad(hour12)}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-}
+const HourMinuteClock = memo(({ hour, min, color }) => {
+  const formattedHM = useMemo(() => pad(hour) + ":" + pad(min), [hour, min]);
+  const hmChars = useMemo(() => formattedHM.split(""), [formattedHM]);
 
-function getFormattedDate(now) {
-  return `${pad(now.getDate())}/${pad(now.getMonth() + 1)}`;
-}
+  return (
+    <View style={styles.row}>
+      {hmChars.map((char, index) => (
+        <View style={styles.digitContainer} key={index}>
+          {char === ":" ? (
+            <SegmentColon onColor={color} />
+          ) : (
+            <SegmentDigit digit={char} onColor={color} offColor={OFF_COLOR} />
+          )}
+        </View>
+      ))}
+    </View>
+  );
+});
+
+const SecondsDigit = memo(({ seconds, color }) => {
+  const formattedSec = useMemo(() => ":" + pad(seconds), [seconds]);
+  const secChars = useMemo(() => formattedSec.split(""), [formattedSec]);
+
+  return (
+    <View style={styles.row}>
+      {secChars.map((char, index) => (
+        <View style={styles.digitContainer} key={index}>
+          {char === ":" ? (
+            <SegmentColon onColor={color} />
+          ) : (
+            <SegmentDigit digit={char} onColor={color} offColor={OFF_COLOR} />
+          )}
+        </View>
+      ))}
+    </View>
+  );
+});
 
 export default function SegmentClock({
   color = DEFAULT_ON_COLOR,
   previewMode = false,
 }) {
-  const [clockData, setClockData] = useState(() => {
-    const now = new Date();
-    return {
-      timeString: getFormattedTime(now),
-      dateString: getFormattedDate(now),
-    };
-  });
-  const timerRef = useRef(null);
+  const { hour, min, date, monthNumber } = useClockStatus();
+  const seconds = useSeconds();
+  const formattedDate = useMemo(
+    () => pad(date) + "/" + pad(monthNumber),
+    [date, monthNumber]
+  );
+  const dateChars = useMemo(() => formattedDate.split(""), [formattedDate]);
 
-  useEffect(() => {
-    const updateClock = () => {
-      const now = new Date();
-      setClockData({
-        timeString: getFormattedTime(now),
-        dateString: getFormattedDate(now),
-      });
-      timerRef.current = setTimeout(updateClock, 1000 - (Date.now() % 1000));
-    };
-    updateClock();
-    return () => clearTimeout(timerRef.current);
-  }, []);
-
-  const timeChars = clockData.timeString.split("");
-  const dateChars = clockData.dateString.split("");
-
-  // When in preview mode, we scale down the main clock.
-  const clockScaleFactor = previewMode ? 0.3 : 1;
+  const clockScaleFactor = previewMode ? 0.35 : 1;
+  const dateScaleFactor = previewMode ? 0.12 : 0.3;
 
   return (
     <View style={styles.container}>
-      {previewMode ? (
-        <>
-          <View style={{ transform: [{ scale: clockScaleFactor }] }}>
-            <View style={styles.row}>
-              {timeChars.map((char, index) => (
-                <View style={styles.digitContainer} key={index}>
-                  {char === ":" ? (
-                    <SegmentColon onColor={color} />
-                  ) : (
-                    <SegmentDigit
-                      digit={char}
-                      onColor={color}
-                      offColor={OFF_COLOR}
-                    />
-                  )}
-                </View>
-              ))}
-            </View>
-          </View>
-          <View
-            style={[
-              styles.dateContainer,
-              { bottom: -20 },
-              { transform: [{ scale: 0.1 }] },
-            ]}
-          >
-            {dateChars.map((char, index) => (
-              <View style={styles.digitContainer} key={index}>
-                {char === "/" ? (
-                  <SegmentSlash onColor={DATE_ON_COLOR} />
-                ) : (
-                  <SegmentDigit
-                    digit={char}
-                    onColor={DATE_ON_COLOR}
-                    offColor={OFF_COLOR}
-                  />
-                )}
-              </View>
-            ))}
-          </View>
-        </>
-      ) : (
+      <View style={{ transform: [{ scale: clockScaleFactor }] }}>
         <View style={styles.row}>
-          {timeChars.map((char, index) => (
-            <View style={styles.digitContainer} key={index}>
-              {char === ":" ? (
-                <SegmentColon onColor={color} />
-              ) : (
-                <SegmentDigit
-                  digit={char}
-                  onColor={color}
-                  offColor={OFF_COLOR}
-                />
-              )}
-            </View>
-          ))}
+          <HourMinuteClock hour={hour} min={min} color={color} />
+          <SecondsDigit seconds={seconds} color={color} />
         </View>
-      )}
-
-      {/* Render the date only in non-preview mode */}
-      {!previewMode && (
-        <View style={styles.dateContainer}>
-          {dateChars.map((char, index) => (
-            <View style={styles.digitContainer} key={index}>
-              {char === "/" ? (
-                <SegmentSlash onColor={DATE_ON_COLOR} />
-              ) : (
-                <SegmentDigit
-                  digit={char}
-                  onColor={DATE_ON_COLOR}
-                  offColor={OFF_COLOR}
-                />
-              )}
-            </View>
-          ))}
-        </View>
-      )}
+      </View>
+      <View
+        style={[
+          styles.dateContainer,
+          { transform: [{ scale: dateScaleFactor }] },
+          previewMode && { bottom: -20 },
+          previewMode && { right: "-30%" },
+        ]}
+      >
+        {dateChars.map((char, index) => (
+          <View style={styles.digitContainer} key={index}>
+            {char === "/" ? (
+              <SegmentSlash onColor={DATE_ON_COLOR} />
+            ) : (
+              <SegmentDigit
+                digit={char}
+                onColor={DATE_ON_COLOR}
+                offColor={OFF_COLOR}
+              />
+            )}
+          </View>
+        ))}
+      </View>
+      <BatteryCharging />
     </View>
   );
 }
@@ -192,6 +156,7 @@ export default function SegmentClock({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
   },

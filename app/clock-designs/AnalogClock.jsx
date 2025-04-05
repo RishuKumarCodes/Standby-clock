@@ -175,7 +175,7 @@ export default function ClockWithCalendar({
   const scaleFactor = previewMode ? 0.37 : 1;
 
   return (
-    <View style={styles.outerContainer}>
+    <>
       <View
         style={[
           styles.container,
@@ -187,23 +187,18 @@ export default function ClockWithCalendar({
         <Calendar size={calendarSize} color={color} />
       </View>
       <BatteryCharging />
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  outerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   container: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
     paddingRight: "6%",
     paddingLeft: "3%",
     alignItems: "center",
-    width: "100%",
   },
   calendarContainer: {
     alignItems: "flex-start",

@@ -41,6 +41,7 @@ function TimeProvider({ children }) {
       date: time.getDate(),
       day: time.toLocaleString("en-US", { weekday: "long" }),
       month: time.toLocaleString("en-US", { month: "long" }),
+      monthNumber: time.getMonth() + 1
     }),
     [time]
   );
@@ -164,6 +165,7 @@ function CombinedClockStatus({ children }) {
       date: time.date,
       day: time.day,
       month: time.month,
+      monthNumber: time.monthNumber,
       ampm,
       battery,
       chargingStatus,
@@ -177,6 +179,7 @@ function CombinedClockStatus({ children }) {
       time.date,
       time.day,
       time.month,
+      time.monthNumber,
       ampm,
       battery,
       chargingStatus,
