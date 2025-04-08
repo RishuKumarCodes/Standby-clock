@@ -20,7 +20,6 @@ export default function WeatherBattery({
   const computedLineHeight = computedFontSize * 1.3;
   const minuteStr = useMemo(() => (min < 10 ? `0${min}` : min), [min]);
   const [temperature, setTemperature] = useState("22");
-  const isCharging = chargingStatus === "Charging";
 
   useEffect(() => {
     async function fetchWeather() {
@@ -47,7 +46,6 @@ export default function WeatherBattery({
       <BatteryIcon percentage={battery} color="#aaa" />
       <Text style={[styles.batteryText, { color: "#aaa" }]}>{battery}%</Text>
       {chargingStatus && <ChargingIcon style={styles.chargingIcon} />}
-      {/* {console.log("charge refreshed", battery)} */}
     </View>
   );
 

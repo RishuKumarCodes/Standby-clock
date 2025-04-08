@@ -34,7 +34,7 @@ const clockComponents = {
 const colorGroups = [
   {
     title: "Neutrals",
-    colors: ["#FFFFFF", "#dedeff", "#FFDAB9", "#737373", "#565C6A", "#6B5762"],
+    colors: ["#FFFFFF", "#ffe0c4", "#d9d9ff", "#737373", "#6B5762", "#565C6A"],
   },
   {
     title: "Pastels",
@@ -55,7 +55,7 @@ const colorGroups = [
   },
   {
     title: "Saturated",
-    colors: ["#008080", "#673AB7", "#B03052", "#d1482c", "#B22222", "#800000"],
+    colors: ["#8e9e00", "#008080", "#2070ba", "#673AB7", "#ad174e", "#bf280d"],
   },
   {
     title: "Neon",
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   rightContent: {
     paddingTop: 70,
     paddingBottom: 40,
-    maxWidth:340,
+    maxWidth: 340,
   },
 
   groupContainer: {

@@ -1,82 +1,88 @@
 import React, { useMemo, memo } from "react";
 import Svg, { Circle, Line } from "react-native-svg";
-import { hexToRgba } from "../_helpers";
 
-const AnalogClock = ({ time, bgColor, size }) => {
-  const hours = time.getHours();
-  const minutes = time.getMinutes();
-  const seconds = time.getSeconds();
+const VIEWBOX = 100;
+const C = VIEWBOX / 2;
 
-  const hourAngle = ((hours % 12) + minutes / 60 + seconds / 3600) * 30 - 90;
-  const minuteAngle = (minutes + seconds / 60) * 6 - 90;
-  const center = size / 2;
-  const hourHandLength = size * 0.18;
-  const minuteHandLength = size * 0.275;
-  const minuteTailLength = size * -0.1;
+const AnalogClock = ({ hour, min, color, bgCol }) => {
+  const { hourAngle, minuteAngle, dims, markers } = useMemo(() => {
+    const hourAngle = ((hour % 12) + min / 60) * 30 - 90;
+    const minuteAngle = min * 6 - 90;
 
-  const hourX = center + hourHandLength * Math.cos((hourAngle * Math.PI) / 180);
-  const hourY = center + hourHandLength * Math.sin((hourAngle * Math.PI) / 180);
+    const dims = {
+      hourHand: VIEWBOX * 0.18,
+      minuteHand: VIEWBOX * 0.275,
+      minuteTail: -VIEWBOX * 0.1,
+      hourStroke: VIEWBOX * 0.03,
+      minuteStroke: VIEWBOX * 0.025,
+      outerDot: VIEWBOX * 0.057,
+      innerDot: VIEWBOX * 0.04,
+      markerDist: C * 0.75,
+      markerOuter: VIEWBOX * 0.02,
+      markerInner: VIEWBOX * 0.019,
+    };
 
-  const minuteX =
-    center + minuteHandLength * Math.cos((minuteAngle * Math.PI) / 180);
-  const minuteY =
-    center + minuteHandLength * Math.sin((minuteAngle * Math.PI) / 180);
-
-  const minuteTailX =
-    center - minuteTailLength * Math.cos((minuteAngle * Math.PI) / 180);
-  const minuteTailY =
-    center - minuteTailLength * Math.sin((minuteAngle * Math.PI) / 180);
-
-  const markers = useMemo(() => {
-    const arr = [];
-    for (let i = 0; i < 12; i++) {
-      const angleRad = (i * 30 - 90) * (Math.PI / 180);
-      const markerDistance = center * 0.75;
-      const markerX = center + markerDistance * Math.cos(angleRad);
-      const markerY = center + markerDistance * Math.sin(angleRad);
+    const markers = Array.from({ length: 12 }, (_, i) => {
       const isCardinal = i % 3 === 0;
-      arr.push(
-        <Circle
-          key={i}
-          cx={markerX}
-          cy={markerY}
-          r={isCardinal ? "2%" : "1.9%"}
-          fill={isCardinal ? "#fff" : hexToRgba(bgColor, 0.14)}
-        />
-      );
-    }
-    return arr;
-  }, [center, bgColor]);
+      return {
+        key: i,
+        radius: isCardinal ? dims.markerOuter : dims.markerInner,
+        fill: isCardinal ? "#fff" : bgCol,
+        rotation: i * 30,
+      };
+    });
 
-  const bgFill = useMemo(() => hexToRgba(bgColor, 0.14), [bgColor]);
+    return { bgCol, hourAngle, minuteAngle, dims, markers };
+  }, [hour, min, color]);
 
   return (
-    <Svg width={size} height={size}>
-      <Circle cx={center} cy={center} r={center} fill={bgFill} />
-      {markers}
+    <Svg
+      width="100%"
+      height="100%"
+      viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`}
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <Circle cx={C} cy={C} r={C} fill={bgCol} />
 
+      {/* Markers */}
+      {markers.map(({ key, radius, fill, rotation }) => (
+        <Circle
+          key={key}
+          cx={C}
+          cy={C - dims.markerDist}
+          r={radius}
+          fill={fill}
+          transform={`rotate(${rotation}, ${C}, ${C})`}
+        />
+      ))}
+
+      {/* Minute hand */}
       <Line
-        x1={minuteTailX}
-        y1={minuteTailY}
-        x2={minuteX}
-        y2={minuteY}
-        stroke={bgColor}
-        strokeWidth={"2.5%"}
+        x1={C - dims.minuteTail}
+        y1={C}
+        x2={C + dims.minuteHand}
+        y2={C}
+        stroke={color}
+        strokeWidth={dims.minuteStroke}
         strokeLinecap="round"
+        transform={`rotate(${minuteAngle}, ${C}, ${C})`}
       />
 
+      {/* Hour hand */}
       <Line
-        x1={center}
-        y1={center}
-        x2={hourX}
-        y2={hourY}
-        stroke="white"
-        strokeWidth={"3%"}
+        x1={C}
+        y1={C}
+        x2={C + dims.hourHand}
+        y2={C}
+        stroke="#fff"
+        strokeWidth={dims.hourStroke}
         strokeLinecap="round"
+        transform={`rotate(${hourAngle}, ${C}, ${C})`}
       />
 
-      <Circle cx={center} cy={center} r={"5.7%"} fill="#fff" />
-      <Circle cx={center} cy={center} r={"4.%"} fill="#333" />
+      {/* Center cap */}
+      <Circle cx={C} cy={C} r={dims.outerDot} fill="#fff" />
+      <Circle cx={C} cy={C} r={dims.innerDot} fill="#333" />
     </Svg>
   );
 };
