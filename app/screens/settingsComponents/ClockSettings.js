@@ -7,7 +7,7 @@ import MinimalBold from "../../clock-designs/MinimalBold";
 import MinimalThin from "../../clock-designs/MinimalThin";
 import AnalogClock from "../../clock-designs/AnalogClock";
 import WeatherBattery from "../../clock-designs/WeatherBattery.jsx";
-import WindowsClock from "../../clock-designs/WindowsClock.jsx";
+import WindowsClock from "../../clock-designs/WindowsClock/WindowsClock.jsx";
 import SegmentClock from "../../clock-designs/SegmentClock";
 import CircleTheme from "../../clock-designs/circleTheme/CircleTheme.jsx";
 import EarthClock from "../../clock-designs/EarthClock/EarthClock.jsx";
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
   selectedOption: {
     borderColor: "#E6F904",
     borderWidth: 3.4,
+    overflow: "hidden",
   },
   previewContainer: {
     width: "100%",

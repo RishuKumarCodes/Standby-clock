@@ -41,7 +41,8 @@ function TimeProvider({ children }) {
       date: time.getDate(),
       day: time.toLocaleString("en-US", { weekday: "long" }),
       month: time.toLocaleString("en-US", { month: "long" }),
-      monthNumber: time.getMonth() + 1
+      monthNumber: time.getMonth() + 1,
+      year: time.getFullYear(),
     }),
     [time]
   );
@@ -157,6 +158,7 @@ function CombinedClockStatus({ children }) {
 
   const hour = is24HourFormat ? time.hour : time.hour % 12 || 12;
   const ampm = time.hour >= 12 ? "PM" : "AM";
+  const year = time.year;
 
   const clockStatus = useMemo(
     () => ({
@@ -167,6 +169,7 @@ function CombinedClockStatus({ children }) {
       month: time.month,
       monthNumber: time.monthNumber,
       ampm,
+      year,
       battery,
       chargingStatus,
       batteryLevelWhileCharging,
@@ -181,6 +184,7 @@ function CombinedClockStatus({ children }) {
       time.month,
       time.monthNumber,
       ampm,
+      year,
       battery,
       chargingStatus,
       batteryLevelWhileCharging,

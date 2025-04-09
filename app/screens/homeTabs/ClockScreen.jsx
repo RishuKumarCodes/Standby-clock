@@ -8,7 +8,7 @@ const AnalogClock = lazy(() => import("../../clock-designs/AnalogClock.jsx"));
 const WeatherBattery = lazy(() =>
   import("../../clock-designs/WeatherBattery.jsx")
 );
-const WindowsClock = lazy(() => import("../../clock-designs/WindowsClock.jsx"));
+const WindowsClock = lazy(() => import("../../clock-designs/WindowsClock/WindowsClock.jsx"));
 const SegmentClock = lazy(() => import("../../clock-designs/SegmentClock.jsx"));
 const CircleTheme = lazy(() =>
   import("../../clock-designs/circleTheme/CircleTheme.jsx")
