@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/screens/+not-found.jsx", "app/_layout.jsx", "app/index.jsx", "app/(tabs)/settings.jsx", "app/(tabs)/_layout.jsx"  ]
+, "app/screens/+not-found.jsx", "app/_layout.jsx", "app/index.jsx", "app/(tabs)/settings.jsx", "app/(tabs)/_layout.jsx", "app/components/ReminderPopup.jsx", "app/components/ReminderPopup.jsx"  ]
 }

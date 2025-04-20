@@ -3,6 +3,7 @@ import { View, StyleSheet, BackHandler } from "react-native";
 import Sidebar from "./settingsComponents/sidebar.js";
 import ClockSettings from "./settingsComponents/ClockSettings.js";
 import ColorSettings from "./settingsComponents/ColorSettings.js";
+import ReminderSettings from "./settingsComponents/ReminderSettings.jsx";
 import GeneralSettings from "./settingsComponents/GeneralSettings.jsx";
 import RateUs from "./settingsComponents/RateUs.jsx";
 import { useScreenSettings } from "../context/ScreenSettingsContext";
@@ -24,6 +25,7 @@ export default function SettingsScreen({ onClose }) {
   const tabComponents = {
     clock: ClockSettings,
     colors: ColorSettings,
+    reminders:ReminderSettings,
     general: GeneralSettings,
     rateUs: RateUs,
   };

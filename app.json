@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Standby-clock",
-    "slug": "Standby-clock",
-    "version": "1.0.0",
+    "name": "Focus Dock",
+    "slug": "Focus-Dock",
+    "version": "2.0.0",
     "orientation": "landscape",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -14,16 +14,15 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#000"
+        "backgroundColor": "#000000"
       },
-      "package": "com.rishukumarcodes.Standbyclock"
+      "package": "com.rishukumarcodes.FocusDock"
     },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -49,8 +48,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "0df30a4d-4b1c-4805-8503-e8b3d2d3f20b"
+        "projectId": "6b8296ce-beee-4ed9-afa1-d1247aab1f7d"
       }
-    }
+    },
+    "owner": "rishukumarcodes"
   }
 }

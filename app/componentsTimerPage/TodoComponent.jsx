@@ -33,7 +33,7 @@ const TodoComponent = ({ primaryColor = "#8F9EFF" }) => {
         const initialTodos = [
           {
             id: "1",
-            text: "Welcome to our Standby clock app.",
+            text: "Welcome to Focus-Dock.",
             completed: false,
           },
           {

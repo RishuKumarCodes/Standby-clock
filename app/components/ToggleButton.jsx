@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { TouchableOpacity, Animated, StyleSheet, Easing } from "react-native";
+import { TouchableOpacity, Animated, StyleSheet, Easing, Vibration } from "react-native";
 
 export default function ToggleButton({ value, onValueChange, style }) {
   const activeTrackColor = "#E6F904";
@@ -44,6 +44,7 @@ export default function ToggleButton({ value, onValueChange, style }) {
   const thumbColor = value ? activeThumbColor : inactiveThumbColor;
 
   const toggleSwitch = () => {
+    Vibration.vibrate(1);
     onValueChange(!value);
   };
 
