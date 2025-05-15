@@ -2,19 +2,19 @@ import React, { Suspense, lazy } from "react";
 import { View } from "react-native";
 import { useClockStyle } from "../../context/ClockStyleContext.js";
 
-const MinimalBold = lazy(() => import("../../clock-designs/MinimalBold.jsx"));
-const MinimalThin = lazy(() => import("../../clock-designs/MinimalThin.jsx"));
-const AnalogClock = lazy(() => import("../../clock-designs/AnalogClock.jsx"));
+const MinimalBold = lazy(() => import("../../themes/date&Time/MinimalBold.jsx"));
+const MinimalThin = lazy(() => import("../../themes/date&Time/MinimalThin.jsx"));
+const AnalogClock = lazy(() => import("../../themes/date&Time/AnalogClock.jsx"));
 const WeatherBattery = lazy(() =>
-  import("../../clock-designs/WeatherBattery.jsx")
+  import("../../themes/date&Time/WeatherBattery.jsx")
 );
-const WindowsClock = lazy(() => import("../../clock-designs/WindowsClock/WindowsClock.jsx"));
-const SegmentClock = lazy(() => import("../../clock-designs/SegmentClock.jsx"));
+const WindowsClock = lazy(() => import("../../themes/date&Time/WindowsClock/WindowsClock.jsx"));
+const SegmentClock = lazy(() => import("../../themes/date&Time/SegmentClock.jsx"));
 const CircleTheme = lazy(() =>
-  import("../../clock-designs/circleTheme/CircleTheme.jsx")
+  import("../../themes/date&Time/circleTheme/CircleTheme.jsx")
 );
 const EarthClock = lazy(() =>
-  import("../../clock-designs/EarthClock/EarthClock.jsx")
+  import("../../themes/date&Time/EarthClock/EarthClock.jsx")
 );
 
 const clockComponents = {

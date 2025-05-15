@@ -4,6 +4,9 @@ import { Text, StyleSheet } from "react-native";
 const H1Txt = ({ style, ...props }) => {
   return <Text style={[styles.h1, style]} {...props} />;
 };
+const H2Txt = ({ style, ...props }) => {
+  return <Text style={[styles.h2, style]} {...props} />;
+};
 
 const MdTxt = ({ style, ...props }) => {
   return <Text style={[styles.md, style]} {...props} />;
@@ -22,6 +25,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 20,
   },
+  h2: {
+    fontFamily: "Poppins-SemiBold",
+    color: "#fff",
+    fontSize: 16,
+  },
   md: {
     color: "#e0e0e0",
     fontSize: 16,
@@ -39,4 +47,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { H1Txt, MdTxt, DimTxt, H1Light };
+export { H1Txt, H2Txt, MdTxt, DimTxt, H1Light };
