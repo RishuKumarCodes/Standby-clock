@@ -13,7 +13,7 @@ import {
   PanResponder,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { H1Light, H1Txt, MdTxt } from "../CustomText";
+import { H1Light, H1Txt, MdTxt } from "../ui/CustomText";
 
 const ANIMATION_DURATION = 250;
 const SHEET_HEIGHT = 300; // Max sheet height (for slide calculations)

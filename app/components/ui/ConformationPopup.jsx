@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Modal, View, Pressable, StyleSheet, Animated } from "react-native";
-import { MdTxt } from "../CustomText";
+import { MdTxt } from "./CustomText";
 
 const ConformationPopup = ({
   visible,

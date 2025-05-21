@@ -11,10 +11,10 @@ import Slider from "@react-native-community/slider";
 import { useGridSettings } from "../../context/GridSettingsContext.js";
 import { useScreenSettings } from "../../context/ScreenSettingsContext.js";
 import { useSleepOverlay } from "../../context/SleepOverlayContext.js";
-import { useClockStyle } from "../../context/ClockStyleContext";
+import { PageSettings } from "../../context/PageSettingsContext.js";
 import * as NavigationBar from "expo-navigation-bar";
-import { DimTxt, H1Txt, MdTxt } from "@/app/components/CustomText.jsx";
-import ToggleButton from "@/app/components/ToggleButton";
+import { DimTxt, H1Txt, MdTxt } from "@/app/components/ui/CustomText.jsx";
+import ToggleButton from "@/app/components/ui/ToggleButton.jsx";
 import { ScrollView } from "react-native-gesture-handler";
 
 if (
@@ -51,7 +51,7 @@ export default function GeneralSettings() {
 
   const { sleepMode, setSleepMode } = useSleepOverlay();
 
-  const { showChargingStatus, setShowChargingStatus } = useClockStyle();
+  const { showChargingStatus, setShowChargingStatus } = PageSettings();
 
   const {
     navBarVisible,

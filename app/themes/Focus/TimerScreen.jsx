@@ -1,16 +1,20 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import TimerComponent from "../../componentsTimerPage/TimerComponent.jsx";
-import TodoComponent from "../../componentsTimerPage/TodoComponent.jsx";
+import TimerComponent from "./componentsTimerPage/TimerComponent.jsx";
+import TodoComponent from "./componentsTimerPage/TodoComponent.jsx";
 
-const TimerScreen = () => {
+const TimerScreen = ({ previewMode, color }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <View style={styles.timerSection}>
-        <TimerComponent totalTime={1500} />
+        <TimerComponent
+          totalTime={1500}
+          previewMode={previewMode}
+          primaryColor={color}
+        />
       </View>
-      <View style={styles.todoSection}>
-        <TodoComponent />
+      <View style={[styles.todoSection, { flex: 1 }]}>
+        <TodoComponent previewMode={previewMode} primaryColor={color} />
       </View>
     </View>
   );

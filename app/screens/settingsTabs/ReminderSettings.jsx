@@ -7,7 +7,7 @@ import {
   Animated,
   TouchableWithoutFeedback,
 } from "react-native";
-import { H1Light, H1Txt, H2Txt, MdTxt } from "@/app/components/CustomText.jsx";
+import { H1Light, H1Txt, H2Txt, MdTxt } from "@/app/components/ui/CustomText.jsx";
 import { Pressable, ScrollView } from "react-native-gesture-handler";
 import useReminders from "@/app/hooks/useReminders";
 import { scheduleReminderNotification } from "@/app/utils/notificationService";
@@ -17,7 +17,7 @@ import {
   deleteReminder,
 } from "@/app/storage/remindersStorage";
 import ReminderForm from "../../components/reminderSettings/ReminderForm";
-import ToggleButton from "@/app/components/ToggleButton";
+import ToggleButton from "@/app/components/ui/ToggleButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import Svg, { Path } from "react-native-svg";

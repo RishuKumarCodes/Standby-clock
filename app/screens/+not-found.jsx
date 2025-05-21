@@ -1,7 +1,7 @@
 import { Link, Stack } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
-import { H1Light } from "../components/CustomText";
+import { H1Light } from "../components/ui/CustomText";
 
 export default function NotFoundScreen() {
   return (

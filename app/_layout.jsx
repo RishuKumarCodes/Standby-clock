@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 
-import ReminderPopup from "./components/ReminderPopup";
+import ReminderPopup from "./components/commmon/ReminderPopup";
 import { ScreenSettings } from "./context/ScreenSettingsContext.js";
 
 export default function Layout() {

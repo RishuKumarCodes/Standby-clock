@@ -7,11 +7,6 @@ import {
   StyleSheet,
 } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import GeneralSettingsIcon from "../../../assets/icons/GeneralSettingsIcon.jsx";
-// import ReminderIcon from "../../../assets/icons/ReminderIcon.jsx";
 import SettingsAnimatedIcon from "../../../assets/icons/SettingsAnimatedIcon.jsx";
 import HeartIcon from "../../../assets/icons/HeartAnimatedIcon.jsx";
 import ThemesIcon from "../../../assets/icons/ThemesAnimatedIcon.jsx";
@@ -93,23 +88,13 @@ const Sidebar = ({ activeTab, setActiveTab, onClose }) => {
         >
           <ThemesIcon isActive={activeTab === "clock"} />
         </SidebarItem>
+
         <SidebarItem
           isActive={activeTab === "colors"}
           onPress={handleTabPress("colors")}
         >
           <ColorPalleteIcon isActive={activeTab === "colors"} />
         </SidebarItem>
-
-        {/* <SidebarItem
-          isActive={activeTab === "colors"}
-          onPress={handleTabPress("colors")}
-        >
-          <Ionicons
-            name="color-palette-outline"
-            size={24}
-            color={activeTab === "colors" ? "black" : "white"}
-          />
-        </SidebarItem> */}
 
         <SidebarItem
           isActive={activeTab === "reminders"}
@@ -130,17 +115,6 @@ const Sidebar = ({ activeTab, setActiveTab, onClose }) => {
         >
           <HeartIcon isActive={activeTab === "rateUs"} />
         </SidebarItem>
-
-        {/* <SidebarItem
-          isActive={activeTab === "rateUs"}
-          onPress={handleTabPress("rateUs")}
-        >
-          <AntDesign
-            name="hearto"
-            size={24}
-            color={activeTab === "rateUs" ? "black" : "white"}
-          />
-        </SidebarItem> */}
       </ScrollView>
     </View>
   );

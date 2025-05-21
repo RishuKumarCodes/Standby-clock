@@ -1,4 +1,4 @@
-import uuid from "react-native-uuid";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -6,32 +6,20 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { H1Light } from "../CustomText";
-import {
-  AddNewPage,
-  deletePage,
-  getInitialPages,
-} from "@/app/storage/pageWidgetsStorage";
+
+import uuid from "react-native-uuid";
+import { H1Light } from "../ui/CustomText";
+
+import { AddNewPage, deletePage } from "@/app/storage/pageWidgetsStorage";
 import { categoryProviders, componentMap } from "@/app/registry/pageRegistry";
-import { useClockStyle } from "@/app/context/ClockStyleContext";
+import { PageSettings } from "@/app/context/PageSettingsContext";
 import ConformationPopup from "@/app/components/ui/ConformationPopup";
 
-const PagesPreviews = () => {
-  const [pages, setPages] = useState([]);
-  const { userColor } = useClockStyle();
-  const [activePage, setActivePage] = useState();
-  const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [PageIdToBeDeleted, setPageIdToBeDeleted] = useState("");
+const PagesPreviews = ({ pages, setPages, activePage, setActivePage }) => {
+  const { userColor } = PageSettings();
 
-  useEffect(() => {
-    async function fetch() {
-      const pages = await getInitialPages();
-      setPages(pages);
-      setActivePage(pages[0]?.id);
-    }
-    fetch();
-  }, []);
+  const [showDeletePopup, setShowDeletePopup] = React.useState(false);
+  const [toDeleteId, setToDeleteId] = React.useState("");
 
   const onAddNew = async () => {
     const newPage = {
@@ -41,7 +29,16 @@ const PagesPreviews = () => {
     };
     const updated = await AddNewPage(newPage);
     setPages(updated);
-    setActivePage(newPage.id);
+    setActivePage(newPage);
+  };
+
+  const onConfirmDelete = async () => {
+    setShowDeletePopup(false);
+    const updated = await deletePage(toDeleteId);
+    setPages(updated);
+    if (toDeleteId === activePage?.id) {
+      setActivePage(updated[0] || null);
+    }
   };
 
   return (
@@ -66,63 +63,58 @@ const PagesPreviews = () => {
             const ContextProvider = categoryProviders[page.category];
             const content = (
               <React.Suspense fallback={<View style={styles.card} />}>
-                <Comp color={userColor} previewMode={true} />
+                <Comp
+                  color={userColor}
+                  previewMode={true}
+                  variant={"smallPreview"}
+                  style={{ scale: 0.3 }}
+                />
               </React.Suspense>
             );
+
             return (
               <Pressable
                 key={page.id}
-                onPress={() => {
-                  setActivePage(page.id);
-                }}
+                onPress={() => setActivePage(page)}
                 onLongPress={() => {
-                  setPageIdToBeDeleted(page.id);
+                  setToDeleteId(page.id);
                   setShowDeletePopup(true);
                 }}
                 style={({ pressed }) => [
                   styles.card,
-                  activePage === page.id && styles.activeCard,
+                  activePage?.id === page.id && styles.activeCard,
                   pressed && { opacity: 0.7 },
                 ]}
               >
-                {ContextProvider ? (
-                  <ContextProvider>{content}</ContextProvider>
-                ) : (
-                  content
-                )}
+                <View pointerEvents="none" style={styles.cardContentContainer}>
+                  {ContextProvider ? (
+                    <ContextProvider>{content}</ContextProvider>
+                  ) : (
+                    content
+                  )}
+                </View>
               </Pressable>
             );
           })}
+
           <TouchableOpacity onPress={onAddNew} style={styles.addNew}>
             <H1Light>+</H1Light>
           </TouchableOpacity>
         </ScrollView>
       </View>
 
-      {pages.length > 1 ? (
-        <ConformationPopup
-          visible={showDeletePopup}
-          message={`Are you sure to delete this page?`}
-          cancelText="Cancel"
-          confirmText="Delete"
-          onConfirm={async () => {
-            setShowDeletePopup(false);
-            const updated = await deletePage(PageIdToBeDeleted);
-            setPages(updated);
-          }}
-          onCancel={() => setShowDeletePopup(false)}
-        />
-      ) : (
-        <ConformationPopup
-          visible={showDeletePopup}
-          message={`There should be at least one page`}
-          confirmText="Got it !"
-          onConfirm={async () => {
-            setShowDeletePopup(false);
-          }}
-          onCancel={() => setShowDeletePopup(false)}
-        />
-      )}
+      <ConformationPopup
+        visible={showDeletePopup}
+        message={
+          pages.length > 1
+            ? "Are you sure to delete this page?"
+            : "There should be at least one page"
+        }
+        cancelText={pages.length > 1 ? "Cancel" : undefined}
+        confirmText={pages.length > 1 ? "Delete" : "Got it !"}
+        onConfirm={onConfirmDelete}
+        onCancel={() => setShowDeletePopup(false)}
+      />
     </>
   );
 };
@@ -133,10 +125,8 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
     paddingVertical: 6,
-    justifyContent: "center",
     height: 84,
   },
-
   card: {
     height: 62,
     aspectRatio: 19.5 / 9,
@@ -149,6 +139,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 40,
     elevation: 14,
+    overflow: "hidden",
+  },
+  cardContentContainer: {
+    height: "100%",
+    width: "100%",
+    // borderWidth: 4,
+    // borderColor: "red",
+    // transform: [{ scale: 0.3 }],
   },
   activeCard: {
     borderWidth: 1.5,

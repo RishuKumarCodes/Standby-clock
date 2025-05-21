@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import { useClockStatus } from "../../context/ClockStatusContext";
-import BatteryCharging from "../../components/BatteryCharging";
+import BatteryCharging from "../../components/commmon/CircleChargingProgressBar";
 
 const pad = (num) => (num < 10 ? "0" + num : String(num));
 const formatTime = (hour, min) => `${pad(hour)}:${pad(min)}`;

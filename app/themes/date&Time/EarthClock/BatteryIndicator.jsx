@@ -4,7 +4,12 @@ import Svg, { Path } from "react-native-svg";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-function BatteryIndicator({ batteryLevel = 100, charging = false, color }) {
+function BatteryIndicator({
+  batteryLevel = 100,
+  charging = false,
+  color,
+  scale = 1,
+}) {
   const filledCells = Math.floor(batteryLevel / 20);
 
   const cellPaths = [
@@ -41,7 +46,7 @@ function BatteryIndicator({ batteryLevel = 100, charging = false, color }) {
   }, [charging, filledCells, blinkOpacity]);
 
   return (
-    <View style={styles.container}>
+    <View style={{ width: 150 * scale }}>
       <View style={styles.svgContainer}>
         <Svg
           width="100%"
@@ -88,9 +93,6 @@ function BatteryIndicator({ batteryLevel = 100, charging = false, color }) {
 export default React.memo(BatteryIndicator);
 
 const styles = StyleSheet.create({
-  container: {
-    width: 150,
-  },
   svgContainer: {
     width: "100%",
     aspectRatio: 829.85 / 226.94,

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, ScrollView, TouchableOpacity } from "react-native";
-import { MdTxt, DimTxt } from "@/app/components/CustomText.jsx";
-import ToggleButton from "@/app/components/ToggleButton";
+import { MdTxt, DimTxt } from "@/app/components/ui/CustomText.jsx";
+import ToggleButton from "@/app/components/ui/ToggleButton";
 import TimePickerWheel from "./TimePickerWheel";
 import PrioritySelectorDropdown from "./PrioritySelectorDropdown";
 import SoundSelector from "./SoundSelector";

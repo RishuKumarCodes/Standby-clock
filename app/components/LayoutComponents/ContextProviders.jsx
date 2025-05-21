@@ -1,7 +1,7 @@
 import React from "react";
 import { GridSettingsProvider } from "../../context/GridSettingsContext";
 import { ScreenSettingsProvider } from "../../context/ScreenSettingsContext";
-import { ClockStyleProvider } from "../../context/ClockStyleContext";
+import { PageSettingsProvider } from "../../context/PageSettingsContext";
 import { ClockStatusProvider } from "../../context/ClockStatusContext";
 import { SleepOverlayProvider } from "../../context/SleepOverlayContext";
 
@@ -10,11 +10,11 @@ export default function ContextProviders({ children }) {
     <GridSettingsProvider>
       <ScreenSettingsProvider>
         <SleepOverlayProvider>
-          <ClockStyleProvider>
+          <PageSettingsProvider>
             <ClockStatusProvider>
               {children}
             </ClockStatusProvider>
-          </ClockStyleProvider>
+          </PageSettingsProvider>
         </SleepOverlayProvider>
       </ScreenSettingsProvider>
     </GridSettingsProvider>

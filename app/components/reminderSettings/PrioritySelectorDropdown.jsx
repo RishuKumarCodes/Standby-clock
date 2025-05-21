@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import {MdTxt} from '../CustomText';
+import {MdTxt} from '../ui/CustomText';
 
 const PrioritySelectorDropdown = ({
   color,

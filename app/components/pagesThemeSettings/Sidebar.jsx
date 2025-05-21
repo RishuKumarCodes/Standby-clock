@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { MdTxt } from "../CustomText";
+import { MdTxt } from "../ui/CustomText";
 import { ScrollView } from "react-native-gesture-handler";
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
@@ -12,29 +12,30 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     { key: "todos", label: "Todos" },
     { key: "music", label: "Music" },
     { key: "anaylitics", label: "Anaylitics" },
-    { key: "others", label: "Others" },
   ];
 
   return (
     <ScrollView style={styles.sidebar}>
-      {tabs.map(({ key, label }) => {
-        const isActive = activeTab === key;
-        return (
-          <TouchableOpacity
-            key={key}
-            style={[styles.sidebarItem, isActive && styles.sidebarItemActive]}
-            onPress={() => setActiveTab(key)}
-          >
-            <MdTxt
-              style={[isActive ? styles.activeTxt : null, { fontSize: 15.2 }]}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+      <View style={styles.itemContainer}>
+        {tabs.map(({ key, label }) => {
+          const isActive = activeTab === key;
+          return (
+            <TouchableOpacity
+              key={key}
+              style={[styles.sidebarItem, isActive && styles.sidebarItemActive]}
+              onPress={() => setActiveTab(key)}
             >
-              {label}
-            </MdTxt>
-          </TouchableOpacity>
-        );
-      })}
+              <MdTxt
+                style={[isActive ? styles.activeTxt : null, { fontSize: 15.2 }]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {label}
+              </MdTxt>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </ScrollView>
   );
 };
@@ -43,11 +44,13 @@ export default Sidebar;
 
 const styles = StyleSheet.create({
   sidebar: {
-    marginTop: 25,
-    marginBottom: 10,
-    marginRight: 5,
     minWidth: 120,
     maxWidth: 120,
+    marginRight: 5,
+    marginTop: 10,
+  },
+  itemContainer: {
+    paddingVertical: 15,
   },
   sidebarItem: {
     borderTopRightRadius: 50,

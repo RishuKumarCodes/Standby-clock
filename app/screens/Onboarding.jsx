@@ -7,7 +7,7 @@ import {
   Animated,
 } from "react-native";
 import PagerView from "react-native-pager-view";
-import { H1Light, MdTxt } from "../components/CustomText";
+import { H1Light, MdTxt } from "../components/ui/CustomText";
 import { Image } from "react-native";
 import { Video } from "expo-av";
 

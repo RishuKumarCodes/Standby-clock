@@ -1,23 +1,29 @@
 import React from "react";
 import { View, Pressable, StyleSheet, ScrollView } from "react-native";
-import { useClockStyle } from "../../context/ClockStyleContext.js";
-import { MdTxt } from "../CustomText.jsx";
+import { PageSettings } from "../../context/PageSettingsContext.js";
+import { MdTxt } from "../ui/CustomText.jsx";
 
 // clock theme components...
-import MinimalBold from "../../themes/date&Time/MinimalBold.jsx";
+import MinimalBold from "../../themes/date&Time/MinimalBold.tsx";
 import MinimalThin from "../../themes/date&Time/MinimalThin.jsx";
-import AnalogClock from "../../themes/date&Time/AnalogClock.jsx";
-import WeatherBattery from "../../themes/date&Time/WeatherBattery.jsx";
-import WindowsClock from "../../themes/date&Time/WindowsClock/WindowsClock.jsx";
-import SegmentClock from "../../themes/date&Time/SegmentClock.jsx";
-import CircleTheme from "../../themes/date&Time/circleTheme/CircleTheme.jsx";
-import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.jsx";
+import AnalogClock from "../../themes/date&Time/AnalogClock.tsx";
+import WeatherBattery from "../../themes/date&Time/WeatherBattery.tsx";
+import WindowsClock from "../../themes/date&Time/WindowsClock/WindowsClock.tsx";
+import SegmentClock from "../../themes/date&Time/SegmentClock.tsx";
+import CircleTheme from "../../themes/date&Time/circleTheme/CircleTheme.tsx";
+import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.tsx";
 
 // focus theme components...
 import TimerScreen from "../../themes/Focus/TimerScreen.jsx";
 
-const ThemesCards = ({ activeTab }) => {
-  const { clockStyle, setClockStyle, userColor } = useClockStyle();
+const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
+  const { userColor } = PageSettings();
+
+  const setClockStyle = (styleName) => {
+    if (!activePage) return;
+    const updated = { ...activePage, component: styleName };
+    onChangePage(updated);
+  };
 
   const dateTime = {
     MinimalBold,
@@ -30,63 +36,57 @@ const ThemesCards = ({ activeTab }) => {
     WindowsClock,
   };
   const calendar = {
-    /* …your calendar components*/
+    /* … */
   };
-  const focus = {
-    TimerScreen,
-  };
+  const focus = { TimerScreen };
 
   const themeMaps = { dateTime, calendar, focus };
   const currentThemes = themeMaps[activeTab] || {};
 
   if (Object.keys(currentThemes).length === 0) {
     return (
-      <View style={styles.container}>
-        <View style={styles.emptyContainer}>
-          <MdTxt>Coming Soon!</MdTxt>
-        </View>
+      <View style={styles.emptyContainer}>
+        <MdTxt>Coming Soon!</MdTxt>
       </View>
     );
   }
 
   return (
-    <ScrollView >
+    <ScrollView nestedScrollEnabled={true}>
       <View style={styles.container}>
-        <View style={styles.styleOptions}>
-          {Object.keys(currentThemes).map((styleName) => {
-            const PreviewComponent = currentThemes[styleName];
-            return (
-              <Pressable
-                key={styleName}
-                style={[
-                  styles.styleOption,
-                  clockStyle === styleName && styles.selectedOption,
-                ]}
-                onPress={() => setClockStyle(styleName)}
-              >
-                <View style={styles.previewContainer} pointerEvents="none">
-                  <PreviewComponent
-                    previewMode={true}
-                    color={userColor || "#fff"}
-                  />
-                </View>
-              </Pressable>
-            );
-          })}
-        </View>
+        {Object.keys(currentThemes).map((styleName) => {
+          const PreviewComponent = currentThemes[styleName];
+          return (
+            <Pressable
+              key={styleName}
+              style={[
+                styles.styleOption,
+                activePage?.component === styleName && styles.selectedOption,
+              ]}
+              onPress={() => setClockStyle(styleName)}
+            >
+              <View style={styles.previewContainer} pointerEvents="none">
+                <PreviewComponent
+                  previewMode={true}
+                  variant={"themeCard"}
+                  color={userColor || "#fff"}
+                />
+              </View>
+            </Pressable>
+          );
+        })}
       </View>
     </ScrollView>
   );
 };
+
+export default ThemesCards;
 
 const styles = StyleSheet.create({
   container: {
     padding: 15,
     marginTop: 9,
     flex: 1,
-  },
-
-  styleOptions: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
@@ -108,8 +108,8 @@ const styles = StyleSheet.create({
     elevation: 9.5,
   },
   selectedOption: {
-    borderColor: "#E6F904",
-    borderWidth: 3.4,
+    borderColor: "#d8f904",
+    borderWidth: 3.1,
     overflow: "hidden",
   },
   previewContainer: {
@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   emptyContainer: {
     flex: 1,
     paddingBottom: 30,
@@ -128,5 +127,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-export default ThemesCards;

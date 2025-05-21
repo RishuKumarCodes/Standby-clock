@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
 import {
@@ -7,34 +7,73 @@ import {
   Gesture,
 } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
-// import ClockScreen from "./homeTabs/ClockScreen";
-// import TimerScreen from "./homeTabs/TimerScreen";
 import { useKeepAwake } from "expo-keep-awake";
-import AlternatingDimOverlay from "../components/AlternatingDimOverlay";
-import SleepOverlay from "../components/SleepOverlay";
+import AlternatingDimOverlay from "../components/commmon/AlternatingDimOverlay";
+import SleepOverlay from "../components/commmon/SleepOverlay.jsx";
 import { useSleepOverlay } from "../context/SleepOverlayContext";
 import { useScreenSettings } from "../context/ScreenSettingsContext";
 import { getInitialPages } from "../storage/pageWidgetsStorage";
 import { componentMap, categoryProviders } from "../registry/pageRegistry";
-import { useClockStyle } from "../context/ClockStyleContext";
-// I have to remove the clockStyle from the clockStyleContext or maybe also move the "color" and "show battery percentage" too.
-// also I've to delete the clock-designs folder and the homeTabs folder.
+import { PageSettings } from "../context/PageSettingsContext";
+
 export default React.memo(function HomePage() {
   useKeepAwake();
   const { sleepMode, isScreenBlack, toggleSleepOverlay } = useSleepOverlay();
   const { activeScreen } = useScreenSettings();
-  const { userColor } = useClockStyle();
+  const { userColor, activePage, setActivePage, loading } = PageSettings();
 
   const [pages, setPages] = useState([]);
+  const pagerRef = useRef(null);
 
+  // Load initial pages and set the active page
   useEffect(() => {
-    async function load() {
+    if (loading) return;
+    (async () => {
       const initial = await getInitialPages();
       setPages(initial);
-    }
-    load();
-  }, []);
 
+      const saved =
+        activePage?.id && initial.find((p) => p.id === activePage.id);
+      const next = saved || initial[0] || null;
+      if (next) setActivePage(next);
+    })();
+  }, [loading]);
+
+  // Refresh pages when returning to home screen
+  useEffect(() => {
+    if (activeScreen !== "home") return;
+    (async () => {
+      const fresh = await getInitialPages();
+      setPages(fresh);
+    })();
+  }, [activeScreen]);
+
+  // Determine the index of the active page
+  const activeIndex = pages.findIndex((p) => p.id === activePage?.id);
+
+  // Imperatively jump to the correct page whenever pages or activeIndex changes
+  useEffect(() => {
+    if (pagerRef.current && pages.length > 0 && activeIndex >= 0) {
+      pagerRef.current.setPageWithoutAnimation(activeIndex);
+    }
+  }, [pages, activeIndex]);
+
+  const onPageScrollStateChanged = ({ nativeEvent }) => {
+    if (nativeEvent.pageScrollState !== "idle") return;
+    const idx = pendingIndexRef.current;
+    pendingIndexRef.current = null;
+    const page = pages[idx];
+    if (page) {
+      setActivePage(page);
+    }
+  };
+
+  const pendingIndexRef = useRef(null);
+  const onPageSelected = ({ nativeEvent }) => {
+    pendingIndexRef.current = nativeEvent.position;
+  };
+
+  // Double-tap to toggle sleep overlay
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .maxDelay(300)
@@ -53,7 +92,15 @@ export default React.memo(function HomePage() {
             <SleepOverlay />
           ) : (
             <>
-              <PagerView style={styles.pagerView} initialPage={1}>
+              <PagerView
+                ref={pagerRef}
+                style={styles.pagerView}
+                initialPage={0}
+                offscreenPageLimit={2}
+                onPageSelected={onPageSelected}
+                onPageScrollStateChanged={onPageScrollStateChanged}
+                transitionStyle="scroll"
+              >
                 {pages.map((page) => {
                   const Comp = componentMap[page.component];
                   const ContextProvider = categoryProviders[page.category];
@@ -72,12 +119,6 @@ export default React.memo(function HomePage() {
                     </View>
                   );
                 })}
-                {/* <View key="1" style={styles.page}>
-                  <TimerScreen />
-                </View>
-                <View key="2" style={styles.page}>
-                  <ClockScreen />
-                </View> */}
               </PagerView>
               <AlternatingDimOverlay />
             </>

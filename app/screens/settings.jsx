@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { View, StyleSheet, BackHandler } from "react-native";
 import Sidebar from "./settingsTabs/sidebar.js";
 import PagesThemes from "./settingsTabs/PagesThemeSettings.js";
-import ColorSettings from "./settingsTabs/ColorSettings.js";
+import ColorSettings from "./settingsTabs/ColorSettings.jsx";
 import ReminderSettings from "./settingsTabs/ReminderSettings.jsx";
 import GeneralSettings from "./settingsTabs/GeneralSettings.jsx";
 import RateUs from "./settingsTabs/RateUs.jsx";

@@ -10,7 +10,7 @@ import {
 import React from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Entypo from "@expo/vector-icons/Entypo";
-import { H1Txt, H1Light, MdTxt } from "@/app/components/CustomText";
+import { H1Txt, H1Light, MdTxt } from "@/app/components/ui/CustomText";
 const screenHeight = Dimensions.get("window").height;
 const RateUs = () => {
   const handleRateUs = () => {
