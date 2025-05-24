@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
   },
   baseStyle: {},
   wrapper: {
-    margin: 15,
+    margin: 14,
+    marginBottom:12,
     width: 268,
     borderRadius: 12,
     overflow: "hidden",
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     width: 34,
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 5,
+    marginVertical: 4.2,
   },
   dayText: {
     textAlign: "center",
@@ -198,12 +199,14 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   todayText: {
-    fontSize: 18,
+    fontSize: 17,
     color: "#fff",
     backgroundColor: "#0078D4",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    paddingTop: 2,
+    width: 29,
+    aspectRatio: 1,
     borderRadius: 40,
+    overflow: "visible",
   },
   blankDay: {
     fontSize: 18,

@@ -15,7 +15,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   ];
 
   return (
-    <ScrollView style={styles.sidebar}>
+    <ScrollView style={styles.sidebar} showsVerticalScrollIndicator={false}>
       <View style={styles.itemContainer}>
         {tabs.map(({ key, label }) => {
           const isActive = activeTab === key;

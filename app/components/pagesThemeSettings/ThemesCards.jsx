@@ -52,7 +52,7 @@ const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
   }
 
   return (
-    <ScrollView nestedScrollEnabled={true}>
+    <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         {Object.keys(currentThemes).map((styleName) => {
           const PreviewComponent = currentThemes[styleName];

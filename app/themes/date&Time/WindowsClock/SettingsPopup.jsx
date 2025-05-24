@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   switchRow: {
+    height:46,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

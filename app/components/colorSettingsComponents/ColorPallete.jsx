@@ -37,6 +37,7 @@ const colorGroups = [
 const ColorPallete = ({ userColor, setUserColor, setTempColor }) => {
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       style={styles.rightSection}
       contentContainerStyle={styles.rightContent}
     >

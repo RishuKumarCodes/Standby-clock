@@ -62,6 +62,11 @@ export async function updatePage(page: Pages): Promise<Pages[]> {
   return updated;
 }
 
+export async function resetPage(){
+  await AsyncStorage.setItem(PAGE_KEY, JSON.stringify(DEFAULT_PAGES));
+  return getInitialPages();
+}
+
 export async function deletePage(id: string): Promise<Pages[]> {
   const all = await getInitialPages();
   if (all.length == 1) {

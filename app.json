@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#000000"
       },
-      "package": "com.rishukumarcodes.FocusDock"
+      "package": "com.rishukumarcodes.Standbyclock"
     },
     "splash": {
       "image": "./assets/images/splash.png",

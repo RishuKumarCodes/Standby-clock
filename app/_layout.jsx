@@ -1,4 +1,6 @@
 import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import 'react-native-reanimated';
 import ContextProviders from "./components/LayoutComponents/ContextProviders";
 import FontLoader from "./components/LayoutComponents/FontLoader";
 import NotificationSetup from "./components/LayoutComponents/NotificationSetup";
@@ -14,31 +16,31 @@ export default function Layout() {
   const [currentReminder, setCurrentReminder] = useState(null);
 
   useEffect(() => {
-    ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.LANDSCAPE
-    );
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   }, []);
 
   return (
-    <FontLoader>
-      <NotificationSetup
-        onInAppReminder={(rem) => {
-          setCurrentReminder(rem);
-          setPopupVisible(true);
-        }}
-      />
-      <ContextProviders>
-        <Stack screenOptions={{ headerShown: false }} />
-        <ScreenSettings />
-        <ReminderPopup
-          visible={popupVisible}
-          reminder={currentReminder || { title: "", color: "#2196F3" }}
-          onDismiss={() => setPopupVisible(false)}
-          onDone={() => {
-            setPopupVisible(false);
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <FontLoader>
+        <NotificationSetup
+          onInAppReminder={(rem) => {
+            setCurrentReminder(rem);
+            setPopupVisible(true);
           }}
         />
-      </ContextProviders>
-    </FontLoader>
+        <ContextProviders>
+          <Stack screenOptions={{ headerShown: false }} />
+          <ScreenSettings />
+          <ReminderPopup
+            visible={popupVisible}
+            reminder={currentReminder || { title: "", color: "#2196F3" }}
+            onDismiss={() => setPopupVisible(false)}
+            onDone={() => {
+              setPopupVisible(false);
+            }}
+          />
+        </ContextProviders>
+      </FontLoader>
+    </GestureHandlerRootView>
   );
 }

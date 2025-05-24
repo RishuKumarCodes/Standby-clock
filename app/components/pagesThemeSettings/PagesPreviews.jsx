@@ -10,12 +10,19 @@ import {
 import uuid from "react-native-uuid";
 import { H1Light } from "../ui/CustomText";
 
+import EditIcon from "../../../assets/icons/EditIcon.jsx";
 import { AddNewPage, deletePage } from "@/app/storage/pageWidgetsStorage";
 import { categoryProviders, componentMap } from "@/app/registry/pageRegistry";
 import { PageSettings } from "@/app/context/PageSettingsContext";
 import ConformationPopup from "@/app/components/ui/ConformationPopup";
 
-const PagesPreviews = ({ pages, setPages, activePage, setActivePage }) => {
+const PagesPreviews = ({
+  pages,
+  setPages,
+  activePage,
+  setActivePage,
+  toggleOverlay,
+}) => {
   const { userColor } = PageSettings();
 
   const [showDeletePopup, setShowDeletePopup] = React.useState(false);
@@ -43,18 +50,18 @@ const PagesPreviews = ({ pages, setPages, activePage, setActivePage }) => {
 
   return (
     <>
-      <View>
+      <View style={[styles.container, { flexDirection: "row" }]}>
         <ScrollView
           horizontal
           keyboardShouldPersistTaps="handled"
           showsHorizontalScrollIndicator={false}
           removeClippedSubviews={false}
           contentContainerStyle={[
-            styles.container,
             {
               justifyContent: "center",
               alignItems: "center",
-              minWidth: "100%",
+              minWidth: "91%",
+              paddingHorizontal: 25,
             },
           ]}
         >
@@ -98,9 +105,12 @@ const PagesPreviews = ({ pages, setPages, activePage, setActivePage }) => {
           })}
 
           <TouchableOpacity onPress={onAddNew} style={styles.addNew}>
-            <H1Light>+</H1Light>
+            <H1Light style={{ fontSize: 30, marginTop: 6 }}>+</H1Light>
           </TouchableOpacity>
         </ScrollView>
+        <TouchableOpacity style={styles.editButton} onPress={toggleOverlay}>
+          <EditIcon size={22} />
+        </TouchableOpacity>
       </View>
 
       <ConformationPopup
@@ -123,7 +133,6 @@ export default PagesPreviews;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
     paddingVertical: 6,
     height: 84,
   },
@@ -144,22 +153,31 @@ const styles = StyleSheet.create({
   cardContentContainer: {
     height: "100%",
     width: "100%",
-    // borderWidth: 4,
-    // borderColor: "red",
-    // transform: [{ scale: 0.3 }],
   },
   activeCard: {
     borderWidth: 1.5,
     borderColor: "rgb(205, 250, 236)",
   },
   addNew: {
-    height: 62,
+    height: 58,
+    margin: 2,
     aspectRatio: 1,
     justifyContent: "center",
     alignItems: "center",
     opacity: 0.7,
-    paddingTop: 4,
-    backgroundColor: "#000",
-    borderRadius: 10,
+    backgroundColor: "#1b2b26",
+    borderRadius: 90,
+  },
+
+  editButton: {
+    height: 54,
+    width: 54,
+    marginTop: 10,
+    marginLeft: 10,
+    backgroundColor: "#0c4532",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    borderTopRightRadius: 4,
   },
 });

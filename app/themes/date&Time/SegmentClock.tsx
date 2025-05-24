@@ -45,7 +45,7 @@ const SegmentDigit = memo(
     offColor: string;
   }) => (
     <Svg width={DIGIT_WIDTH} height={DIGIT_HEIGHT}>
-      {Object.keys(segmentsPath).map((segKey) => (
+      {(Object.keys(segmentsPath) as Array<keyof typeof segmentsPath>).map((segKey) => (
         <Path
           key={segKey}
           d={segmentsPath[segKey]}
@@ -56,14 +56,15 @@ const SegmentDigit = memo(
   )
 );
 
-const SegmentColon = memo((onColor: String) => (
+
+const SegmentColon = memo(({ onColor }: { onColor: string }) => (
   <Svg width={14} height={DIGIT_HEIGHT}>
     <Circle cx={7} cy={30} r={5} fill={onColor} />
     <Circle cx={7} cy={70} r={5} fill={onColor} />
   </Svg>
 ));
 
-const SegmentSlash = memo((onColor: String) => (
+const SegmentSlash = memo(({ onColor }: { onColor: string }) => (
   <Svg width={DIGIT_WIDTH} height={DIGIT_HEIGHT}>
     <Path
       d="M12,88 L38,12"
