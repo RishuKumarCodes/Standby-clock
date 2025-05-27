@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Pressable, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Pressable,
+  StyleSheet,
+  ScrollView,
+  Linking,
+  TouchableOpacity,
+} from "react-native";
 import { PageSettings } from "../../context/PageSettingsContext.js";
 import { MdTxt } from "../ui/CustomText.jsx";
 
@@ -14,7 +21,11 @@ import CircleTheme from "../../themes/date&Time/circleTheme/CircleTheme.tsx";
 import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.tsx";
 
 // focus theme components...
-import TimerScreen from "../../themes/Focus/TimerScreen.jsx";
+import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";
+import FullScreenTimer from "../../themes/Focus/FullScreenTimer";
+
+// timer theme components:
+import DailyHabit from "../../themes/todos/DailyHabit.tsx";
 
 const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
   const { userColor } = PageSettings();
@@ -38,9 +49,10 @@ const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
   const calendar = {
     /* … */
   };
-  const focus = { TimerScreen };
+  const focus = { TimerScreen, FullScreenTimer };
+  const todos = { DailyHabit };
 
-  const themeMaps = { dateTime, calendar, focus };
+  const themeMaps = { dateTime, calendar, focus, todos };
   const currentThemes = themeMaps[activeTab] || {};
 
   if (Object.keys(currentThemes).length === 0) {
@@ -50,6 +62,12 @@ const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
       </View>
     );
   }
+
+  const handleFeedback = () => {
+    Linking.openURL(
+      "https://docs.google.com/forms/d/e/1FAIpQLSeW2dbnms9xrzU2SHe9lLUSy2JQzj2GiF7JTNK9uZb12o4GBg/viewform?usp=header"
+    );
+  };
 
   return (
     <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
@@ -76,6 +94,14 @@ const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
           );
         })}
       </View>
+      <View style={styles.suggestionBox}>
+        <MdTxt style={styles.formTxt}>
+          have any suggestions? feel free to share by
+        </MdTxt>
+        <TouchableOpacity onPress={handleFeedback}>
+          <MdTxt style={styles.formLinkTxt}>clicking here.</MdTxt>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -95,10 +121,11 @@ const styles = StyleSheet.create({
   styleOption: {
     backgroundColor: "#000",
     borderRadius: 20,
-    width: "48.5%",
+    width: "48%",
     aspectRatio: 19.5 / 9,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
     borderWidth: 1,
     borderColor: "rgba(205, 250, 236, 0.07)",
     shadowColor: "rgba(205, 250, 224, 0.8)",
@@ -125,5 +152,21 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     alignItems: "center",
     justifyContent: "center",
+  },
+  suggestionBox: {
+    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 5,
+    marginBottom: 35,
+  },
+  formTxt: {
+    color: "#999",
+    fontSize: 14,
+  },
+  formLinkTxt: {
+    textDecorationLine: "underline",
+    color: "#5e8deb",
+    fontSize: 14,
   },
 });

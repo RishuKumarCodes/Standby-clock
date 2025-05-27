@@ -9,7 +9,8 @@ import WindowsClock from "../../themes/date&Time/WindowsClock/WindowsClock.tsx";
 import SegmentClock from "../../themes/date&Time/SegmentClock.tsx";
 import CircleTheme from "../../themes/date&Time/circleTheme/CircleTheme.tsx";
 import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.tsx";
-
+import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";
+import FullScreenTimer from "../../themes/Focus/FullScreenTimer";
 
 const clockComponents = {
   MinimalBold,
@@ -20,15 +21,20 @@ const clockComponents = {
   EarthClock,
   SegmentClock,
   CircleTheme,
+  TimerScreen,
+  FullScreenTimer,
 };
 
-
-const PagePreview = ({activePage, userColor}) => {
+const PagePreview = ({ activePage, userColor }) => {
   const PreviewComponent = clockComponents[activePage.component] || MinimalBold;
 
   return (
     <View style={styles.clockPreviewContainer} pointerEvents="none">
-      <PreviewComponent previewMode={true} variant={"colorSettings"} color={userColor || "#9ac78f"} />
+      <PreviewComponent
+        previewMode={true}
+        variant={"colorSettings"}
+        color={userColor || "#9ac78f"}
+      />
     </View>
   );
 };
@@ -39,7 +45,7 @@ const styles = StyleSheet.create({
   clockPreviewContainer: {
     alignItems: "center",
     aspectRatio: 19.5 / 9,
-    marginTop:10,
+    marginTop: 10,
     marginBottom: 7,
     backgroundColor: "#000",
     borderRadius: 15,

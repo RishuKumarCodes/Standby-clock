@@ -7,7 +7,12 @@ import {
   Animated,
   TouchableWithoutFeedback,
 } from "react-native";
-import { H1Light, H1Txt, H2Txt, MdTxt } from "@/app/components/ui/CustomText.jsx";
+import {
+  H1Light,
+  H1Txt,
+  H2Txt,
+  MdTxt,
+} from "@/app/components/ui/CustomText.jsx";
 import { Pressable, ScrollView } from "react-native-gesture-handler";
 import useReminders from "@/app/hooks/useReminders";
 import { scheduleReminderNotification } from "@/app/utils/notificationService";
@@ -20,7 +25,7 @@ import ReminderForm from "../../components/reminderSettings/ReminderForm";
 import ToggleButton from "@/app/components/ui/ToggleButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
-import Svg, { Path } from "react-native-svg";
+import TimerIcon from "../../../assets/icons/TimerIcon.jsx";
 
 const ReminderSettings = () => {
   const { reminders, setReminders } = useReminders();
@@ -122,16 +127,7 @@ const ReminderSettings = () => {
                   style={{ color: "#000" }}
                 >
                   <View style={{ paddingRight: 5 }}>
-                    <Svg width={27} height={27} viewBox="0 0 32 32" fill="none">
-                      <Path
-                        d="M7.722 20.788A3 3 0 0 0 7 22.74V29H5a1 1 0 0 0 0 2h22a1 1 0 0 0 0-2h-2v-6.26a3 3 0 0 0-.722-1.952l-3.546-4.137a1 1 0 0 1 0-1.3l3.546-4.137A3 3 0 0 0 25 9.26V3h2a1 1 0 0 0 0-2H5a1 1 0 0 0 0 2h2v6.26a3 3 0 0 0 .722 1.952l3.546 4.137a1 1 0 0 1 0 1.3Zm5.065-6.741L9.241 9.911A1 1 0 0 1 9 9.26V3h14v6.26a1 1 0 0 1-.241.651l-3.546 4.136a2.986 2.986 0 0 0 0 3.905l3.546 4.137a1 1 0 0 1 .241.651V29H9v-6.26a1 1 0 0 1 .241-.651l3.546-4.137a2.986 2.986 0 0 0 0-3.905Z"
-                        fill="#000"
-                      />
-                      <Path
-                        d="M11 26a1 1 0 0 0 1 1h8a1 1 0 0 0 0-2h-8a1 1 0 0 0-1 1Z"
-                        fill="#000"
-                      />
-                    </Svg>
+                    <TimerIcon />
                   </View>
                   {(() => {
                     const [h, m] = r.interval.split(":").map(Number);

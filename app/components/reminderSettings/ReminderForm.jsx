@@ -8,7 +8,8 @@ import SoundSelector from "./SoundSelector";
 import ConformationPopup from "@/app/components/ui/ConformationPopup";
 import { Pressable, TextInput } from "react-native-gesture-handler";
 import { Audio } from "expo-av";
-import Svg, { Path } from "react-native-svg";
+import DeleteIcon from "../../../assets/icons/DeleteIcon.jsx";
+import TickIcon from "../../../assets/icons/TickIcon.jsx";
 
 const colorOptions = [
   { label: "Critical", value: "#ff6161" },
@@ -262,14 +263,7 @@ const ReminderForm = ({ initData = {}, onSubmit, onDelete, closeModal }) => {
             onPress={() => setShowConfirmationPopup(true)}
             style={styles.actionBtns}
           >
-            <Svg width={39} height={39} viewBox="0 0 24 24" fill="none">
-              <Path
-                fill="#fff"
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M8.5 4A1.5 1.5 0 0 1 10 2.5h4A1.5 1.5 0 0 1 15.5 4v.446H20a.5.5 0 0 1 0 1h-1.5V19a2.5 2.5 0 0 1-2.5 2.5H8A2.5 2.5 0 0 1 5.5 19V7.865a.5.5 0 0 1 1 0V19A1.5 1.5 0 0 0 8 20.5h8a1.5 1.5 0 0 0 1.5-1.5V5.446H15a.5.5 0 0 1-.5-.5V4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 0-.5.5v.946a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h4.5V4Z"
-              />
-            </Svg>
+            <DeleteIcon />
             <MdTxt style={{ fontSize: 13.5, opacity: 0.8 }}>Delete</MdTxt>
           </Pressable>
 
@@ -280,12 +274,7 @@ const ReminderForm = ({ initData = {}, onSubmit, onDelete, closeModal }) => {
             }}
             style={styles.actionBtns}
           >
-            <Svg width={45} height={45} viewBox="0 0 24 24" fill="none">
-              <Path
-                d="M19.35352,6.64648a.49983.49983,0,0,1,0,.707l-10,10a.49984.49984,0,0,1-.707,0l-4-4a.5.5,0,0,1,.707-.707L9,16.293l9.64648-9.64649A.49983.49983,0,0,1,19.35352,6.64648Z"
-                fill="#fff"
-              />
-            </Svg>
+            <TickIcon />
             <MdTxt style={{ fontSize: 13.5, opacity: 0.8 }}>Save</MdTxt>
           </Pressable>
         </View>

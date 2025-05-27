@@ -45,7 +45,8 @@ export const ScreenSettingsProvider = ({ children }) => {
 
     if (settingsLoaded) {
       saveNavBarSetting();
-      NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
+      // NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
+      NavigationBar.setVisibilityAsync(navBarVisible ? "sticky-immersive" : "hidden");
       NavigationBar.setBackgroundColorAsync("#000");
     }
   }, [navBarVisible, settingsLoaded]);

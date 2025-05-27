@@ -155,9 +155,9 @@ const Calendar = React.memo(
 
 const VARIANT_CONFIG: Record<ClockVariant, { scaleFactor: number }> = {
   full: { scaleFactor: 1 },
-  themeCard: { scaleFactor: 0.32 },
+  themeCard: { scaleFactor: 0.305 },
   smallPreview: { scaleFactor: 0.14 },
-  colorSettings: { scaleFactor: 0.43 },
+  colorSettings: { scaleFactor: 0.4 },
 };
 
 //  Main Component

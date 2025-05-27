@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useRef, useEffect, useState } from "react";
-import { View, StyleSheet, Animated } from "react-native";
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import { StyleSheet, Animated, Pressable } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -12,82 +12,62 @@ export default function SleepOverlay({
   const timerRef = useRef(null);
   const [navBarVisible, setNavBarVisible] = useState(false);
 
-  // Load the initial navigation bar visibility state
   useEffect(() => {
-    const loadNavBarState = async () => {
-      try {
-        const storedNavBar = await AsyncStorage.getItem("navBarVisible");
-        if (storedNavBar !== null) {
-          setNavBarVisible(storedNavBar === "true");
-        }
-      } catch (error) {
-        console.error("Error loading navigation bar state:", error);
-      }
-    };
-    loadNavBarState();
+    AsyncStorage.getItem("navBarVisible")
+      .then((value) => {
+        if (value !== null) setNavBarVisible(value === "true");
+      })
+      .catch(console.error);
   }, []);
 
+  useEffect(() => { 
+    let mounted = true;
+    async function setupNavBar() {
+      await NavigationBar.setVisibilityAsync("hidden");
+      await NavigationBar.setBehaviorAsync("overlay-swipe");
+      triggerFade();
+    }
+    if (mounted) setupNavBar();
+    return () => {
+      mounted = false;
+      clearTimeout(timerRef.current);
+      NavigationBar.setVisibilityAsync(
+        navBarVisible ? "visible" : "hidden"
+      ).catch(console.error);
+      NavigationBar.setBehaviorAsync("inset-swipe").catch(console.error);
+    };
+  }, [navBarVisible]);
+
   useEffect(() => {
-    let isMounted = true;
+    if (fadeTrigger !== undefined) {
+      triggerFade();
+    }
+  }, [fadeTrigger]);
 
-    const manageNavigationBar = async () => {
-      try {
-        // Hide the navigation bar and set its behavior to prevent it from reappearing on touch
-        await NavigationBar.setVisibilityAsync("hidden");
-        await NavigationBar.setBehaviorAsync("overlay-swipe");
-
-        fadeAnim.stopAnimation();
-
-        if (timerRef.current) {
-          clearTimeout(timerRef.current);
-        }
-
+  const triggerFade = useCallback(() => {
+    clearTimeout(timerRef.current);
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      timerRef.current = setTimeout(() => {
         Animated.timing(fadeAnim, {
-          toValue: 1,
+          toValue: 0,
           duration: 300,
           useNativeDriver: true,
         }).start();
-
-        timerRef.current = setTimeout(() => {
-          Animated.timing(fadeAnim, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true,
-          }).start();
-        }, 1700);
-      } catch (error) {
-        console.error("Error managing navigation bar:", error);
-      }
-    };
-
-    if (isMounted) {
-      manageNavigationBar();
-    }
-
-    return () => {
-      if (isMounted) {
-        // Restore the navigation bar visibility state and reset its behavior
-        NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden").catch((err) =>
-          console.error("Error restoring navigation bar state:", err)
-        );
-        NavigationBar.setBehaviorAsync("inset-swipe").catch((err) =>
-          console.error("Error resetting navigation bar behavior:", err)
-        );
-      }
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-      isMounted = false;
-    };
-  }, [fadeTrigger, fadeAnim, navBarVisible]);
+      }, 1700);
+    });
+  }, [fadeAnim]);
 
   return (
-    <View style={styles.overlay} pointerEvents="none">
-      <StatusBar hidden={true} />
+    <Pressable style={styles.overlay} onPressIn={triggerFade}>
+      <StatusBar hidden />
       <Animated.Text style={[styles.instruction, { opacity: fadeAnim }]}>
         {instructionText}
       </Animated.Text>
-    </View>
+    </Pressable>
   );
 }
 
