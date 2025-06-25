@@ -112,6 +112,15 @@ const ReminderSettings = () => {
             <MdTxt style={{ paddingTop: 1.5 }}>Add new</MdTxt>
           </TouchableOpacity>
         </View>
+        <MdTxt
+          style={{
+            marginBottom: 20,
+            paddingHorizontal: 5,
+            color: "#deb435",
+          }}
+        >
+          ! This feature is currently not stable in some devices.
+        </MdTxt>
         <View style={styles.cardsContainer}>
           {reminders.map((r) => (
             <TouchableOpacity

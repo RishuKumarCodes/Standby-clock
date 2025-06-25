@@ -47,7 +47,7 @@ const VARIANT_CONFIG: Record<
     TimerFontSize: 20,
     timerHeight: 20,
     labelFontsize: 0.18,
-    btnSize: 1,
+    btnSize: 4,
   },
   colorSettings: {
     scaleFactor: 0.36,
@@ -141,8 +141,13 @@ const FullScreenTimer: React.FC<FullScreenTimerProps> = ({
   const adjust = (delta: number) => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
-    const newTotal = Math.max(0, totalDur + delta);
-    const newRem = Math.min(Math.max(0, remaining + delta), newTotal);
+    const MIN_DURATION = 300; // in seconds
+
+    const newTotal = Math.max(MIN_DURATION, totalDur + delta);
+    const newRem = Math.min(
+      Math.max(MIN_DURATION, remaining + delta),
+      newTotal
+    );
 
     setTotalDur(newTotal);
     setRemaining(newRem);
@@ -159,7 +164,12 @@ const FullScreenTimer: React.FC<FullScreenTimerProps> = ({
   });
 
   return (
-    <View style={[styles.container, {}]}>
+    <View
+      style={[
+        styles.container,
+        variant !== "full" && { aspectRatio: 19.5 / 9 },
+      ]}
+    >
       <Animated.View
         style={[styles.fillPane, { backgroundColor: color, width: fillWidth }]}
       />
@@ -182,20 +192,22 @@ const FullScreenTimer: React.FC<FullScreenTimerProps> = ({
         <View style={styles.timerBox}>
           <Text style={[styles.label, { fontSize: labelFontsize }]}>TIMER</Text>
           <View style={{ flexDirection: "row", gap: "4%" }}>
-            <View style={{ justifyContent: "center", gap: 3 }}>
-              <Pressable
-                onPress={() => adjust(300)}
-                style={styles.plusMinusBtn}
-              >
-                <Ionicons name="add" size={btnSize} color="#888" />
-              </Pressable>
-              <Pressable
-                onPress={() => adjust(-300)}
-                style={styles.plusMinusBtn}
-              >
-                <Ionicons name="remove" size={btnSize} color="#888" />
-              </Pressable>
-            </View>
+            {isPaused && (
+              <View style={{ justifyContent: "center", gap: 3 }}>
+                <Pressable
+                  onPress={() => adjust(300)}
+                  style={styles.plusMinusBtn}
+                >
+                  <Ionicons name="add" size={btnSize} color="#888" />
+                </Pressable>
+                <Pressable
+                  onPress={() => adjust(-300)}
+                  style={styles.plusMinusBtn}
+                >
+                  <Ionicons name="remove" size={btnSize} color="#888" />
+                </Pressable>
+              </View>
+            )}
             <Text
               style={[
                 styles.timerText,
@@ -216,7 +228,6 @@ export default FullScreenTimer;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    aspectRatio: 19.5 / 9,
   } as ViewStyle,
 
   fillPane: {
@@ -236,25 +247,29 @@ const styles = StyleSheet.create({
 
   controls: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: "5%",
+    gap: "8%",
   } as ViewStyle,
 
   iconBtn: {
     backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: 74,
-    padding: "9%",
-  } as ViewStyle,
-
-  plusMinusBtn: {
-    padding: "2.3%",
+    height: "30%",
     alignItems: "center",
     justifyContent: "center",
     aspectRatio: 1,
   } as ViewStyle,
 
+  plusMinusBtn: {
+    padding: "2%",
+    alignItems: "center",
+    justifyContent: "center",
+    aspectRatio: 1,
+  } as ViewStyle,
+
+  // ---------------------------------------------------------
+
   timerBox: {
-    marginRight: "10%",
+    flex: 1,
     alignItems: "flex-end",
   } as ViewStyle,
 

@@ -134,7 +134,7 @@ const TimePickerWheel = ({
   );
 
   const minuteData = useMemo(
-    () => Array.from({ length: 12 }, (_, i) => i * 5),
+    () => Array.from({ length: 61 }, (_, i) => i ),
     []
   );
   const ampmData = useMemo(() => ["am", "pm"], []);

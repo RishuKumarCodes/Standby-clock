@@ -18,6 +18,12 @@ const WindowsClock = lazy(() =>
 const TimerScreen = lazy(() =>
   import("../themes/Focus/TimerTodoCombo.jsx/TimerScreen")
 );
+const DailyHabitTimer = lazy(() =>
+  import("../themes/Focus/dailyHabitTimer/DailyHabitTimer")
+);
+const AnalyticsScreen = lazy(() =>
+  import("../themes/analytics/DailyHabitTimer/AnalyticsScreen")
+);
 const FullScreenTimer = lazy(() => import("../themes/Focus/FullScreenTimer"));
 const DailyHabit = lazy(() => import("../themes/todos/DailyHabit"));
 
@@ -34,8 +40,11 @@ export const componentMap = {
   // focus
   TimerScreen,
   FullScreenTimer,
+  DailyHabitTimer,
   // daily habit
   DailyHabit,
+  // analytics screen
+  AnalyticsScreen,
 };
 
 import { ClockContextProvider } from "../context/ClockStatusContext";

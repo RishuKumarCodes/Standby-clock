@@ -27,7 +27,7 @@ const ConformationPopup = ({
     <Modal visible={visible} transparent animationType="none">
       <Pressable style={styles.overlay} onPress={onCancel}>
         <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-          <MdTxt>{message}</MdTxt>
+          <MdTxt style={{ textAlign: "center" }}>{message}</MdTxt>
           <View style={styles.buttonRow}>
             {cancelText && (
               <Pressable style={styles.cancelButton} onPress={onCancel}>

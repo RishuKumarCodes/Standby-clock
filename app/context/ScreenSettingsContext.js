@@ -46,8 +46,19 @@ export const ScreenSettingsProvider = ({ children }) => {
     if (settingsLoaded) {
       saveNavBarSetting();
       // NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
-      NavigationBar.setVisibilityAsync(navBarVisible ? "sticky-immersive" : "hidden");
-      NavigationBar.setBackgroundColorAsync("#000");
+
+      (async () => {
+      try {
+        await NavigationBar.setVisibilityAsync(
+          navBarVisible ? "immersive" : "hidden"
+        );
+      } catch (e) {
+        console.error("Failed to set nav-bar visibility:", e);
+      }
+    })();
+
+      // NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
+      // NavigationBar.setBackgroundColorAsync("#000");
     }
   }, [navBarVisible, settingsLoaded]);
 

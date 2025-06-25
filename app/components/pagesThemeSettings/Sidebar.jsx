@@ -11,7 +11,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     { key: "focus", label: "Focus" },
     { key: "todos", label: "Todos" },
     { key: "music", label: "Music" },
-    { key: "anaylitics", label: "Anaylitics" },
+    { key: "analytics", label: "Analytics" },
   ];
 
   return (

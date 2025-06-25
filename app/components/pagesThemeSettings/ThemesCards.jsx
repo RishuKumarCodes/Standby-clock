@@ -22,10 +22,14 @@ import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.tsx";
 
 // focus theme components...
 import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";
+import DailyHabitTimer from "../../themes/Focus/dailyHabitTimer/DailyHabitTimer";
 import FullScreenTimer from "../../themes/Focus/FullScreenTimer";
 
 // timer theme components:
 import DailyHabit from "../../themes/todos/DailyHabit.tsx";
+
+// analytics theme components:
+import AnalyticsScreen from "../../themes/analytics/DailyHabitTimer/AnalyticsScreen";
 
 const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
   const { userColor } = PageSettings();
@@ -49,10 +53,15 @@ const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
   const calendar = {
     /* … */
   };
-  const focus = { TimerScreen, FullScreenTimer };
+  const focus = {
+    DailyHabitTimer,
+    FullScreenTimer,
+    TimerScreen,
+  };
   const todos = { DailyHabit };
+  const analytics = { AnalyticsScreen };
 
-  const themeMaps = { dateTime, calendar, focus, todos };
+  const themeMaps = { dateTime, calendar, focus, todos, analytics };
   const currentThemes = themeMaps[activeTab] || {};
 
   if (Object.keys(currentThemes).length === 0) {

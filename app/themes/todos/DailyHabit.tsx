@@ -1,4 +1,3 @@
-// DailyHabit.js
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -13,6 +12,7 @@ import { H1Light, MdTxt } from "@/app/components/ui/CustomText";
 import DeleteIcon from "@/assets/icons/DeleteIcon";
 import { ScrollView } from "react-native";
 import { ClockVariant, ThemeProps } from "@/app/types/ThemesTypes";
+import EditIcon from "@/assets/icons/EditIcon";
 
 // Keys for AsyncStorage
 const DATA_KEY = "@HabitTracker:data";
@@ -133,31 +133,51 @@ const DailyHabit = ({ color, variant = "full" }: ThemeProps) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        variant !== "full" ? { aspectRatio: 19 / 8.7 } : null,
+      ]}
+    >
       {/* Header */}
       <View style={styles.row}>
         <View style={[styles.labelCell]}>
           <Pressable onPress={() => setEditMode(!editMode)}>
             <MdTxt style={[styles.editscaleFactor, { fontSize: scaleFactor }]}>
-              {editMode ? "done" : "edit"}
+              {editMode ? (
+                "done"
+              ) : (
+                <EditIcon size={scaleFactor * 1.4} color={"#e6e6e6"} />
+              )}
             </MdTxt>
           </Pressable>
         </View>
-        {days.map((d, i) => (
-          <View key={d} style={[styles.headerCell, { width: CELL_SIZE }]}>
-            <H1Light
+        <View style={styles.headerRow}>
+          {days.map((d, i) => (
+            <View
+              key={d}
               style={[
-                styles.headerText,
-                { fontSize: scaleFactor * 1.6 },
-                i === days.length - 1 ? styles.lastDayText : null,
+                styles.headerCell,
+                { width: CELL_SIZE },
+                i === days.length - 1
+                  ? { backgroundColor: "#1c1c1c", borderRadius: 40, padding: 1 }
+                  : null,
               ]}
             >
-              {new Date(d)
-                .toLocaleDateString(undefined, { weekday: "short" })
-                .slice(0, 1)}
-            </H1Light>
-          </View>
-        ))}
+              <H1Light
+                style={[
+                  styles.headerText,
+                  { fontSize: scaleFactor * 1.6 },
+                  i === days.length - 1 ? styles.lastDayText : null,
+                ]}
+              >
+                {new Date(d)
+                  .toLocaleDateString(undefined, { weekday: "short" })
+                  .slice(0, 1)}
+              </H1Light>
+            </View>
+          ))}
+        </View>
       </View>
 
       <ScrollView keyboardShouldPersistTaps="handled">
@@ -185,36 +205,41 @@ const DailyHabit = ({ color, variant = "full" }: ThemeProps) => {
         {habits.map((h) => (
           <View key={h.key} style={styles.row}>
             <View style={styles.labelCell}>
+              {editMode && (
+                <TouchableOpacity onPress={() => onDelete(h.key)}>
+                  <DeleteIcon size={27} color={"#ff5e5e"} />
+                </TouchableOpacity>
+              )}
               <MdTxt
                 numberOfLines={1}
-                style={[styles.labelText, { fontSize: scaleFactor * 1.5 }]}
+                style={[
+                  styles.labelText,
+                  { fontSize: scaleFactor * 1.5, paddingTop: 5 },
+                ]}
               >
                 {h.label}
               </MdTxt>
-              {editMode && (
-                <TouchableOpacity onPress={() => onDelete(h.key)}>
-                  <DeleteIcon size={26} color={"#ff5e5e"} />
-                </TouchableOpacity>
-              )}
             </View>
-            {days.map((d) => {
-              const done = !!data[d]?.[h.key];
-              return (
-                <TouchableOpacity
-                  key={`${h.key}-${d}`}
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: done ? color : "#222",
-                      width: CELL_SIZE,
-                      height: CELL_SIZE,
-                      borderRadius: scaleFactor / 2,
-                    },
-                  ]}
-                  onPress={() => onToggle(d, h.key)}
-                />
-              );
-            })}
+            <View style={styles.checkBoxes}>
+              {days.map((d) => {
+                const done = !!data[d]?.[h.key];
+                return (
+                  <TouchableOpacity
+                    key={`${h.key}-${d}`}
+                    style={[
+                      styles.cell,
+                      {
+                        backgroundColor: done ? color : "#222",
+                        width: CELL_SIZE,
+                        height: CELL_SIZE,
+                        borderRadius: scaleFactor / 2,
+                      },
+                    ]}
+                    onPress={() => onToggle(d, h.key)}
+                  />
+                );
+              })}
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -227,37 +252,46 @@ export default DailyHabit;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "red",
     padding: "6.4%",
-    aspectRatio: 19 / 9,
     paddingBottom: 0,
   },
 
   row: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     marginBottom: "3%",
+    gap: "2%",
   },
 
+  headerRow: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   headerCell: {
-    justifyContent: "center",
     alignItems: "center",
   },
 
   editscaleFactor: {
-    backgroundColor: "#222",
-    padding: "2%",
-    paddingHorizontal: "10%",
+    backgroundColor: "#171717",
+    padding: "2.5%",
+    paddingHorizontal: "7%",
     paddingTop: "3%",
     borderRadius: 30,
+  },
+  checkBoxes: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   labelCell: {
     flexDirection: "row",
     alignItems: "center",
-    gap: "6%",
-    width: "20%",
+    gap: "6.2%",
+    overflow: "hidden",
+    width: "25%",
   },
 
   labelText: {
@@ -276,7 +310,7 @@ const styles = StyleSheet.create({
 
   lastDayText: {
     fontFamily: "Poppins-semibold",
-    color: "#ff624a",
+    color: "#ff4529",
   },
 
   addRow: {
@@ -284,7 +318,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 18,
     backgroundColor: "#141414",
-    padding: 15,
+    padding: 12,
     paddingHorizontal: 30,
     borderRadius: 20,
   },
@@ -292,7 +326,7 @@ const styles = StyleSheet.create({
   input: {
     marginLeft: 20,
     flex: 1,
-    height: 36,
+    height: 40,
     color: "#fff",
     backgroundColor: "#000",
     borderWidth: 1,
@@ -304,8 +338,8 @@ const styles = StyleSheet.create({
   },
   addscaleFactor: {
     backgroundColor: "#333",
-    padding: 2.5,
-    paddingTop: 4.5,
+    padding: 5.5,
+    paddingTop: 5.5,
     paddingRight: 17,
     paddingHorizontal: 12,
     borderRadius: 6,

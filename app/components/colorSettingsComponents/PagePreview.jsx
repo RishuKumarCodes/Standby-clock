@@ -10,7 +10,10 @@ import SegmentClock from "../../themes/date&Time/SegmentClock.tsx";
 import CircleTheme from "../../themes/date&Time/circleTheme/CircleTheme.tsx";
 import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.tsx";
 import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";
+import DailyHabitTimer from "../../themes/Focus/dailyHabitTimer/DailyHabitTimer";
 import FullScreenTimer from "../../themes/Focus/FullScreenTimer";
+
+import AnalyticsScreen from "../../themes/analytics/DailyHabitTimer/AnalyticsScreen";
 
 const clockComponents = {
   MinimalBold,
@@ -22,7 +25,9 @@ const clockComponents = {
   SegmentClock,
   CircleTheme,
   TimerScreen,
+  DailyHabitTimer,
   FullScreenTimer,
+  AnalyticsScreen
 };
 
 const PagePreview = ({ activePage, userColor }) => {
