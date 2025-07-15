@@ -8,14 +8,18 @@ const CircleChargingProgressBar = () => {
   const { batteryLevelWhileCharging } = useClockStatus();
   const [containerSize, setContainerSize] = useState(null);
   const { showChargingStatus } = PageSettings();
-  
+
   const onLayout = (event) => {
     const { width, height } = event.nativeEvent.layout;
     const size = Math.min(width, height);
     setContainerSize(size);
   };
 
-  if (showChargingStatus === false || batteryLevelWhileCharging === null || containerSize === null) {
+  if (
+    showChargingStatus === false ||
+    batteryLevelWhileCharging === null ||
+    containerSize === null
+  ) {
     return <View style={styles.container} onLayout={onLayout} />;
   }
 
@@ -29,7 +33,10 @@ const CircleChargingProgressBar = () => {
   const strokeDashoffset = circumference * (1 - progress / 100);
 
   return (
-    <View style={styles.container} onLayout={onLayout}>
+    <View
+      style={[styles.container, { backgroundColor: "rgba(0, 0, 0, 0.75)" }]}
+      onLayout={onLayout}
+    >
       <Svg width={size} height={size}>
         <Circle
           cx={center}
@@ -66,6 +73,7 @@ export default CircleChargingProgressBar;
 const styles = StyleSheet.create({
   container: {
     height: "15%",
+    borderRadius: 40,
     aspectRatio: 1,
     position: "absolute",
     left: 15,

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Focus Dock",
     "slug": "Focus-Dock",
-    "version": "2.1.0",
+    "version": "2.2.4",
     "orientation": "landscape",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",

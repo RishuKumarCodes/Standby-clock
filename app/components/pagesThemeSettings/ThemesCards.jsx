@@ -10,7 +10,7 @@ import {
 import { PageSettings } from "../../context/PageSettingsContext.js";
 import { MdTxt } from "../ui/CustomText.jsx";
 
-// clock theme components...
+// clock theme components:
 import MinimalBold from "../../themes/date&Time/MinimalBold.tsx";
 import MinimalThin from "../../themes/date&Time/MinimalThin.jsx";
 import AnalogClock from "../../themes/date&Time/AnalogClock.tsx";
@@ -20,7 +20,15 @@ import SegmentClock from "../../themes/date&Time/SegmentClock.tsx";
 import CircleTheme from "../../themes/date&Time/circleTheme/CircleTheme.tsx";
 import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.tsx";
 
-// focus theme components...
+// weather theme components:
+import MinimalWeather from "../../themes/weather/minimalWeather/MinimalWeather";
+import SunriseMoonrise from "../../themes/weather/sunriseMoonrise/SunriseMoonrise";
+import ConsoleLogClock from "../../themes/weather/ConsoleLogClock.tsx";
+import WeatherWidget from "../../themes/weather/WeatherWidget.tsx";
+import WeatherDashboard from "../../themes/weather/WeatherDashboard.tsx";
+import WeatherCards from "../../themes/weather/WeatherCards.tsx";
+
+// focus theme components:
 import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";
 import DailyHabitTimer from "../../themes/Focus/dailyHabitTimer/DailyHabitTimer";
 import FullScreenTimer from "../../themes/Focus/FullScreenTimer";
@@ -60,8 +68,16 @@ const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
   };
   const todos = { DailyHabit };
   const analytics = { AnalyticsScreen };
+  const weather = {
+    MinimalWeather,
+    SunriseMoonrise,
+    WeatherWidget,
+    WeatherDashboard,
+    WeatherCards,
+    ConsoleLogClock,
+  };
 
-  const themeMaps = { dateTime, calendar, focus, todos, analytics };
+  const themeMaps = { dateTime, calendar, focus, todos, analytics, weather };
   const currentThemes = themeMaps[activeTab] || {};
 
   if (Object.keys(currentThemes).length === 0) {

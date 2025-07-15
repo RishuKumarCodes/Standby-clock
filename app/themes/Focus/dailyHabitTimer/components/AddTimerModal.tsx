@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     borderColor: "#555",
     marginVertical: 8,
     paddingHorizontal: 8,
-    color: "#fff", // Add text color for visibility
+    color: "#fff",
     paddingVertical: 10,
   },
   timeRow: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
     alignItems: "center",
-    minHeight: 150, // Ensure adequate height for the wheel
+    minHeight: 150,
   },
   modalActions: {
     flexDirection: "row",

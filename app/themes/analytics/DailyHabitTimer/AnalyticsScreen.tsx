@@ -18,7 +18,7 @@ import {
 } from "@/app/storage/themesStorage/todos/DailyHabitTimer";
 import { ThemeProps } from "@/app/types/ThemesTypes";
 import PreviewScreen from "./components/PreviewScreen";
-import { DimTxt, H1Light, MdTxt } from "@/app/components/ui/CustomText";
+import { DimTxt, MdTxt } from "@/app/components/ui/CustomText";
 
 const BG = "#000";
 const TEXT = "#EEE";

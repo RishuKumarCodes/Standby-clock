@@ -6,6 +6,7 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Pressable,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { useGridSettings } from "../../context/GridSettingsContext.js";
@@ -16,6 +17,8 @@ import * as NavigationBar from "expo-navigation-bar";
 import { DimTxt, H1Txt, MdTxt } from "@/app/components/ui/CustomText.jsx";
 import ToggleButton from "@/app/components/ui/ToggleButton.jsx";
 import { ScrollView } from "react-native-gesture-handler";
+import { weatherStorage } from "../../storage/themesStorage/weather";
+import { EditPage } from "@/app/themes/weather/Common/EditPage";
 
 if (
   Platform.OS === "android" &&
@@ -53,6 +56,9 @@ export default function GeneralSettings() {
 
   const { showChargingStatus, setShowChargingStatus } = PageSettings();
 
+  const [location, setLocation] = useState(null);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+
   const {
     navBarVisible,
     setNavBarVisible,
@@ -74,6 +80,19 @@ export default function GeneralSettings() {
   }, []);
 
   useEffect(() => {
+    (async () => {
+      try {
+        const saved = await weatherStorage.getLocation();
+        setLocation(saved.cityName ?? "");
+      } catch {
+        const def = weatherStorage.getDefaultLocation();
+        setLocation(def.cityName ?? "");
+      }
+    })();
+  }, []);
+
+  console.log(location);
+  useEffect(() => {
     NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
     NavigationBar.setBackgroundColorAsync("#000");
   }, [navBarVisible]);
@@ -88,86 +107,116 @@ export default function GeneralSettings() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <H1Txt style={styles.heading}>General Settings</H1Txt>
-      <View style={styles.cardsContainer}>
-        {/* Left side card */}
-        <View style={styles.card}>
-          <View style={styles.cardRow}>
-            <View>
-              <MdTxt>Burn-in protection</MdTxt>
-              {gridOverlayEnabled ? (
-                <View style={styles.cardRow}>
-                  <MdTxt style={{ opacity: 0.5 }}>
-                    Grid Opacity: {Math.round(sliderValue * 100)}%
-                  </MdTxt>
-                </View>
-              ) : (
-                <View>
-                  <DimTxt>- Protects against display burn-in.</DimTxt>
-                  <DimTxt>- Adds grid overlay, flips per minute.</DimTxt>
-                  <DimTxt>- Only beneficial for OLED displays.</DimTxt>
-                </View>
-              )}
-            </View>
-            <ToggleButton
-              value={gridOverlayEnabled}
-              onValueChange={toggleGridOverlay}
-            />
-          </View>
-          {gridOverlayEnabled && (
-            <View>
-              <OptimizedSlider
-                value={sliderValue}
-                onValueChange={handleValueChange}
-                onSlidingComplete={handleSlidingComplete}
+    <>
+      <ScrollView contentContainerStyle={styles.container}>
+        <H1Txt style={styles.heading}>General Settings</H1Txt>
+        <View style={styles.cardsContainer}>
+          {/* Left side card */}
+          <View style={styles.card}>
+            <View style={styles.cardRow}>
+              <View>
+                <MdTxt>Burn-in protection</MdTxt>
+                {gridOverlayEnabled ? (
+                  <View style={styles.cardRow}>
+                    <MdTxt style={{ opacity: 0.5 }}>
+                      Grid Opacity: {Math.round(sliderValue * 100)}%
+                    </MdTxt>
+                  </View>
+                ) : (
+                  <View>
+                    <DimTxt>- Protects against display burn-in.</DimTxt>
+                    <DimTxt>- Adds grid overlay, flips per minute.</DimTxt>
+                    <DimTxt>- Only beneficial for OLED displays.</DimTxt>
+                  </View>
+                )}
+              </View>
+              <ToggleButton
+                value={gridOverlayEnabled}
+                onValueChange={toggleGridOverlay}
               />
             </View>
-          )}
-        </View>
+            {gridOverlayEnabled && (
+              <View>
+                <OptimizedSlider
+                  value={sliderValue}
+                  onValueChange={handleValueChange}
+                  onSlidingComplete={handleSlidingComplete}
+                />
+              </View>
+            )}
+          </View>
 
-        {/* Right side card */}
-        <View style={styles.card}>
-          <View style={[styles.cardRow, styles.marginTop]}>
-            <MdTxt>Show status bar</MdTxt>
-            <ToggleButton
-              value={statusBarVisible}
-              onValueChange={setStatusBarVisible}
-            />
-          </View>
-          <View style={styles.cardRow}>
-            <MdTxt>Show navigation bar</MdTxt>
-            <ToggleButton
-              value={navBarVisible}
-              onValueChange={setNavBarVisible}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={styles.cardsContainer}>
-        <View style={styles.card}>
-          <View style={styles.cardRow}>
-            <View>
-              <MdTxt>Double tap to sleep</MdTxt>
-              <DimTxt>- Turns the display black</DimTxt>
+          {/* Right side card */}
+          <View style={styles.card}>
+            <View style={[styles.cardRow, styles.marginTop]}>
+              <MdTxt>Show status bar</MdTxt>
+              <ToggleButton
+                value={statusBarVisible}
+                onValueChange={setStatusBarVisible}
+              />
             </View>
-            <ToggleButton value={sleepMode} onValueChange={setSleepMode} />
-          </View>
-        </View>
-        <View style={styles.card}>
-          <View style={styles.cardRow}>
-            <View>
-              <MdTxt>Show charging status </MdTxt>
-              <DimTxt>- Display battery % while charging</DimTxt>
+            <View style={styles.cardRow}>
+              <MdTxt>Show navigation bar</MdTxt>
+              <ToggleButton
+                value={navBarVisible}
+                onValueChange={setNavBarVisible}
+              />
             </View>
-            <ToggleButton
-              value={showChargingStatus}
-              onValueChange={setShowChargingStatus}
-            />
           </View>
         </View>
-      </View>
-    </ScrollView>
+        <View style={styles.cardsContainer}>
+          <View style={styles.card}>
+            <View style={styles.cardRow}>
+              <View>
+                <MdTxt>Double tap to sleep</MdTxt>
+                <DimTxt>- Turns the display black</DimTxt>
+              </View>
+              <ToggleButton value={sleepMode} onValueChange={setSleepMode} />
+            </View>
+          </View>
+          <View style={styles.card}>
+            <View style={styles.cardRow}>
+              <View>
+                <MdTxt>Show charging status </MdTxt>
+                <DimTxt>- Display battery % while charging</DimTxt>
+              </View>
+              <ToggleButton
+                value={showChargingStatus}
+                onValueChange={setShowChargingStatus}
+              />
+            </View>
+          </View>
+        </View>
+        <Pressable
+          style={styles.cardsContainer}
+          onPress={() => setShowLocationModal(true)}
+        >
+          <View style={styles.card}>
+            <View style={styles.cardRow}>
+              <View>
+                <MdTxt>Set Current Location</MdTxt>
+                <DimTxt>- Set your current location for weather</DimTxt>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#24332e",
+                  paddingHorizontal: 15,
+                  paddingTop: 4,
+                  borderRadius: 35,
+                  justifyContent: "center",
+                }}
+              >
+                <MdTxt>Current: {location}</MdTxt>
+              </View>
+            </View>
+          </View>
+        </Pressable>
+      </ScrollView>
+      <EditPage
+        showLocationModal={showLocationModal}
+        setShowLocationModal={setShowLocationModal}
+      />
+    </>
   );
 }
 

@@ -6,6 +6,16 @@ const MinimalThin = lazy(() => import("../themes/date&Time/MinimalThin"));
 const AnalogClock = lazy(() => import("../themes/date&Time/AnalogClock"));
 const WeatherBattery = lazy(() => import("../themes/date&Time/WeatherBattery"));
 const SegmentClock = lazy(() => import("../themes/date&Time/SegmentClock"));
+
+const MinimalWeather = lazy(() => import("../themes/weather/minimalWeather/MinimalWeather"));
+const SunriseMoonrise = lazy(() => import("../themes/weather/sunriseMoonrise/SunriseMoonrise"));
+const ConsoleLogClock = lazy(() => import("../themes/weather/ConsoleLogClock"));
+const WeatherWidget = lazy(() => import("../themes/weather/WeatherWidget"));
+const WeatherCards = lazy(() => import("../themes/weather/WeatherCards"));
+const WeatherDashboard = lazy(() =>
+  import("../themes/weather/WeatherDashboard")
+);
+
 const CircleTheme = lazy(() =>
   import("../themes/date&Time/circleTheme/CircleTheme")
 );
@@ -37,6 +47,13 @@ export const componentMap = {
   CircleTheme,
   EarthClock,
   WindowsClock,
+  // weather
+  MinimalWeather,
+  SunriseMoonrise,
+  ConsoleLogClock,
+  WeatherWidget,
+  WeatherDashboard,
+  WeatherCards,
   // focus
   TimerScreen,
   FullScreenTimer,

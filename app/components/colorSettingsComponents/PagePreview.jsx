@@ -9,13 +9,23 @@ import WindowsClock from "../../themes/date&Time/WindowsClock/WindowsClock.tsx";
 import SegmentClock from "../../themes/date&Time/SegmentClock.tsx";
 import CircleTheme from "../../themes/date&Time/circleTheme/CircleTheme.tsx";
 import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.tsx";
+
+import MinimalWeather from "../../themes/weather/minimalWeather/MinimalWeather";
+import SunriseMoonrise from "../../themes/weather/sunriseMoonrise/SunriseMoonrise";
+import ConsoleLogClock from "../../themes/weather/ConsoleLogClock";
+import WeatherWidget from "../../themes/weather/WeatherWidget";
+import WeatherCards from "../../themes/weather/WeatherCards.tsx";
+import WeatherDashboard from "../../themes/weather/WeatherDashboard.tsx";
+
 import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";
 import DailyHabitTimer from "../../themes/Focus/dailyHabitTimer/DailyHabitTimer";
 import FullScreenTimer from "../../themes/Focus/FullScreenTimer";
 
+import DailyHabit from "../../themes/todos/DailyHabit.tsx";
+
 import AnalyticsScreen from "../../themes/analytics/DailyHabitTimer/AnalyticsScreen";
 
-const clockComponents = {
+const allComponents = {
   MinimalBold,
   MinimalThin,
   AnalogClock,
@@ -24,14 +34,25 @@ const clockComponents = {
   EarthClock,
   SegmentClock,
   CircleTheme,
+
+  MinimalWeather,
+  SunriseMoonrise,
+  WeatherWidget,
+  ConsoleLogClock,
+  WeatherCards,
+  WeatherDashboard,
+
   TimerScreen,
   DailyHabitTimer,
   FullScreenTimer,
-  AnalyticsScreen
+
+  DailyHabit,
+
+  AnalyticsScreen,
 };
 
 const PagePreview = ({ activePage, userColor }) => {
-  const PreviewComponent = clockComponents[activePage.component] || MinimalBold;
+  const PreviewComponent = allComponents[activePage.component] || MinimalBold;
 
   return (
     <View style={styles.clockPreviewContainer} pointerEvents="none">
