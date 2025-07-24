@@ -76,7 +76,7 @@ const RateUs = () => {
           Got suggestions or found a bug?
         </H1Light>
         <MdTxt style={styles.cardSubtitle}>
-          Help us improve by sharing your thoughts, or leaving a rating.
+          Help us improve by sharing your thoughts, or leaving a review.
         </MdTxt>
 
         <View style={styles.cardButtons}>

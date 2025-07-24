@@ -16,8 +16,9 @@ import Svg, {
   Rect,
 } from "react-native-svg";
 import BatteryCharging from "../../../components/commmon/CircleChargingProgressBar";
-import { TouchEditContainer } from "../Common/TouchEditContainer";
+import { TouchEditContainer } from "../../../components/ui/TouchEditContainer";
 import { getMoonPhase } from "@/app/utils/moonService";
+import EditPage from "../Common/EditPage";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("screen");
 
@@ -35,6 +36,7 @@ const SunriseMoonrise: React.FC = ({ variant = "full" }) => {
   const [error, setError] = useState<string | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showModal, setShowModal] = useState(false);
 
   const fetchWeatherData = async () => {
     try {
@@ -130,7 +132,10 @@ const SunriseMoonrise: React.FC = ({ variant = "full" }) => {
   }));
 
   return (
-    <TouchEditContainer style={{ flexDirection: "row" }}>
+    <TouchEditContainer
+      style={{ flexDirection: "row" }}
+      setShowModal={setShowModal}
+    >
       {/* Background gradient */}
       <Svg
         style={{ position: "absolute", top: 0, left: 0 }}
@@ -170,6 +175,7 @@ const SunriseMoonrise: React.FC = ({ variant = "full" }) => {
       <SunComponent weatherData={weatherData} currentTime={currentTime} />
       <RightComponent weatherData={weatherData} />
       <BatteryCharging />
+      <EditPage visible={showModal} onClose={() => setShowModal(false)} />
     </TouchEditContainer>
   );
 };

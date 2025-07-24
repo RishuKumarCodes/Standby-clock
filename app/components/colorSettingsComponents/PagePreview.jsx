@@ -14,7 +14,7 @@ import MinimalWeather from "../../themes/weather/minimalWeather/MinimalWeather";
 import SunriseMoonrise from "../../themes/weather/sunriseMoonrise/SunriseMoonrise";
 import ConsoleLogClock from "../../themes/weather/ConsoleLogClock";
 import WeatherWidget from "../../themes/weather/WeatherWidget";
-import WeatherCards from "../../themes/weather/WeatherCards.tsx";
+import WeatherCards from "../../themes/weather/visualCardsWeather/WeatherCards.tsx";
 import WeatherDashboard from "../../themes/weather/WeatherDashboard.tsx";
 
 import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";

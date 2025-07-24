@@ -11,7 +11,7 @@ const MinimalWeather = lazy(() => import("../themes/weather/minimalWeather/Minim
 const SunriseMoonrise = lazy(() => import("../themes/weather/sunriseMoonrise/SunriseMoonrise"));
 const ConsoleLogClock = lazy(() => import("../themes/weather/ConsoleLogClock"));
 const WeatherWidget = lazy(() => import("../themes/weather/WeatherWidget"));
-const WeatherCards = lazy(() => import("../themes/weather/WeatherCards"));
+const WeatherCards = lazy(() => import("../themes/weather/visualCardsWeather/WeatherCards"));
 const WeatherDashboard = lazy(() =>
   import("../themes/weather/WeatherDashboard")
 );

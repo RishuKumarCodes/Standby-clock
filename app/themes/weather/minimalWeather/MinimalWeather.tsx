@@ -10,11 +10,12 @@ import {
   DetailedWeatherData,
 } from "@/app/types/WeatherTypes";
 import { H1Txt, MdTxt } from "@/app/components/ui/CustomText";
-import { TouchEditContainer } from "../Common/TouchEditContainer";
+import { TouchEditContainer } from "../../../components/ui/TouchEditContainer";
 import PreviewScreen from "./components/PreviewScreen";
 import { ThemeProps } from "@/app/types/ThemesTypes";
 import { useClockStatus } from "@/app/context/ClockStatusContext";
 import BatteryCharging from "../../../components/commmon/CircleChargingProgressBar";
+import EditPage from "../Common/EditPage";
 
 const MinimalWeather = ({ color, variant = "full" }: ThemeProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -22,6 +23,8 @@ const MinimalWeather = ({ color, variant = "full" }: ThemeProps) => {
   const [weatherData, setWeatherData] = useState<CurrentWeatherDetailed | null>(
     null
   );
+  const [showModal, setShowModal] = useState(false);
+
   const [airQualityData, setAirQualityData] = useState<AirQualityData | null>(
     null
   );
@@ -90,7 +93,7 @@ const MinimalWeather = ({ color, variant = "full" }: ThemeProps) => {
   }
 
   return (
-    <TouchEditContainer>
+    <TouchEditContainer setShowModal={setShowModal}>
       <View style={styles.container}>
         <View
           style={{
@@ -183,6 +186,7 @@ const MinimalWeather = ({ color, variant = "full" }: ThemeProps) => {
         </View>
       </View>
       <BatteryCharging />
+      <EditPage visible={showModal} onClose={() => setShowModal(false)} />
     </TouchEditContainer>
   );
 };

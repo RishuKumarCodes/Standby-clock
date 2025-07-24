@@ -399,7 +399,7 @@ export const fetchDetailedWeatherData = async (lat: number, lon: number): Promis
       lastUpdated: new Date().toISOString(),
     };
 
-    console.log('Detailed weather data processed successfully');
+    // console.log('Detailed weather data processed successfully');
     return detailedWeather;
 
   } catch (error) {

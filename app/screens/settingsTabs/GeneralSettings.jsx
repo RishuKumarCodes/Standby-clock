@@ -18,7 +18,7 @@ import { DimTxt, H1Txt, MdTxt } from "@/app/components/ui/CustomText.jsx";
 import ToggleButton from "@/app/components/ui/ToggleButton.jsx";
 import { ScrollView } from "react-native-gesture-handler";
 import { weatherStorage } from "../../storage/themesStorage/weather";
-import { EditPage } from "@/app/themes/weather/Common/EditPage";
+import EditPage from "@/app/themes/weather/Common/EditPage";
 
 if (
   Platform.OS === "android" &&
@@ -206,15 +206,24 @@ export default function GeneralSettings() {
                   justifyContent: "center",
                 }}
               >
-                <MdTxt>Current: {location}</MdTxt>
+                <MdTxt
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    maxWidth: 260,
+                    overflow: "hidden",
+                  }}
+                >
+                  Current: {location}
+                </MdTxt>
               </View>
             </View>
           </View>
         </Pressable>
       </ScrollView>
       <EditPage
-        showLocationModal={showLocationModal}
-        setShowLocationModal={setShowLocationModal}
+        visible={showLocationModal}
+        onClose={() => setShowLocationModal(false)}
       />
     </>
   );

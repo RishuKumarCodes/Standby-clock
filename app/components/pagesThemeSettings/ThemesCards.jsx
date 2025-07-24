@@ -26,7 +26,7 @@ import SunriseMoonrise from "../../themes/weather/sunriseMoonrise/SunriseMoonris
 import ConsoleLogClock from "../../themes/weather/ConsoleLogClock.tsx";
 import WeatherWidget from "../../themes/weather/WeatherWidget.tsx";
 import WeatherDashboard from "../../themes/weather/WeatherDashboard.tsx";
-import WeatherCards from "../../themes/weather/WeatherCards.tsx";
+import WeatherCards from "../../themes/weather/visualCardsWeather/WeatherCards.tsx";
 
 // focus theme components:
 import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";

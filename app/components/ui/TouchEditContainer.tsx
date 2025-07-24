@@ -14,7 +14,7 @@ import {
   Animated,
 } from "react-native";
 import EditIcon from "@/assets/icons/EditIcon";
-import { EditPage } from "./EditPage";
+import { EditPage } from "../../themes/weather/Common/EditPage";
 
 interface TouchEditContainer {
   children: ReactNode;
@@ -27,6 +27,7 @@ interface TouchEditContainer {
   showDuration?: number;
   fadeInDuration?: number;
   fadeOutDuration?: number;
+  setShowModal: (value: boolean) => void;
 }
 
 export const TouchEditContainer: React.FC<TouchEditContainer> = ({
@@ -38,9 +39,9 @@ export const TouchEditContainer: React.FC<TouchEditContainer> = ({
   showDuration = 2000,
   fadeInDuration = 200,
   fadeOutDuration = 300,
+  setShowModal,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const hideTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -82,7 +83,6 @@ export const TouchEditContainer: React.FC<TouchEditContainer> = ({
     };
   }, []);
 
-  // Handle button press
   const handleEditPress = useCallback(() => {
     setShowModal(true);
     if (hideTimer.current) {
@@ -134,11 +134,6 @@ export const TouchEditContainer: React.FC<TouchEditContainer> = ({
           </TouchableOpacity>
         </Animated.View>
       )}
-
-      <EditPage
-        showLocationModal={showModal}
-        setShowLocationModal={setShowModal}
-      />
     </View>
   );
 };
@@ -160,13 +155,5 @@ const styles = StyleSheet.create({
   editButton: {
     justifyContent: "center",
     alignItems: "center",
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
 });
