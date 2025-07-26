@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
-import Svg, { Path } from "react-native-svg";
-import { fetchDetailedWeatherData } from "@/app/api/weatherAPI";
+import { View, StyleSheet, Dimensions, Image } from "react-native";
+import { getDetailedWeather } from "@/app/utils/weatherService.ts";
 import EditPage from "./components/EditPage.tsx";
-import {
-  TemperatureCard,
-  FeelsLikeCard,
-  CloudCoverCard,
-  PrecipitationCard,
-  WindCard,
-  HumidityCard,
-  UVCard,
-  AQICard,
-  VisibilityCard,
-  PressureCard,
-} from "./components/Cards.jsx";
+import TemperatureCard from "./components/TempratureCard.jsx";
+import FeelsLikeCard from "./components/FeelsLikeCard.jsx";
+import CloudCoverCard from "./components/CloudCoverCard.jsx";
+import PrecipitationCard from "./components/PrecipitationCard.jsx";
+import WindCard from "./components/WindCard.jsx";
+import HumidityCard from "./components/HumidityCard.jsx";
+import UVCard from "./components/UVCard.jsx";
+import AQICard from "./components/AQICard.jsx";
+import VisibilityCard from "./components/VisibilityCard.jsx";
+import PressureCard from "./components/PressureCard.jsx";
+
 import {
   loadSelectedCards,
   saveSelectedCards,
@@ -23,37 +21,24 @@ import {
 import { TouchEditContainer } from "@/app/components/ui/TouchEditContainer.tsx";
 import { MdTxt } from "@/app/components/ui/CustomText.jsx";
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("screen");
 
-const EditIcon = ({ size = 24, color = "#FFFFFF" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Path
-      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      fill="none"
-    />
-    <Path
-      d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      fill="none"
-    />
-  </Svg>
-);
-
-const WeatherCards = () => {
+const WeatherCards = ({ variant = "full" }) => {
   const [weatherData, setWeatherData] = useState(null);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [selectedCards, setSelectedCards] = useState([]);
   const [availableCards, setAvailableCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Component mapping for card rendering
+  if (variant !== "full") {
+    return (
+      <Image
+        source={require("../../../../assets/images/weatherCardPreview.jpg")}
+        style={{ height: "100%", width: "100%" }}
+      />
+    );
+  }
+
   const cardComponentMap = {
     temperature: TemperatureCard,
     feelsLike: FeelsLikeCard,
@@ -103,7 +88,7 @@ const WeatherCards = () => {
   useEffect(() => {
     const loadWeatherData = async () => {
       try {
-        const data = await fetchDetailedWeatherData(25.6, 85.1);
+        const data = await getDetailedWeather();
         setWeatherData(data);
       } catch (error) {
         console.error("Failed to fetch weather data:", error);
@@ -143,7 +128,18 @@ const WeatherCards = () => {
       }
 
       return (
-        <View key={card.id} style={styles.cardWrapper}>
+        <View
+          key={card.id}
+          style={[
+            styles.cardWrapper,
+            {
+              maxHeight:
+                selectedCards.length < 4 ? height - 10 : (height - 10) / 2,
+              minWidth:
+                selectedCards.length == 4 ? (width - 20) / 2 : (width - 30) / 3,
+            },
+          ]}
+        >
           <CardComponent data={weatherData} />
         </View>
       );
@@ -163,10 +159,8 @@ const WeatherCards = () => {
       style={styles.container}
       setShowModal={setIsEditModalVisible}
     >
-      <View style={styles.scrollView}>
-        <View style={styles.dashboard}>
-          <View style={styles.cardsContainer}>{renderSelectedCards()}</View>
-        </View>
+      <View style={styles.dashboard}>
+        <View style={styles.cardsContainer}>{renderSelectedCards()}</View>
       </View>
 
       <EditPage
@@ -183,26 +177,27 @@ const WeatherCards = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: "100%",
+    padding: 5,
   },
   loadingContainer: {
     justifyContent: "center",
     alignItems: "center",
   },
-  scrollView: {
-    flex: 1,
-  },
   dashboard: {
-    padding: 25,
-    minWidth: width,
+    minWidth: width - 10,
   },
   cardsContainer: {
     flexDirection: "row",
+    height: "100%",
+    width: "100%",
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
   cardWrapper: {
-    width: (width - 70) / 2,
-    marginBottom: 20,
+    flex: 1,
+    overflow: "hidden",
+    padding: 5,
   },
 });
 

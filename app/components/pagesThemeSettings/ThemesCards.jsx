@@ -23,10 +23,10 @@ import EarthClock from "../../themes/date&Time/EarthClock/EarthClock.tsx";
 // weather theme components:
 import MinimalWeather from "../../themes/weather/minimalWeather/MinimalWeather";
 import SunriseMoonrise from "../../themes/weather/sunriseMoonrise/SunriseMoonrise";
-import ConsoleLogClock from "../../themes/weather/ConsoleLogClock.tsx";
-import WeatherWidget from "../../themes/weather/WeatherWidget.tsx";
-import WeatherDashboard from "../../themes/weather/WeatherDashboard.tsx";
 import WeatherCards from "../../themes/weather/visualCardsWeather/WeatherCards.tsx";
+// import ConsoleLogClock from "../../themes/weather/ConsoleLogClock.tsx";
+// import WeatherWidget from "../../themes/weather/WeatherWidget.tsx";
+// import WeatherDashboard from "../../themes/weather/WeatherDashboard.tsx";
 
 // focus theme components:
 import TimerScreen from "../../themes/Focus/TimerTodoCombo.jsx/TimerScreen.jsx";
@@ -71,10 +71,10 @@ const ThemesCards = ({ activeTab, activePage, onChangePage }) => {
   const weather = {
     MinimalWeather,
     SunriseMoonrise,
-    WeatherWidget,
-    WeatherDashboard,
     WeatherCards,
-    ConsoleLogClock,
+    // WeatherWidget,
+    // WeatherDashboard,
+    // ConsoleLogClock,
   };
 
   const themeMaps = { dateTime, calendar, focus, todos, analytics, weather };

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Focus Dock",
     "slug": "Focus-Dock",
-    "version": "2.2.4",
+    "version": "2.3.1",
     "orientation": "landscape",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -13,8 +13,8 @@
     },
     "androidNavigationBar": {
       "visible": "immersive",
-      "barStyle": "dark-content",
-      "backgroundColor": "#000000"
+      "barStyle": "dark-content"
+      // "backgroundColor": "#000000"
     },
     "android": {
       "adaptiveIcon": {

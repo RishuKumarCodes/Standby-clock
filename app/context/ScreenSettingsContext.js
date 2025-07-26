@@ -48,14 +48,14 @@ export const ScreenSettingsProvider = ({ children }) => {
       // NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
 
       (async () => {
-      try {
-        await NavigationBar.setVisibilityAsync(
-          navBarVisible ? "immersive" : "hidden"
-        );
-      } catch (e) {
-        console.error("Failed to set nav-bar visibility:", e);
-      }
-    })();
+        try {
+          await NavigationBar.setVisibilityAsync(
+            navBarVisible ? "immersive" : "hidden"
+          );
+        } catch (e) {
+          console.error("Failed to set nav-bar visibility:", e);
+        }
+      })();
 
       // NavigationBar.setVisibilityAsync(navBarVisible ? "visible" : "hidden");
       // NavigationBar.setBackgroundColorAsync("#000");
